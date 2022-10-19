@@ -69,7 +69,7 @@ function AppMenu(props) {
     <nav id="app-menu">
       <List>
         <Item className={pathMatch === "/governance" ? "active" : undefined}>
-          <StyledLink exact to="/admin/governance">
+          <StyledLink exact to="/governance">
             Governance
           </StyledLink>
         </Item>
@@ -79,7 +79,7 @@ function AppMenu(props) {
               pathMatch === "/governance/schemas" ? "active" : undefined
             }
           >
-            <StyledSubLink exact to="/admin/governance/schemas">
+            <StyledSubLink exact to="/governance/schemas">
               Schemas
             </StyledSubLink>
           </Item>
@@ -88,7 +88,7 @@ function AppMenu(props) {
               pathMatch === "/governance/issuers" ? "active" : undefined
             }
           >
-            <StyledSubLink exact to="/admin/governance/issuers">
+            <StyledSubLink exact to="/governance/issuers">
               Issuers
             </StyledSubLink>
           </Item>

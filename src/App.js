@@ -1,3 +1,4 @@
+import React from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,6 +9,11 @@ import AppHeader from "./UI/AppHeader";
 import styled from "styled-components";
 
 import Governance from "./UI/Governance";
+import GovernanceMetadata from "./UI/GovernanceMetadata";
+import GovernanceSchemas from "./UI/GovernanceSchemas";
+import GovernanceSchema from "./UI/GovernanceSchema";
+import GovernanceIssuers from "./UI/GovernanceIssuers";
+import GovernanceIssuer from "./UI/GovernanceIssuer";
 
 import "./App.css";
 
@@ -40,6 +46,98 @@ function App() {
             );
           }}
         />
+
+        <Route
+          path={`/governance/metadata`}
+          render={({ match, history }) => {
+            // if (check('settings:update')) {
+            return (
+              <Frame id="app-frame">
+                <AppHeader match={match} history={history} />
+                <Main>
+                  <GovernanceMetadata history={history} />
+                </Main>
+              </Frame>
+            );
+            // } else {
+            //   return <Route render={() => <Redirect to="/" />} />
+            // }
+          }}
+        />
+        <Route
+          path={`/governance/schemas`}
+          exact
+          render={({ match, history }) => {
+            // if (check('settings:update')) {
+            return (
+              <Frame id="app-frame">
+                <AppHeader match={match} history={history} />
+                <Main>
+                  <GovernanceSchemas history={history} />
+                </Main>
+              </Frame>
+            );
+            // } else {
+            //   return <Route render={() => <Redirect to="/" />} />
+            // }
+          }}
+        />
+        <Route
+          path={`/governance/schemas/:id`}
+          render={({ match, history }) => {
+            // if (check('contacts:read')) {
+            return (
+              <Frame id="app-frame">
+                <AppHeader match={match} history={history} />
+                <Main>
+                  <GovernanceSchema history={history} id={match.params.id} />
+                </Main>
+              </Frame>
+            );
+            // } else {
+            //   return <Route render={() => <Redirect to="/" />} />
+            // }
+          }}
+        />
+        <Route
+          path={`/governance/issuers`}
+          exact
+          render={({ match, history }) => {
+            // if (check('settings:update')) {
+            return (
+              <Frame id="app-frame">
+                <AppHeader match={match} history={history} />
+                <Main>
+                  <GovernanceIssuers history={history} />
+                </Main>
+              </Frame>
+            );
+            // } else {
+            //   return <Route render={() => <Redirect to="/" />} />
+            // }
+          }}
+        />
+        <Route
+          path={`/governance/issuers/:issuerId`}
+          render={({ match, history }) => {
+            // if (check('contacts:read')) {
+            return (
+              <Frame id="app-frame">
+                <AppHeader match={match} history={history} />
+                <Main>
+                  <GovernanceIssuer
+                    history={history}
+                    issuerId={match.params.issuerId}
+                  />
+                </Main>
+              </Frame>
+            );
+            // } else {
+            //   return <Route render={() => <Redirect to="/" />} />
+            // }
+          }}
+        />
+
         {/* Redirect to root if no route match is found */}
         <Route render={() => <Redirect to="/governance" />} />
       </Switch>

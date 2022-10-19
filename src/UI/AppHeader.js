@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 
 import AppMenu from "./AppMenu.js";
-// import PoweredByImage from "../assets/powered-by.png";
+import PoweredByImage from "../assets/powered-by.png";
 
-// import { PoweredHolder, PoweredBy } from "./CommonStylesForms";
+import { PoweredHolder, PoweredBy } from "./CommonStylesForms";
 
 const Header = styled.header`
   flex: 3;
@@ -16,12 +16,14 @@ const Header = styled.header`
 `;
 
 function AppHeader(props) {
+  console.log(props.history.location.pathname);
+
   return (
     <Header id="app-header">
       <AppMenu match={props.match} />
-      {/* <PoweredHolder>
+      <PoweredHolder>
         <PoweredBy src={PoweredByImage} alt="Powered By Indicio" />
-      </PoweredHolder> */}
+      </PoweredHolder>
     </Header>
   );
 }

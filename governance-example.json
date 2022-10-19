@@ -1,0 +1,62 @@
+{
+	"@context": [
+		"https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0430-machine-readable-governance-frameworks/context.jsonld"
+	],
+	"name": "COVID Governance",
+	"version": "0.1",
+	"format": "1.0",
+	"id": "<uuid>",
+	"description": "This document describes COVID health and travel governance for the nation of ___ in a machine readable way.",
+	"last_updated": "2022-03-29",
+	"docs_uri": "https://url-for-docs...",
+	"schemas": [
+		{
+			"id": "4CLG5pU5v294VdkMWxSByu:2:Medical_Release:1.0",
+			"name": "Medical Release",
+			"issuer_roles": ["release_issuer"]
+		},
+		{
+			"id": "RuuJwd3JMffNwZ43DcJKN1:2:Medical_Release_Issuer:1.4",
+			"name": "Medical Release Issuer",
+			"issuer_roles": ["lab_authorizer"]
+		}
+	],
+	"participants": {
+		"id": "32f54163-7166-48f1-93d8-ff217bdb0653",
+		"author": "did:example:sampleecosystemgovernanceparty",
+		"created": "2010-01-01T19:23:24Z",
+		"version": 2,
+		"topic": "uri:to-multi-topic-schema",
+		"entries": {
+			"did:example:lab_licensing_board": {
+				"uri:to-role_schema": {
+					"roles": ["lab_authorizer"]
+				},
+				"uri:to-describe_schema": {
+					"label": "Country Government",
+					"sublabel": "Government",
+					"website": "issuinggovernmentsite.org",
+					"email": "credential_manager@issuinggovernmentsite.org"
+				}
+			},
+			"did:example:healthlab": {
+				"uri:to-role_schema": {
+					"roles": ["release_issuer"]
+				},
+				"uri:to-describe_schema": {
+					"label": "Health Lab",
+					"sublabel": "Local Health Lab",
+					"website": "issuinglabsite.com",
+					"email": "credential_manager@issuinglabsite.com"
+				}
+			}
+		}
+	},
+	"roles": {
+		"holder": {},
+		"release_issuer": {
+			"credentials": ["RuuJwd3JMffNwZ43DcJKN1:2:Medical_Release_Issuer:1.4"]
+		},
+		"lab_authorizer": {}
+	}
+}
