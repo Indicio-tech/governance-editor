@@ -1,34 +1,33 @@
-import React from "react";
+import React from "react"
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
-} from "react-router-dom";
-import AppHeader from "./UI/AppHeader";
-import styled from "styled-components";
+} from "react-router-dom"
+import AppHeader from "./UI/AppHeader"
+import styled from "styled-components"
 
-import Governance from "./UI/Governance";
-import GovernanceMetadata from "./UI/GovernanceMetadata";
-import GovernanceSchemas from "./UI/GovernanceSchemas";
-import GovernanceSchema from "./UI/GovernanceSchema";
-import GovernanceIssuers from "./UI/GovernanceIssuers";
-import GovernanceIssuer from "./UI/GovernanceIssuer";
+import Governance from "./UI/Governance"
+import GovernanceMetadata from "./UI/GovernanceMetadata"
+import GovernanceSchemas from "./UI/GovernanceSchemas"
+import GovernanceSchema from "./UI/GovernanceSchema"
+import GovernanceIssuers from "./UI/GovernanceIssuers"
+import GovernanceIssuer from "./UI/GovernanceIssuer"
 
-import "./App.css";
+import "./App.css"
 
 const Frame = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-`;
+`
 const Main = styled.main`
   flex: 9;
   padding: 30px;
-`;
+`
 
 function App() {
-  console.log("App rendered");
   return (
     <Router>
       <Switch>
@@ -43,14 +42,13 @@ function App() {
                   <Governance />
                 </Main>
               </Frame>
-            );
+            )
           }}
         />
 
         <Route
           path={`/governance/metadata`}
           render={({ match, history }) => {
-            // if (check('settings:update')) {
             return (
               <Frame id="app-frame">
                 <AppHeader match={match} history={history} />
@@ -58,17 +56,13 @@ function App() {
                   <GovernanceMetadata history={history} />
                 </Main>
               </Frame>
-            );
-            // } else {
-            //   return <Route render={() => <Redirect to="/" />} />
-            // }
+            )
           }}
         />
         <Route
           path={`/governance/schemas`}
           exact
           render={({ match, history }) => {
-            // if (check('settings:update')) {
             return (
               <Frame id="app-frame">
                 <AppHeader match={match} history={history} />
@@ -76,16 +70,12 @@ function App() {
                   <GovernanceSchemas history={history} />
                 </Main>
               </Frame>
-            );
-            // } else {
-            //   return <Route render={() => <Redirect to="/" />} />
-            // }
+            )
           }}
         />
         <Route
           path={`/governance/schemas/:id`}
           render={({ match, history }) => {
-            // if (check('contacts:read')) {
             return (
               <Frame id="app-frame">
                 <AppHeader match={match} history={history} />
@@ -93,17 +83,13 @@ function App() {
                   <GovernanceSchema history={history} id={match.params.id} />
                 </Main>
               </Frame>
-            );
-            // } else {
-            //   return <Route render={() => <Redirect to="/" />} />
-            // }
+            )
           }}
         />
         <Route
           path={`/governance/issuers`}
           exact
           render={({ match, history }) => {
-            // if (check('settings:update')) {
             return (
               <Frame id="app-frame">
                 <AppHeader match={match} history={history} />
@@ -111,16 +97,12 @@ function App() {
                   <GovernanceIssuers history={history} />
                 </Main>
               </Frame>
-            );
-            // } else {
-            //   return <Route render={() => <Redirect to="/" />} />
-            // }
+            )
           }}
         />
         <Route
           path={`/governance/issuers/:issuerId`}
           render={({ match, history }) => {
-            // if (check('contacts:read')) {
             return (
               <Frame id="app-frame">
                 <AppHeader match={match} history={history} />
@@ -131,10 +113,7 @@ function App() {
                   />
                 </Main>
               </Frame>
-            );
-            // } else {
-            //   return <Route render={() => <Redirect to="/" />} />
-            // }
+            )
           }}
         />
 
@@ -142,7 +121,7 @@ function App() {
         <Route render={() => <Redirect to="/governance" />} />
       </Switch>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App

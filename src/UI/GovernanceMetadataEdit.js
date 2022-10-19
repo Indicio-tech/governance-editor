@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from "react"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 // import { useTheme } from "styled-components"
 
-import { setSelectedGovernance } from "../redux/governanceReducer"
+import { setGovernanceMetadata } from "../redux/governanceReducer"
 
 import {
   Actions,
@@ -20,6 +20,7 @@ import {
 } from "./CommonStylesForms"
 
 function EditFormGovernanceMetadata(props) {
+  const dispatch = useDispatch()
   //   const roles = useSelector((state) => state.users.roles)
 
   // const governanceMetadata = props.governanceMetadata
@@ -70,13 +71,7 @@ function EditFormGovernanceMetadata(props) {
         : false,
     }
 
-    setSelectedGovernance(metadata)
-    // props.sendRequest("GOVERNANCE", "SET_METADATA", metadata)
-
-    // (eldersonar) Wait 0.5 sec for the database to update and fetch fresh metadata
-    // setTimeout(() => {
-    //   props.sendRequest("GOVERNANCE", "GET_ALL_METADATA", {})
-    // }, 500)
+    dispatch(setGovernanceMetadata(metadata))
 
     props.closeEditMetadataModal()
   }

@@ -1,6 +1,6 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import styled from "styled-components";
+import React from "react"
+import { NavLink } from "react-router-dom"
+import styled from "styled-components"
 
 const List = styled.ul`
   margin: 0;
@@ -11,7 +11,7 @@ const List = styled.ul`
     position: relative;
     padding: 0 0 0 20px;
   }
-`;
+`
 const Item = styled.li`
   border-bottom: 1px solid ${(props) => props.theme.border};
   &:first-child {
@@ -29,7 +29,7 @@ const Item = styled.li`
   &.active ul {
     display: block;
   }
-`;
+`
 const StyledLink = styled(NavLink)`
   display: block;
   padding: 20px 0 20px 20px;
@@ -45,7 +45,7 @@ const StyledLink = styled(NavLink)`
     border-right: 3px solid ${(props) => props.theme.secondary_color};
     background: ${(props) => props.theme.background_secondary};
   }
-`;
+`
 const StyledSubLink = styled(NavLink)`
   display: block;
   padding: 10px 0 10px 20px;
@@ -58,13 +58,12 @@ const StyledSubLink = styled(NavLink)`
     color: ${(props) => props.theme.primary_color};
     background: none;
   }
-`;
+`
 function AppMenu(props) {
-  let pathMatch = "";
+  let pathMatch = ""
   if (props.match.path !== undefined) {
-    pathMatch = props.match.path;
+    pathMatch = props.match.path
   }
-  //   if (localUser) {
   return (
     <nav id="app-menu">
       <List>
@@ -95,7 +94,6 @@ function AppMenu(props) {
         </List>
       </List>
     </nav>
-  );
-  //   } else return null;
+  )
 }
-export default AppMenu;
+export default AppMenu

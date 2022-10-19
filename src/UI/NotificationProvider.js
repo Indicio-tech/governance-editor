@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import styled from "styled-components";
+import React, { useContext, useEffect, useState } from "react"
+import styled from "styled-components"
 
 const NotificationWrapper = styled.div`
   padding: 20px;
@@ -21,7 +21,7 @@ const NotificationWrapper = styled.div`
   text-align: center;
   transition: 6s;
   z-index: 99999999;
-`;
+`
 
 const NotificationCloseBtn = styled.span`
   margin-left: 15px;
@@ -31,62 +31,62 @@ const NotificationCloseBtn = styled.span`
   font-size: 22px;
   line-height: 20px;
   cursor: pointer;
-`;
+`
 
-const NotificationContext = React.createContext();
+const NotificationContext = React.createContext()
 
 // Making the functionality of adding new notifications possible across the app using context provider
 export function useNotification() {
-  return useContext(NotificationContext);
+  return useContext(NotificationContext)
 }
 
 // Exporting the notification component itself
 export function NotificationProvider(props) {
   // Notification list state
-  let [notificationList, setNotificationList] = useState([]);
+  let [notificationList, setNotificationList] = useState([])
 
   // Perform on every notificationList render
   useEffect(() => {
     //  Check if list of notifications is not empty
     if (notificationList.length !== 0) {
       // Copy the notification list array
-      const array = [...notificationList];
+      const array = [...notificationList]
       // Setting up the timer to remove the last notification from the array every 6 seconds
       let timer = setTimeout(function () {
         // Remove last notification from the list
-        array.pop();
+        array.pop()
         // Reset notificationList state with updated array
-        setNotificationList(array);
-      }, 6000);
+        setNotificationList(array)
+      }, 6000)
 
       // This will clear timeout when component unmount
       return () => {
-        clearTimeout(timer);
-      };
+        clearTimeout(timer)
+      }
     }
-  }, [notificationList]);
+  }, [notificationList])
 
   // Receiving new notification
   function setNotifications(message, type) {
     // Saving notification into a variable
-    const newNotification = { message, type };
+    const newNotification = { message, type }
     // Adding notification to a list
-    setNotificationList((oldArray) => [...oldArray, newNotification]);
+    setNotificationList((oldArray) => [...oldArray, newNotification])
   }
 
   // Closing notification
   function closeNotification() {
     // Copying an array
-    const array = [...notificationList];
+    const array = [...notificationList]
     // Removing last notification from an array
-    array.pop();
+    array.pop()
     // Saving edited array back to the list
-    setNotificationList(array);
+    setNotificationList(array)
   }
 
   // Returning notifications
-  let notifications = [];
-  let background = "";
+  let notifications = []
+  let background = ""
 
   // Checking notification list status, comment in to use.
   // console.log(notificationList)
@@ -96,31 +96,31 @@ export function NotificationProvider(props) {
     // Deciding the background color of the notification based on the type
     switch (notification.type) {
       case "notice":
-        background = "notice";
-        break;
+        background = "notice"
+        break
       case "warning":
-        background = "warning";
-        break;
+        background = "warning"
+        break
       case "error":
-        background = "error";
-        break;
+        background = "error"
+        break
       default:
-        background = "error";
+        background = "error"
     }
     // Returning notification component
     return [
       <NotificationWrapper key={index} background={background}>
         <NotificationCloseBtn
           onClick={() => {
-            closeNotification();
+            closeNotification()
           }}
         >
           &times;
         </NotificationCloseBtn>
         <p>{notification.message}</p>
       </NotificationWrapper>,
-    ];
-  });
+    ]
+  })
 
   // Returning notification provider
   return (
@@ -128,5 +128,5 @@ export function NotificationProvider(props) {
       {notifications}
       {props.children}
     </NotificationContext.Provider>
-  );
+  )
 }

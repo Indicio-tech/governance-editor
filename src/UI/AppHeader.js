@@ -1,10 +1,10 @@
-import React from "react";
-import styled from "styled-components";
+import React from "react"
+import styled from "styled-components"
 
-import AppMenu from "./AppMenu.js";
-import PoweredByImage from "../assets/powered-by.png";
+import AppMenu from "./AppMenu.js"
+import PoweredByImage from "../assets/powered-by.png"
 
-import { PoweredHolder, PoweredBy } from "./CommonStylesForms";
+import { PoweredHolder, PoweredBy } from "./CommonStylesForms"
 
 const Header = styled.header`
   flex: 3;
@@ -13,11 +13,9 @@ const Header = styled.header`
   min-height: 100vh;
   background: ${(props) => props.theme.background_primary};
   position: relative;
-`;
+`
 
 function AppHeader(props) {
-  console.log(props.history.location.pathname);
-
   return (
     <Header id="app-header">
       <AppMenu match={props.match} />
@@ -25,7 +23,7 @@ function AppHeader(props) {
         <PoweredBy src={PoweredByImage} alt="Powered By Indicio" />
       </PoweredHolder>
     </Header>
-  );
+  )
 }
 
-export default AppHeader;
+export default AppHeader

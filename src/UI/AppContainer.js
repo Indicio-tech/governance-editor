@@ -1,9 +1,9 @@
-import React from "react";
+import React from "react"
 // import { useSelector } from "react-redux";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "styled-components"
 
-import App from "../App";
-import { NotificationProvider } from "./NotificationProvider";
+import App from "../App"
+import { NotificationProvider } from "./NotificationProvider"
 
 function AppContainer() {
   const theme = {
@@ -20,7 +20,7 @@ function AppContainer() {
     drop_shadow: "3px 3px 3px rgba(0, 0, 0, 0.3)",
     background_primary: "#fff",
     background_secondary: "#f5f5f5",
-  };
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -28,7 +28,7 @@ function AppContainer() {
         <App />
       </NotificationProvider>
     </ThemeProvider>
-  );
+  )
 }
 
-export default AppContainer;
+export default AppContainer

@@ -2,8 +2,8 @@
 
 const initialState = {
   selectedGovernance: {},
-  governanceOptions: [],
-  metadata: [],
+  // governanceOptions: [],
+  metadata: {},
   selectedSchema: {},
   schemas: [],
   selectedIssuer: {},
@@ -20,7 +20,7 @@ const SET_SELECTED_GOVERNANCE_ISSUER = "SET_SELECTED_GOVERNANCE_ISSUER"
 const SET_GOVERNANCE_ISSUER = "SET_GOVERNANCE_ISSUER"
 const SET_GOVERNANCE_ROLE = "SET_GOVERNANCE_ROLE"
 const SET_GOVERNANCE_DID = "SET_GOVERNANCE_DID"
-const SET_GOVERNANCE_OPTIONS = "SET_GOVERNANCE_OPTIONS"
+// const SET_GOVERNANCE_OPTIONS = "SET_GOVERNANCE_OPTIONS"
 const CLEAR_GOVERNANCE_STATE = "CLEAR_GOVERNANCE_STATE"
 
 export function setSelectedGovernance(selectedGovernance) {
@@ -79,12 +79,12 @@ export function setGovernanceDID(did) {
   }
 }
 
-export function setGovernanceOptions(governanceOptions) {
-  return {
-    type: SET_GOVERNANCE_OPTIONS,
-    payload: governanceOptions,
-  }
-}
+// export function setGovernanceOptions(governanceOptions) {
+//   return {
+//     type: SET_GOVERNANCE_OPTIONS,
+//     payload: governanceOptions,
+//   }
+// }
 
 export function clearGovernanceState() {
   return {
@@ -119,8 +119,8 @@ export default function (state = initialState, action) {
     case SET_GOVERNANCE_DID:
       return { ...state, did: action.payload }
 
-    case SET_GOVERNANCE_OPTIONS:
-      return { ...state, governanceOptions: action.payload }
+    // case SET_GOVERNANCE_OPTIONS:
+    //   return { ...state, governanceOptions: action.payload }
 
     case CLEAR_GOVERNANCE_STATE:
       return initialState

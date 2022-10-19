@@ -4,7 +4,16 @@ import styled from "styled-components"
 
 // import { setNotificationState } from '../redux/notificationsReducer'
 import GovernanceMetadataEdit from "./GovernanceMetadataEdit"
-import { setSelectedGovernance } from "../redux/governanceReducer"
+import {
+  setSelectedGovernance,
+  setGovernanceMetadata,
+  setGovernanceSchemas,
+  // setSelectedGovernanceSchema,
+  // setSelectedGovernanceIssuer,
+  setGovernanceIssuers,
+  setGovernanceRoles,
+  // setGovernanceDID,
+} from "../redux/governanceReducer"
 
 import PageHeader from "./PageHeader.js"
 import PageSection from "./PageSection.js"
@@ -69,6 +78,24 @@ function Governance() {
     if (governanceState.selectedGovernance) {
       console.log(governanceFile)
       dispatch(setSelectedGovernance(governanceFile))
+
+      console.log(governanceFile["@context"])
+
+      let metadata = {
+        description: governanceFile.description,
+        docs_uri: governanceFile.docs_uri,
+        format: governanceFile.format,
+        id: governanceFile.id,
+        last_updated: governanceFile.last_updated,
+        name: governanceFile.name,
+        version: governanceFile.version,
+      }
+      metadata["@context"] = governanceFile["@context"]
+
+      dispatch(setGovernanceMetadata(metadata))
+      dispatch(setGovernanceSchemas(governanceFile.schemas))
+      dispatch(setGovernanceIssuers(governanceFile.participants.entries))
+      dispatch(setGovernanceRoles(governanceFile.roles))
     } else {
       console.log("no governance")
     }
@@ -84,40 +111,40 @@ function Governance() {
             <AttributeRow>
               <th>Name:</th>
               <td>
-                {governanceState.selectedGovernance !== undefined
-                  ? governanceState.selectedGovernance.name || ""
+                {governanceState.metadata !== undefined
+                  ? governanceState.metadata.name || ""
                   : ""}
               </td>
             </AttributeRow>
             <AttributeRow>
               <th>Description:</th>
               <td>
-                {governanceState.selectedGovernance !== undefined
-                  ? governanceState.selectedGovernance.description || ""
+                {governanceState.metadata !== undefined
+                  ? governanceState.metadata.description || ""
                   : ""}
               </td>
             </AttributeRow>
             <AttributeRow>
               <th>Version:</th>
               <td>
-                {governanceState.selectedGovernance !== undefined
-                  ? governanceState.selectedGovernance.version || ""
+                {governanceState.metadata !== undefined
+                  ? governanceState.metadata.version || ""
                   : ""}
               </td>
             </AttributeRow>
             <AttributeRow>
               <th>Human Readable Version URI:</th>
               <td>
-                {governanceState.selectedGovernance !== undefined
-                  ? governanceState.selectedGovernance.docs_uri || ""
+                {governanceState.metadata !== undefined
+                  ? governanceState.metadata.docs_uri || ""
                   : ""}
               </td>
             </AttributeRow>
             <AttributeRow>
               <th>Last Updated:</th>
               <td>
-                {governanceState.selectedGovernance === {}
-                  ? new Date(governanceState.selectedGovernance.updated_at)
+                {governanceState.metadata === {}
+                  ? new Date(governanceState.metadata.updated_at)
                       .toISOString()
                       .slice(0, 19)
                       .replace("T", " ") || ""
