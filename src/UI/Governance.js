@@ -79,7 +79,7 @@ function Governance() {
       console.log(governanceFile)
       dispatch(setSelectedGovernance(governanceFile))
 
-      console.log(governanceFile["@context"])
+      console.log(governanceFile.last_updated)
 
       let metadata = {
         description: governanceFile.description,
@@ -143,11 +143,15 @@ function Governance() {
             <AttributeRow>
               <th>Last Updated:</th>
               <td>
-                {governanceState.metadata === {}
-                  ? new Date(governanceState.metadata.updated_at)
+                {/* TODO: decide on the date format and handle it here */}
+                {/* {governanceState.metadata === {}
+                  ? new Date(governanceState.metadata.last_updated)
                       .toISOString()
                       .slice(0, 19)
                       .replace("T", " ") || ""
+                  : ""} */}
+                {governanceState.metadata !== {}
+                  ? governanceState.metadata.last_updated || ""
                   : ""}
               </td>
             </AttributeRow>
