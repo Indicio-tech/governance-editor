@@ -90,43 +90,90 @@ function Governance() {
       metadata["@context"] = governanceFile["@context"]
 
       // (eldersonar) Handle roles assembly
-      const roles = {}
+      const roles = []
+      let role_id = 1
       roles.governance_id = governanceFile.id
+      for (var key in governanceFile.roles) {
+        let role = {}
+        if (governanceFile.roles.hasOwnProperty(key)) {
+          role.role_id = role_id
+          role.governance_id = governanceFile.id
+          role.role = key
+          role.credentials = governanceFile.roles[key].credentials
+            ? governanceFile.roles[key].credentials
+            : {}
+
+          // issuer.email =
+          //   governanceFile.participants.entries[key][
+          //     "uri:to-describe_schema"
+          //   ].email
+          // issuer.name =
+          //   governanceFile.participants.entries[key][
+          //     "uri:to-describe_schema"
+          //   ].name
+          // issuer.phone =
+          //   governanceFile.participants.entries[key][
+          //     "uri:to-describe_schema"
+          //   ].phone
+          // issuer.website =
+          //   governanceFile.participants.entries[key][
+          //     "uri:to-describe_schema"
+          //   ].website
+          // issuer.roles =
+          //   governanceFile.participants.entries[key]["uri:to-role_schema"].roles
+
+          roles.push(role)
+
+          // Increment for unique id
+          role_id++
+        }
+      }
 
       // (eldersonar) Handle schemas assembly
       let schemas = []
+      let schema_id = 1
       governanceFile.schemas.forEach((schema) => {
+        schema.schema_id = schema_id
         schema.governance_id = governanceFile.id
         schemas.push(schema)
+
+        schema_id++
       })
 
       // (eldersonar) Handle issuers assembly
       let issuers = []
-      for (var key in governanceFile.participants.entries) {
+      let issuer_id = 1
+      for (let key2 in governanceFile.participants.entries) {
         let issuer = {}
-        if (governanceFile.participants.entries.hasOwnProperty(key)) {
-          issuer.did = key
+        if (governanceFile.participants.entries.hasOwnProperty(key2)) {
+          issuer.issuer_id = issuer_id
+          issuer.did = key2
           issuer.governance_id = governanceFile.id
           issuer.email =
-            governanceFile.participants.entries[key][
+            governanceFile.participants.entries[key2][
               "uri:to-describe_schema"
             ].email
           issuer.name =
-            governanceFile.participants.entries[key][
+            governanceFile.participants.entries[key2][
               "uri:to-describe_schema"
             ].name
           issuer.phone =
-            governanceFile.participants.entries[key][
+            governanceFile.participants.entries[key2][
               "uri:to-describe_schema"
             ].phone
           issuer.website =
-            governanceFile.participants.entries[key][
+            governanceFile.participants.entries[key2][
               "uri:to-describe_schema"
             ].website
           issuer.roles =
-            governanceFile.participants.entries[key]["uri:to-role_schema"].roles
+            governanceFile.participants.entries[key2][
+              "uri:to-role_schema"
+            ].roles
 
           issuers.push(issuer)
+
+          // Increment for unique id
+          issuer_id++
         }
       }
 
