@@ -33,10 +33,10 @@
 					"roles": ["lab_authorizer"]
 				},
 				"uri:to-describe_schema": {
-					"label": "Country Government",
-					"sublabel": "Government",
-					"website": "issuinggovernmentsite.org",
-					"email": "credential_manager@issuinggovernmentsite.org"
+					"email": "credential_manager@issuinggovernmentsite.org",
+					"name": "Government",
+					"phone": "123-234-3456",
+					"website": "issuinggovernmentsite.org"
 				}
 			},
 			"did:example:healthlab": {
@@ -44,10 +44,10 @@
 					"roles": ["release_issuer"]
 				},
 				"uri:to-describe_schema": {
-					"label": "Health Lab",
-					"sublabel": "Local Health Lab",
-					"website": "issuinglabsite.com",
-					"email": "credential_manager@issuinglabsite.com"
+					"email": "credential_manager@issuinglabsite.com",
+					"name": "Local Health Lab",
+					"phone": "678-789-7890",
+					"website": "issuinglabsite.com"
 				}
 			}
 		}

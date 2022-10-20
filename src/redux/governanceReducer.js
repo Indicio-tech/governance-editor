@@ -8,6 +8,7 @@ const initialState = {
   schemas: [],
   selectedIssuer: {},
   issuers: [],
+  issuersMetadata: {},
   roles: [],
   did: null,
 }
@@ -18,6 +19,7 @@ const SET_GOVERNANCE_SCHEMA = "SET_GOVERNANCE_SCHEMA"
 const SET_SELECTED_GOVERNANCE_SCHEMA = "SET_SELECTED_GOVERNANCE_SCHEMA"
 const SET_SELECTED_GOVERNANCE_ISSUER = "SET_SELECTED_GOVERNANCE_ISSUER"
 const SET_GOVERNANCE_ISSUER = "SET_GOVERNANCE_ISSUER"
+const SET_GOVERNANCE_ISSUERS_METADATA = "SET_GOVERNANCE_ISSUERS_METADATA"
 const SET_GOVERNANCE_ROLE = "SET_GOVERNANCE_ROLE"
 const SET_GOVERNANCE_DID = "SET_GOVERNANCE_DID"
 // const SET_GOVERNANCE_OPTIONS = "SET_GOVERNANCE_OPTIONS"
@@ -55,6 +57,13 @@ export function setSelectedGovernanceIssuer(issuer) {
   return {
     type: SET_SELECTED_GOVERNANCE_ISSUER,
     payload: issuer,
+  }
+}
+
+export function setSelectedGovernanceIssuersMetadata(issuersMetadata) {
+  return {
+    type: SET_GOVERNANCE_ISSUERS_METADATA,
+    payload: issuersMetadata,
   }
 }
 
@@ -112,6 +121,9 @@ export default function (state = initialState, action) {
 
     case SET_GOVERNANCE_ISSUER:
       return { ...state, issuers: action.payload }
+
+    case SET_GOVERNANCE_ISSUERS_METADATA:
+      return { ...state, issuersMetadata: action.payload }
 
     case SET_GOVERNANCE_ROLE:
       return { ...state, roles: action.payload }

@@ -144,7 +144,7 @@ function GovernanceSchemas(props) {
 
   const openSchema = (history, schema_id) => {
     if (history !== undefined) {
-      history.push("/admin/governance/schemas/" + schema_id)
+      history.push("/governance/schemas/" + schema_id)
     }
   }
 
@@ -182,10 +182,10 @@ function GovernanceSchemas(props) {
 
       // (eldersonar) TODO: Need a better way to update the state
       // (eldersonar) Wait 0.5 sec for the database to update and fetch fresh set of data
-      setTimeout(() => {
-        props.sendRequest("GOVERNANCE", "GET_ALL_SCHEMAS", {})
-        props.sendRequest("GOVERNANCE", "GET_ALL_ROLES", {})
-      }, 500)
+      // setTimeout(() => {
+      //   props.sendRequest("GOVERNANCE", "GET_ALL_SCHEMAS", {})
+      //   props.sendRequest("GOVERNANCE", "GET_ALL_ROLES", {})
+      // }, 500)
     } else {
       dispatch(
         setNotificationState({
@@ -211,7 +211,7 @@ function GovernanceSchemas(props) {
             <Flexbox
               key={schema.id}
               onClick={() => {
-                openSchema(history, schema.schema_id)
+                openSchema(history, schema.id)
               }}
             >
               <FloatRight>{schema.name}</FloatRight>

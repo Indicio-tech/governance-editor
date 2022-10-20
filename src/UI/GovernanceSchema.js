@@ -7,7 +7,7 @@ import PageHeader from "./PageHeader.js"
 import PageSection from "./PageSection.js"
 
 import { setSelectedGovernanceSchema } from "../redux/governanceReducer"
-// import GovernanceSchemaEdit from "./GovernanceSchemaEdit"
+import GovernanceSchemaEdit from "./GovernanceSchemaEdit"
 
 // import { setNotificationState } from "../redux/notificationsReducer"
 
@@ -44,13 +44,13 @@ function GovernanceSchema(props) {
   const schemaId = props.id
   const history = props.history
 
-  // Handle selected schema
   useEffect(() => {
+    // Handle selected schema
     if (governanceState.schemas) {
       let foundSchema = {}
       foundSchema = governanceState.schemas.find(
         (schema) =>
-          schema.schema_id === parseInt(schemaId) &&
+          schema.id === schemaId &&
           schema.governance_id === governanceState.selectedGovernance.id
       )
 
@@ -60,22 +60,57 @@ function GovernanceSchema(props) {
       } else {
         // (eldersonar) TODO: Might want to display notification as well `The schema with id ${schemaId} doesn't exist or it doesn't belong to selected governance`
         if (history !== undefined) {
-          history.push("/admin/governance/schemas")
+          history.push("/governance/schemas")
+        }
+      }
+
+      let options = []
+
+      if (governanceState.issuers) {
+        // (eldersonar) Handle governance options state
+        for (let i = 0; i < governanceState.issuers.length; i++) {
+          options.push({
+            id: governanceState.issuers[i].issuer_id,
+            label: governanceState.issuers[i].name,
+            value: governanceState.issuers[i].issuer_id,
+          })
+        }
+        setIssuersOptions(options)
+
+        // (eldersonar) Generate a list of issuers using this schema
+        if (
+          foundSchema &&
+          foundSchema.issuer_roles &&
+          foundSchema.issuer_roles.length
+        ) {
+          let list = []
+          governanceState.issuers.forEach((element) => {
+            for (let i = 0; i < foundSchema.issuer_roles.length; i++) {
+              for (let k = 0; k < element.roles.length; k++) {
+                if (element.roles[k] === foundSchema.issuer_roles[i]) {
+                  list.push(element)
+                }
+              }
+            }
+          })
+          setIssuersList(list)
         }
       }
     }
   }, [
     governanceState.schemas,
     governanceState.selectedGovernance,
+    governanceState.issuers,
     schemaId,
     dispatch,
+    history,
   ])
 
-  // const [schemaModalIsOpen, setSchemaModalIsOpen] = useState(false)
-  // const closeSchemaModal = () => setSchemaModalIsOpen(false)
-  // const editSchema = () => {
-  //   setSchemaModalIsOpen(true)
-  // }
+  const [schemaModalIsOpen, setSchemaModalIsOpen] = useState(false)
+  const closeSchemaModal = () => setSchemaModalIsOpen(false)
+  const editSchema = () => {
+    setSchemaModalIsOpen(true)
+  }
 
   const [issuersOptions, setIssuersOptions] = useState([])
   const [issuersList, setIssuersList] = useState([])
@@ -84,38 +119,6 @@ function GovernanceSchema(props) {
   function selectIsssuer(issuer) {
     setSelectedIssuer(issuer)
   }
-
-  // (eldersonar) Setting up selected governance and governance options
-  useEffect(() => {
-    let options = []
-
-    if (governanceState.issuers) {
-      // (eldersonar) Handle governance options state
-      for (let i = 0; i < governanceState.issuers.length; i++) {
-        options.push({
-          id: governanceState.issuers[i].issuer_id,
-          label: governanceState.issuers[i].name,
-          value: governanceState.issuers[i].issuer_id,
-        })
-      }
-      setIssuersOptions(options)
-
-      // (eldersonar) Generate a list of issuers using this schema
-      if (selectedSchema.issuer_roles && selectedSchema.issuer_roles.length) {
-        let list = []
-        governanceState.issuers.forEach((element) => {
-          for (let i = 0; i < selectedSchema.issuer_roles.length; i++) {
-            for (let k = 0; k < element.roles.length; k++) {
-              if (element.roles[k] === selectedSchema.issuer_roles[i]) {
-                list.push(element)
-              }
-            }
-          }
-        })
-        setIssuersList(list)
-      }
-    }
-  }, [governanceState.issuers, governanceState.selectedSchema])
 
   const OptionSelect = () => {
     return (
@@ -184,19 +187,15 @@ function GovernanceSchema(props) {
               </AttributeRow>
             </tbody>
           </AttributeTable>
-          <SaveBtn
-          // onClick={() => editSchema()}
-          >
-            Edit
-          </SaveBtn>
+          <SaveBtn onClick={() => editSchema()}>Edit</SaveBtn>
         </PageSection>
         <PageSection>
           <GovernanceHeader>Issuers</GovernanceHeader>
           {issuersList.map((issuer) => (
             <ListItem
-              key={issuer.issuer_id}
+              key={issuer.did}
               onClick={() => {
-                openIssuer(history, issuer.issuer_id)
+                openIssuer(history, issuer.did)
               }}
             >
               {issuer.name}
@@ -208,11 +207,11 @@ function GovernanceSchema(props) {
           <OptionSelect />
           <SaveBtn onClick={() => addIssuer()}>Add</SaveBtn>
         </PageSection>
-        {/* <GovernanceSchemaEdit
+        <GovernanceSchemaEdit
           sendRequest={props.sendRequest}
           schemaModalIsOpen={schemaModalIsOpen}
           closeSchemaModal={closeSchemaModal}
-        /> */}
+        />
       </div>
     </>
   )

@@ -11,6 +11,7 @@ import {
   // setSelectedGovernanceSchema,
   // setSelectedGovernanceIssuer,
   setGovernanceIssuers,
+  setSelectedGovernanceIssuersMetadata,
   setGovernanceRoles,
   // setGovernanceDID,
 } from "../redux/governanceReducer"
@@ -72,15 +73,11 @@ function Governance() {
     }
   }
 
-  const handleLogoSubmit = async (e) => {
+  const handleGovernanceUpload = async (e) => {
     e.preventDefault()
 
-    if (governanceState.selectedGovernance) {
-      console.log(governanceFile)
-      dispatch(setSelectedGovernance(governanceFile))
-
-      console.log(governanceFile.last_updated)
-
+    if (governanceFile) {
+      // (eldersonar) Handle metadata assembly
       let metadata = {
         description: governanceFile.description,
         docs_uri: governanceFile.docs_uri,
@@ -92,10 +89,63 @@ function Governance() {
       }
       metadata["@context"] = governanceFile["@context"]
 
+      // (eldersonar) Handle roles assembly
+      const roles = {}
+      roles.governance_id = governanceFile.id
+
+      // (eldersonar) Handle schemas assembly
+      let schemas = []
+      governanceFile.schemas.forEach((schema) => {
+        schema.governance_id = governanceFile.id
+        schemas.push(schema)
+      })
+
+      // (eldersonar) Handle issuers assembly
+      let issuers = []
+      for (var key in governanceFile.participants.entries) {
+        let issuer = {}
+        if (governanceFile.participants.entries.hasOwnProperty(key)) {
+          issuer.did = key
+          issuer.governance_id = governanceFile.id
+          issuer.email =
+            governanceFile.participants.entries[key][
+              "uri:to-describe_schema"
+            ].email
+          issuer.name =
+            governanceFile.participants.entries[key][
+              "uri:to-describe_schema"
+            ].name
+          issuer.phone =
+            governanceFile.participants.entries[key][
+              "uri:to-describe_schema"
+            ].phone
+          issuer.website =
+            governanceFile.participants.entries[key][
+              "uri:to-describe_schema"
+            ].website
+          issuer.roles =
+            governanceFile.participants.entries[key]["uri:to-role_schema"].roles
+
+          issuers.push(issuer)
+        }
+      }
+
+      // (eldersonar) Handle issuers metadata assembly
+      let issuersMetadata = {
+        author: governanceFile.participants.author,
+        id: governanceFile.participants.id,
+        created: governanceFile.participants.created,
+        topic: governanceFile.participants.topic,
+        version: governanceFile.participants.version,
+      }
+
+      // (eldersonar) Handle storage
+      dispatch(setSelectedGovernance(governanceFile))
       dispatch(setGovernanceMetadata(metadata))
       dispatch(setGovernanceSchemas(governanceFile.schemas))
-      dispatch(setGovernanceIssuers(governanceFile.participants.entries))
-      dispatch(setGovernanceRoles(governanceFile.roles))
+      dispatch(setGovernanceIssuers(issuers))
+      dispatch(setSelectedGovernanceIssuersMetadata(issuersMetadata))
+      dispatch(setGovernanceRoles(roles))
     } else {
       console.log("no governance")
     }
@@ -158,7 +208,7 @@ function Governance() {
           </tbody>
         </AttributeTable>
         <SaveBtn onClick={() => editMetadata()}>Edit</SaveBtn>
-        <Form onSubmit={handleLogoSubmit}>
+        <Form onSubmit={handleGovernanceUpload}>
           <Input
             type="file"
             accept=".json"
