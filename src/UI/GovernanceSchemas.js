@@ -173,28 +173,6 @@ function GovernanceSchemas(props) {
     }
 
     if (governanceState.selectedGovernance.id) {
-      // let schemaIdList = []
-      // governanceState.schemas.forEach((schema) => {
-      //   schemaIdList.push(schema.schema_id)
-      // })
-
-      // let nextSchemaId = Math.max.apply(0, schemaIdList)
-      // console.log(schemaIdList)
-      // console.log(nextSchemaId)
-      // nextSchemaId++
-      // console.log(nextSchemaId)
-
-      // let roleIdList = []
-      // governanceState.roles.forEach((role) => {
-      //   roleIdList.push(role.role_id)
-      // })
-
-      // let nextRoleId = Math.max.apply(0, roleIdList)
-      // console.log(roleIdList)
-      // console.log(nextRoleId)
-      // nextRoleId++
-      // console.log(nextRoleId)
-
       const schema = {
         schema_id: getNextId(governanceState.schemas, "schema_id"),
         id,
@@ -211,25 +189,11 @@ function GovernanceSchemas(props) {
       }
 
       // Save new schema
-      // props.sendRequest("GOVERNANCE", "SET_SCHEMA", schema)
       dispatch(setGovernanceSchemas([...governanceState.schemas, schema]))
-
       // Save new role
       dispatch(setGovernanceRoles([...governanceState.roles, role]))
-      // props.sendRequest("GOVERNANCE", "SET_ROLE", {
-      //   governance_id: governanceState.selectedGovernance.id,
-      //   role: role,
-      //   credentials: [],
-      // })
 
       newSchemaForm.current.reset()
-
-      // (eldersonar) TODO: Need a better way to update the state
-      // (eldersonar) Wait 0.5 sec for the database to update and fetch fresh set of data
-      // setTimeout(() => {
-      //   props.sendRequest("GOVERNANCE", "GET_ALL_SCHEMAS", {})
-      //   props.sendRequest("GOVERNANCE", "GET_ALL_ROLES", {})
-      // }, 500)
     } else {
       dispatch(
         setNotificationState({
