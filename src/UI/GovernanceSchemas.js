@@ -8,6 +8,8 @@ import {
 } from "../redux/governanceReducer"
 import { setNotificationState } from "../redux/notificationsReducer"
 
+import { getNextId } from "./utils"
+
 // import { CanUser } from './CanUser'
 // import GovernanceMetadataEdit from './GovernanceMetadataEdit'
 
@@ -160,17 +162,17 @@ function GovernanceSchemas(props) {
     let roleName = id.split(":")[2] + "_v" + id.split(":")[3]
     roleName = roleName.concat(suffix).toLowerCase()
 
-    const getNextId = (array, idKey) => {
-      let idList = []
-      array.forEach((element) => {
-        idList.push(element[idKey])
-      })
-      let nextId = Math.max.apply(0, idList) // (eldersonar) Math.max is great for small arrays only (up to ~120000)
-      console.log(idList)
-      console.log(nextId)
-      nextId++
-      return nextId
-    }
+    // const getNextId = (array, idKey) => {
+    //   let idList = []
+    //   array.forEach((element) => {
+    //     idList.push(element[idKey])
+    //   })
+    //   let nextId = Math.max.apply(0, idList) // (eldersonar) Math.max is great for small arrays only (up to ~120000)
+    //   console.log(idList)
+    //   console.log(nextId)
+    //   nextId++
+    //   return nextId
+    // }
 
     if (governanceState.selectedGovernance.id) {
       const schema = {

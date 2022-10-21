@@ -135,7 +135,7 @@ function GovernanceSchema(props) {
 
   const openIssuer = (history, id) => {
     if (history !== undefined) {
-      history.push("/admin/governance/issuers/" + id)
+      history.push("/governance/issuers/" + id)
     }
   }
 
@@ -193,9 +193,9 @@ function GovernanceSchema(props) {
           <GovernanceHeader>Issuers</GovernanceHeader>
           {issuersList.map((issuer) => (
             <ListItem
-              key={issuer.did}
+              key={issuer.issuer_id}
               onClick={() => {
-                openIssuer(history, issuer.did)
+                openIssuer(history, issuer.issuer_id)
               }}
             >
               {issuer.name}

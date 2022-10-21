@@ -45,7 +45,6 @@ function Governance() {
   const dispatch = useDispatch()
   const governanceState = useSelector((state) => state.governance)
 
-  // const [selectedGovernance, setSelectedGovernance] = useState("trash")
   const [governanceFile, setGovernanceFile] = useState("Choose file")
 
   const [editMetadataModalIsOpen, setEditMetadataModalIsOpen] = useState(false)
@@ -63,13 +62,8 @@ function Governance() {
       const fileReader = new FileReader()
       fileReader.readAsText(event.target.files[0], "UTF-8")
       fileReader.onload = (e) => {
-        // console.log("e.target.result", e.target.result);
-        // setSelectedGovernance(e.target.result)
-
         setGovernanceFile(JSON.parse(e.target.result))
       }
-
-      // setGovernanceFileName(event.target.files[0].name);
     }
   }
 
@@ -77,7 +71,6 @@ function Governance() {
     e.preventDefault()
 
     if (governanceFile) {
-      console.log(governanceFile)
       // (eldersonar) Handle metadata assembly
       let metadata = {
         description: governanceFile.description,
@@ -102,7 +95,7 @@ function Governance() {
           role.role = key
           role.credentials = governanceFile.roles[key].credentials
             ? governanceFile.roles[key].credentials
-            : {}
+            : []
 
           roles.push(role)
 
@@ -259,10 +252,7 @@ function Governance() {
         }
       })
 
-      // console.log(rolesByGovernanceId)
-
       const finalEntries = []
-
       rolesByGovernanceId.forEach((role) => {
         delete role.created_at
         delete role.updated_at
@@ -270,7 +260,6 @@ function Governance() {
         delete role.role_id
 
         const finalRole = {}
-
         if (role.credentials.length !== 0) {
           finalRole[role.role] = {
             credentials: role.credentials,
@@ -281,9 +270,6 @@ function Governance() {
 
         finalEntries.push(finalRole)
       })
-
-      // console.log(finalEntries)
-
       return finalEntries
     }
 
@@ -295,7 +281,6 @@ function Governance() {
     const metadata = cleanMetadata()
 
     const issuers = {}
-
     console.log(governanceState.issuersMetadata.id)
 
     issuers.participants = {

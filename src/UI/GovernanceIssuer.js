@@ -1,7 +1,293 @@
-import React from "react";
+import React, { useEffect, useState } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import Select from "react-select"
+
+// import { CanUser } from "./CanUser"
+import PageHeader from "./PageHeader.js"
+import PageSection from "./PageSection.js"
+import styled from "styled-components"
+import { setSelectedGovernanceIssuer } from "../redux/governanceReducer"
+import GovernanceIssuerEdit from "./GovernanceIssuerEdit"
+
+// import { setNotificationState } from "../redux/notificationsReducer"
+
+import { AttributeTable, AttributeRow } from "./CommonStylesTables"
+
+const ListItem = styled.div`
+  color: blue;
+
+  :hover {
+    cursor: pointer;
+    background: #ffc;
+  }
+`
+
+const GovernanceHeader = styled.h3`
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 0;
+`
+const SaveBtn = styled.button`
+  width: 80px;
+  background: ${(props) => props.theme.primary_color};
+  padding: 10px;
+  color: ${(props) => props.theme.text_light};
+  border: none;
+  float: right;
+  box-shadow: ${(props) => props.theme.drop_shadow};
+`
 
 function GovernanceIssuer(props) {
-  return <>'GovernanceIssuer page here'</>;
+  const dispatch = useDispatch()
+  const governanceState = useSelector((state) => state.governance)
+  const selectedIssuer = governanceState.selectedIssuer
+
+  const issuerId = props.issuerId
+  const history = props.history
+
+  const [issuerModalIsOpen, setIssuerModalIsOpen] = useState(false)
+  const [schemaOptions, setSchemaOptions] = useState([])
+  const [schemaList, setSchemasList] = useState([])
+  const [selectedSchema, setSelectedSchema] = useState(null)
+
+  // const [selectedIssuer, setSelectedIssuer] = useState({})
+
+  useEffect(() => {
+    // Handle selected schema
+    if (governanceState.issuers) {
+      let foundIssuer = {}
+      foundIssuer = governanceState.issuers.find(
+        (issuer) =>
+          issuer.issuer_id === parseInt(issuerId) &&
+          issuer.governance_id === governanceState.selectedGovernance.id
+      )
+
+      if (foundIssuer) {
+        console.log(foundIssuer)
+        dispatch(setSelectedGovernanceIssuer(foundIssuer))
+      } else {
+        // (eldersonar) TODO: Might want to display notification as well `The issuer with id ${issuerId} doesn't exist or it doesn't belong to selected governance`
+        if (history !== undefined) {
+          console.log("redirect...")
+          history.push("/governance/issuers")
+        }
+      }
+
+      let options = []
+
+      // (eldersonar) Handle governance options state
+      if (governanceState.schemas) {
+        for (let i = 0; i < governanceState.schemas.length; i++) {
+          options.push({
+            id: governanceState.schemas[i].schema_id,
+            label: governanceState.schemas[i].name,
+            value: governanceState.schemas[i].schema_id,
+          })
+        }
+        setSchemaOptions(options)
+      }
+
+      // (eldersonar) Set up the list of authorized to issue schemas
+      if (foundIssuer && foundIssuer.roles && foundIssuer.roles.length) {
+        let list = []
+        governanceState.schemas.forEach((element) => {
+          for (let k = 0; k < element.issuer_roles.length; k++) {
+            for (let i = 0; i < foundIssuer.roles.length; i++) {
+              if (element.issuer_roles[k] === foundIssuer.roles[i]) {
+                list.push(element)
+              }
+            }
+          }
+        })
+        console.log(list)
+        setSchemasList(list)
+      }
+    }
+  }, [
+    governanceState.issuers,
+    governanceState.selectedGovernance,
+    governanceState.schemas,
+    issuerId,
+    dispatch,
+    history,
+  ])
+
+  // (eldersonar) TODO: must fix this useEffect. It sometimes doesn't get the current state for selectedIssuer
+  // (eldersonar) TODO: and we might want to get rid of selectedIssuer reducer all together. It writes the issuer, but then keeps it when the view is exited
+  // (eldersonar) Setting up schema options
+  // useEffect(() => {
+  //   let options = []
+
+  //   // (eldersonar) Handle governance options state
+  //   if (governanceState.schemas && governanceState.selectedIssuer) {
+  //     for (let i = 0; i < governanceState.schemas.length; i++) {
+  //       options.push({
+  //         id: governanceState.schemas[i].schema_id,
+  //         label: governanceState.schemas[i].name,
+  //         value: governanceState.schemas[i].schema_id,
+  //       })
+  //     }
+  //     setSchemaOptions(options)
+  //   }
+
+  //   // (eldersonar) Set up the list of authorized to issue schemas
+  //   if (
+  //     governanceState.schemas &&
+  //     governanceState.selectedIssuer &&
+  //     governanceState.selectedIssuer.roles
+  //   ) {
+  //     let list = []
+  //     governanceState.schemas.forEach((element) => {
+  //       for (let k = 0; k < element.issuer_roles.length; k++) {
+  //         for (
+  //           let i = 0;
+  //           i < governanceState.selectedIssuer.roles.length;
+  //           i++
+  //         ) {
+  //           if (
+  //             element.issuer_roles[k] ===
+  //             governanceState.selectedIssuer.roles[i]
+  //           ) {
+  //             list.push(element)
+  //           }
+  //         }
+  //       }
+  //     })
+  //     setSchemasList(list)
+  //   }
+  // }, [
+  //   governanceState.schemas,
+  //   governanceState.selectedIssuer,
+  //   selectedIssuer.roles,
+  // ])
+
+  const closeIssuerModal = () => setIssuerModalIsOpen(false)
+  const editIssuer = () => {
+    setIssuerModalIsOpen(true)
+  }
+
+  function selectIsssuer(schema) {
+    setSelectedSchema(schema)
+  }
+
+  const OptionSelect = () => {
+    return (
+      <Select
+        name="governance_issuer"
+        placeholder="Select issuer..."
+        defaultValue={selectedSchema}
+        options={schemaOptions}
+        onChange={(e) => selectIsssuer(e)}
+        menuPortalTarget={document.body}
+      />
+    )
+  }
+
+  const openSchema = (history, id) => {
+    if (history !== undefined) {
+      history.push("/governance/schemas/" + id)
+    }
+  }
+
+  const addSchema = () => {
+    const issuer = { ...selectedIssuer }
+
+    const schema = governanceState.schemas.find(
+      (item) => item.schema_id === selectedSchema.id
+    )
+
+    // (eldersonar) Clear the dropdown selection
+    setSelectedSchema(null)
+
+    // (eldersonar) Merge arrays without duplicates
+    issuer.roles = [...new Set([...issuer.roles, ...schema.issuer_roles])]
+
+    // Update issuer with role
+    props.sendRequest("GOVERNANCE", "UPDATE_ISSUER", issuer)
+
+    // (eldersonar) TODO: Need a better way to update the state
+    // (eldersonar) Wait 0.5 sec for the database to update and fetch fresh set of data
+    setTimeout(() => {
+      props.sendRequest("GOVERNANCE", "GET_ALL_ISSUERS", {})
+    }, 500)
+  }
+
+  return (
+    <>
+      <div id="issuer">
+        <PageHeader title={"Issuer Details: " + (selectedIssuer.name || "")} />
+        <PageSection>
+          <GovernanceHeader>Schema</GovernanceHeader>
+          <AttributeTable>
+            <tbody>
+              <AttributeRow>
+                <th>Name:</th>
+                <td>
+                  {selectedIssuer !== undefined
+                    ? selectedIssuer.name || ""
+                    : ""}
+                </td>
+              </AttributeRow>
+              <AttributeRow>
+                <th>DID:</th>
+                <td>
+                  {selectedIssuer !== undefined ? selectedIssuer.did || "" : ""}
+                </td>
+              </AttributeRow>
+              <AttributeRow>
+                <th>Website:</th>
+                <td>
+                  {selectedIssuer !== undefined
+                    ? selectedIssuer.website || ""
+                    : ""}
+                </td>
+              </AttributeRow>
+              <AttributeRow>
+                <th>Email:</th>
+                <td>
+                  {selectedIssuer !== undefined
+                    ? selectedIssuer.email || ""
+                    : ""}
+                </td>
+              </AttributeRow>
+              <AttributeRow>
+                <th>Phone:</th>
+                <td>
+                  {selectedIssuer !== undefined
+                    ? selectedIssuer.phone || ""
+                    : ""}
+                </td>
+              </AttributeRow>
+            </tbody>
+          </AttributeTable>
+          <SaveBtn onClick={() => editIssuer()}>Edit</SaveBtn>
+        </PageSection>
+        <PageSection>
+          <GovernanceHeader>Authorized to Issue</GovernanceHeader>
+          {schemaList.map((schema) => (
+            <ListItem
+              key={schema.schema_id}
+              onClick={() => {
+                openSchema(history, schema.schema_id)
+              }}
+            >
+              {schema.name}
+            </ListItem>
+          ))}
+        </PageSection>
+        <PageSection>
+          <GovernanceHeader>Add Schema</GovernanceHeader>
+          <OptionSelect />
+          <SaveBtn onClick={() => addSchema()}>Add</SaveBtn>
+        </PageSection>
+        <GovernanceIssuerEdit
+          sendRequest={props.sendRequest}
+          issuerModalIsOpen={issuerModalIsOpen}
+          closeIssuerModal={closeIssuerModal}
+        />
+      </div>
+    </>
+  )
 }
 
-export default GovernanceIssuer;
+export default GovernanceIssuer
