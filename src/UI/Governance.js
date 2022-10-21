@@ -77,6 +77,7 @@ function Governance() {
     e.preventDefault()
 
     if (governanceFile) {
+      console.log(governanceFile)
       // (eldersonar) Handle metadata assembly
       let metadata = {
         description: governanceFile.description,
@@ -102,25 +103,6 @@ function Governance() {
           role.credentials = governanceFile.roles[key].credentials
             ? governanceFile.roles[key].credentials
             : {}
-
-          // issuer.email =
-          //   governanceFile.participants.entries[key][
-          //     "uri:to-describe_schema"
-          //   ].email
-          // issuer.name =
-          //   governanceFile.participants.entries[key][
-          //     "uri:to-describe_schema"
-          //   ].name
-          // issuer.phone =
-          //   governanceFile.participants.entries[key][
-          //     "uri:to-describe_schema"
-          //   ].phone
-          // issuer.website =
-          //   governanceFile.participants.entries[key][
-          //     "uri:to-describe_schema"
-          //   ].website
-          // issuer.roles =
-          //   governanceFile.participants.entries[key]["uri:to-role_schema"].roles
 
           roles.push(role)
 
