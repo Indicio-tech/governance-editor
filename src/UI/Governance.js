@@ -198,6 +198,168 @@ function Governance() {
     }
   }
 
+  const publishGovernance = () => {
+    const timestamp = new Date()
+
+    // Clean and restructure - "basic" structure
+    const cleanSchemas = () => {
+      // const array = [...governanceState.schemas]
+      const array = JSON.parse(JSON.stringify(governanceState.schemas)) // Creates a deep copy
+
+      let schemasByGovernanceId = []
+      array.forEach((element) => {
+        if (element.governance_id === governanceState.selectedGovernance.id) {
+          schemasByGovernanceId.push(element)
+        }
+      })
+
+      schemasByGovernanceId.forEach((schema) => {
+        delete schema.created_at
+        delete schema.updated_at
+        delete schema.governance_id
+        delete schema.schema_id
+      })
+
+      return schemasByGovernanceId
+    }
+
+    // Clean and restructure - "basic" structure
+    const cleanMetadata = () => {
+      const obj = JSON.parse(JSON.stringify(governanceState.selectedGovernance)) // Creates a deep copy
+      delete obj.selected
+      return obj
+    }
+
+    // Clean and restructure - "basic" structure
+    const cleanIssuers = () => {
+      console.log("Original array of issuers", governanceState.issuers)
+
+      const array = JSON.parse(JSON.stringify(governanceState.issuers)) // Creates a deep copy
+
+      let issuersByGovernanceId = []
+      array.forEach((element) => {
+        if (element.governance_id === governanceState.selectedGovernance.id) {
+          issuersByGovernanceId.push(element)
+        }
+      })
+
+      const finalEntries = []
+      issuersByGovernanceId.forEach((issuer) => {
+        delete issuer.created_at
+        delete issuer.updated_at
+        delete issuer.governance_id
+        delete issuer.issuer_id
+
+        const participant = {}
+        participant[issuer.did] = {
+          "uri:to-role_schema": {
+            roles: issuer.roles,
+          },
+          "uri:to-describe_schema": issuer,
+        }
+
+        delete issuer.roles
+
+        finalEntries.push(participant)
+      })
+      return finalEntries
+    }
+
+    // Clean and restructure - "basic" structure
+    const cleanRoles = () => {
+      // const array = [...arr] // Creates a shallow copy that results in mutating the original issuers array
+      const array = JSON.parse(JSON.stringify(governanceState.roles)) // Creates a deep copy
+
+      let rolesByGovernanceId = []
+      array.forEach((element) => {
+        if (element.governance_id === governanceState.selectedGovernance.id) {
+          rolesByGovernanceId.push(element)
+        }
+      })
+
+      // console.log(rolesByGovernanceId)
+
+      const finalEntries = []
+
+      rolesByGovernanceId.forEach((role) => {
+        delete role.created_at
+        delete role.updated_at
+        delete role.governance_id
+        delete role.role_id
+
+        const finalRole = {}
+
+        if (role.credentials.length !== 0) {
+          finalRole[role.role] = {
+            credentials: role.credentials,
+          }
+        } else {
+          finalRole[role.role] = {}
+        }
+
+        finalEntries.push(finalRole)
+      })
+
+      // console.log(finalEntries)
+
+      return finalEntries
+    }
+
+    const schemas = { schemas: cleanSchemas() }
+    const entries = cleanIssuers()
+    const roles = {
+      roles: Object.assign({}, ...cleanRoles()),
+    }
+    const metadata = cleanMetadata()
+
+    const issuers = {}
+
+    console.log(governanceState.issuersMetadata.id)
+
+    issuers.participants = {
+      id: governanceState.issuersMetadata.id
+        ? governanceState.issuersMetadata.id
+        : "9b1deb4d-test-uuid-9bdd-2b0d7b3dcb6d",
+      author: governanceState.issuersMetadata.author
+        ? governanceState.issuersMetadata.author
+        : "DID not anchored",
+      created_at: timestamp,
+      version: governanceState.issuersMetadata.version,
+      topic: governanceState.issuersMetadata.topic,
+      entries: Object.assign({}, ...entries), //convert an array of objects to a single object
+    }
+
+    let result = {}
+    result = {
+      ...metadata,
+      ...schemas,
+      ...issuers,
+      ...roles,
+    }
+    // (eldersonar) This is simulating final result of the governance file
+    console.log(result)
+
+    // if (issuers.participants.author !== 'DID not anchored') {
+    //   result = {
+    //     ...metadata,
+    //     ...schemas,
+    //     ...issuers,
+    //     ...roles,
+    //   }
+    //   // (eldersonar) This is simulating final result of the governance file
+    //   console.log(result)
+    // } else {
+    //   dispatch(
+    //     setNotificationState({
+    //       message: 'Publishing without public DID is forbidden',
+    //       type: 'error',
+    //     })
+    //   )
+    // }
+
+    // props.sendRequest('GOVERNANCE', 'PUBLISH_GOVERNANCE', result )
+  }
+
   return (
     <>
       <PageHeader title="Ecosystem Governance" />
@@ -264,6 +426,7 @@ function Governance() {
           <SubmitFormBtn type="submit">Upload</SubmitFormBtn>
         </Form>
       </PageSection>
+      <SubmitFormBtn onClick={() => publishGovernance()}>Publish</SubmitFormBtn>
       <GovernanceMetadataEdit
         editMetadataModalIsOpen={editMetadataModalIsOpen}
         closeEditMetadataModal={closeEditMetadataModal}
