@@ -165,7 +165,7 @@ function GovernanceSchemas(props) {
       array.forEach((element) => {
         idList.push(element[idKey])
       })
-      let nextId = Math.max.apply(0, idList)
+      let nextId = Math.max.apply(0, idList) // (eldersonar) Math.max is great for small arrays only (up to ~120000)
       console.log(idList)
       console.log(nextId)
       nextId++
