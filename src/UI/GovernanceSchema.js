@@ -6,7 +6,11 @@ import styled from "styled-components"
 import PageHeader from "./PageHeader.js"
 import PageSection from "./PageSection.js"
 
-import { setSelectedGovernanceSchema } from "../redux/governanceReducer"
+import {
+  setGovernanceIssuers,
+  setSelectedGovernanceSchema,
+  // setSelectedGovernanceIssuer,
+} from "../redux/governanceReducer"
 import GovernanceSchemaEdit from "./GovernanceSchemaEdit"
 
 // import { setNotificationState } from "../redux/notificationsReducer"
@@ -84,9 +88,16 @@ function GovernanceSchema(props) {
           foundSchema.issuer_roles.length
         ) {
           let list = []
+          console.log("tests")
+          console.log(governanceState.issuers)
           governanceState.issuers.forEach((element) => {
+            console.log("element")
+            console.log(element)
             for (let i = 0; i < foundSchema.issuer_roles.length; i++) {
+              console.log(foundSchema.issuer_roles[i])
               for (let k = 0; k < element.roles.length; k++) {
+                console.log(element.roles[k])
+
                 if (element.roles[k] === foundSchema.issuer_roles[i]) {
                   list.push(element)
                 }
@@ -153,14 +164,28 @@ function GovernanceSchema(props) {
       ...new Set([...issuer.roles, ...selectedSchema.issuer_roles]),
     ]
 
+    let array = JSON.parse(JSON.stringify(governanceState.issuers)) // Creates a deep copy
+
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    console.log("issuer")
+    console.log(issuer)
+    console.log(array)
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+    array = array.map((x) => (x.issuer_id === issuer.issuer_id ? issuer : x))
+
+    console.log(array)
+
     // Update issuer with role
-    props.sendRequest("GOVERNANCE", "UPDATE_ISSUER", issuer)
+    // props.sendRequest("GOVERNANCE", "UPDATE_ISSUER", issuer)
+    // dispatch(setSelectedGovernanceIssuer(issuer))
+    dispatch(setGovernanceIssuers(array))
 
     // (eldersonar) TODO: Need a better way to update the state
     // (eldersonar) Wait 0.5 sec for the database to update and fetch fresh set of data
-    setTimeout(() => {
-      props.sendRequest("GOVERNANCE", "GET_ALL_ISSUERS", {})
-    }, 500)
+    // setTimeout(() => {
+    //   props.sendRequest("GOVERNANCE", "GET_ALL_ISSUERS", {})
+    // }, 500)
   }
 
   return (
