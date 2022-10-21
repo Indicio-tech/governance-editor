@@ -1,7 +1,10 @@
 import React, { useRef, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 
-import { setSelectedGovernanceSchema } from "../redux/governanceReducer"
+import {
+  setSelectedGovernanceSchema,
+  setGovernanceSchemas,
+} from "../redux/governanceReducer"
 
 import {
   Actions,
@@ -47,6 +50,7 @@ function FormGovernanceSchema(props) {
     const id = form.get("id")
 
     const schema = {
+      schema_id: governanceState.selectedSchema.schema_id,
       governance_id: governanceState.selectedSchema.governance_id,
       name,
       id,
@@ -55,7 +59,12 @@ function FormGovernanceSchema(props) {
         : [],
     }
 
+    let array = JSON.parse(JSON.stringify(governanceState.schemas)) // Creates a deep copy
+
+    array = array.map((x) => (x.schema_id === schema.schema_id ? schema : x))
+
     dispatch(setSelectedGovernanceSchema(schema))
+    dispatch(setGovernanceSchemas(array))
 
     props.closeSchemaModal()
   }

@@ -50,7 +50,7 @@ function GovernanceSchema(props) {
       let foundSchema = {}
       foundSchema = governanceState.schemas.find(
         (schema) =>
-          schema.id === schemaId &&
+          schema.schema_id === parseInt(schemaId) &&
           schema.governance_id === governanceState.selectedGovernance.id
       )
 

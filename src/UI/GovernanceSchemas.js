@@ -2,6 +2,10 @@ import React, { useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import styled from "styled-components"
 
+import {
+  setGovernanceSchemas,
+  setGovernanceRoles,
+} from "../redux/governanceReducer"
 import { setNotificationState } from "../redux/notificationsReducer"
 
 // import { CanUser } from './CanUser'
@@ -37,20 +41,17 @@ const Flexbox = styled.div`
     background: #ffc;
   }
 `
-
 const SchemaWrapper = styled.div`
   display: flex;
   justify-content: center;
   width: 75%;
 `
-
 const FloatRight = styled.div`
   // float: right;
   text-align: right;
   padding-right: 30px;
   flex: 1;
 `
-
 const FloatLeft = styled.div`
   // float: left;
   text-align: left;
@@ -156,27 +157,70 @@ function GovernanceSchemas(props) {
     const name = form.get("name")
     const suffix = "_issuer"
 
-    let role = id.split(":")[2] + "_v" + id.split(":")[3]
-    role = role.concat(suffix).toLowerCase()
+    let roleName = id.split(":")[2] + "_v" + id.split(":")[3]
+    roleName = roleName.concat(suffix).toLowerCase()
+
+    const getNextId = (array, idKey) => {
+      let idList = []
+      array.forEach((element) => {
+        idList.push(element[idKey])
+      })
+      let nextId = Math.max.apply(0, idList)
+      console.log(idList)
+      console.log(nextId)
+      nextId++
+      return nextId
+    }
 
     if (governanceState.selectedGovernance.id) {
+      // let schemaIdList = []
+      // governanceState.schemas.forEach((schema) => {
+      //   schemaIdList.push(schema.schema_id)
+      // })
+
+      // let nextSchemaId = Math.max.apply(0, schemaIdList)
+      // console.log(schemaIdList)
+      // console.log(nextSchemaId)
+      // nextSchemaId++
+      // console.log(nextSchemaId)
+
+      // let roleIdList = []
+      // governanceState.roles.forEach((role) => {
+      //   roleIdList.push(role.role_id)
+      // })
+
+      // let nextRoleId = Math.max.apply(0, roleIdList)
+      // console.log(roleIdList)
+      // console.log(nextRoleId)
+      // nextRoleId++
+      // console.log(nextRoleId)
+
       const schema = {
-        schema_id: "",
+        schema_id: getNextId(governanceState.schemas, "schema_id"),
         id,
         governance_id: governanceState.selectedGovernance.id,
         name,
-        issuer_roles: [role],
+        issuer_roles: [roleName],
+      }
+
+      const role = {
+        role_id: getNextId(governanceState.roles, "role_id"),
+        governance_id: governanceState.selectedGovernance.id,
+        role: roleName,
+        credentials: [],
       }
 
       // Save new schema
-      props.sendRequest("GOVERNANCE", "SET_SCHEMA", schema)
+      // props.sendRequest("GOVERNANCE", "SET_SCHEMA", schema)
+      dispatch(setGovernanceSchemas([...governanceState.schemas, schema]))
 
       // Save new role
-      props.sendRequest("GOVERNANCE", "SET_ROLE", {
-        governance_id: governanceState.selectedGovernance.id,
-        role: role,
-        credentials: [],
-      })
+      dispatch(setGovernanceRoles([...governanceState.roles, role]))
+      // props.sendRequest("GOVERNANCE", "SET_ROLE", {
+      //   governance_id: governanceState.selectedGovernance.id,
+      //   role: role,
+      //   credentials: [],
+      // })
 
       newSchemaForm.current.reset()
 
@@ -209,9 +253,9 @@ function GovernanceSchemas(props) {
           </SchemaWrapper>
           {governanceState.schemas.map((schema) => (
             <Flexbox
-              key={schema.id}
+              key={schema.schema_id}
               onClick={() => {
-                openSchema(history, schema.id)
+                openSchema(history, schema.schema_id)
               }}
             >
               <FloatRight>{schema.name}</FloatRight>
