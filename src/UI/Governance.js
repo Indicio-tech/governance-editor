@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import styled from "styled-components"
 
-// import { setNotificationState } from '../redux/notificationsReducer'
+import { setNotificationState } from "../redux/notificationsReducer"
 import GovernanceMetadataEdit from "./GovernanceMetadataEdit"
 import {
   setSelectedGovernance,
@@ -173,6 +173,26 @@ function Governance() {
     }
   }
 
+  // (eldersonar) Hadle JSON file download
+  const downloadFile = (file) => {
+    // create file in browser
+    const fileName = "governance-framework-downloaded"
+    const json = JSON.stringify(file, null, 2)
+    const blob = new Blob([json], { type: "application/json" })
+    const href = URL.createObjectURL(blob)
+
+    // create HTML element with href to file
+    const link = document.createElement("a")
+    link.href = href
+    link.download = fileName + ".json"
+    document.body.appendChild(link)
+    link.click()
+
+    // clean up element & remove ObjectURL to avoid memory leak
+    document.body.removeChild(link)
+    URL.revokeObjectURL(href)
+  }
+
   const publishGovernance = () => {
     const timestamp = new Date()
 
@@ -297,34 +317,26 @@ function Governance() {
     }
 
     let result = {}
-    result = {
-      ...metadata,
-      ...schemas,
-      ...issuers,
-      ...roles,
+    if (issuers.participants.author !== "DID not anchored") {
+      result = {
+        ...metadata,
+        ...schemas,
+        ...issuers,
+        ...roles,
+      }
+      // (eldersonar) This is simulating final result of the governance file
+      console.log(result)
+
+      // Download the governance file
+      downloadFile(result)
+    } else {
+      dispatch(
+        setNotificationState({
+          message: "Publishing without public DID is forbidden",
+          type: "error",
+        })
+      )
     }
-    // (eldersonar) This is simulating final result of the governance file
-    console.log(result)
-
-    // if (issuers.participants.author !== 'DID not anchored') {
-    //   result = {
-    //     ...metadata,
-    //     ...schemas,
-    //     ...issuers,
-    //     ...roles,
-    //   }
-    //   // (eldersonar) This is simulating final result of the governance file
-    //   console.log(result)
-    // } else {
-    //   dispatch(
-    //     setNotificationState({
-    //       message: 'Publishing without public DID is forbidden',
-    //       type: 'error',
-    //     })
-    //   )
-    // }
-
-    // props.sendRequest('GOVERNANCE', 'PUBLISH_GOVERNANCE', result )
   }
 
   return (

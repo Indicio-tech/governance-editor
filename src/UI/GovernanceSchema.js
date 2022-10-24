@@ -157,10 +157,10 @@ function GovernanceSchema(props) {
       ...new Set([...issuer.roles, ...selectedSchema.issuer_roles]),
     ]
 
+    // Update issuer with role
     let array = JSON.parse(JSON.stringify(governanceState.issuers)) // Creates a deep copy
     array = array.map((x) => (x.issuer_id === issuer.issuer_id ? issuer : x))
 
-    // Update issuer with role
     dispatch(setGovernanceIssuers(array))
   }
 

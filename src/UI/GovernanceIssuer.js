@@ -209,15 +209,7 @@ function GovernanceIssuer(props) {
     let array = JSON.parse(JSON.stringify(governanceState.issuers)) // Creates a deep copy
     array = array.map((x) => (x.issuer_id === issuer.issuer_id ? issuer : x))
 
-    // Update issuer with role
     dispatch(setGovernanceIssuers(array))
-    // props.sendRequest("GOVERNANCE", "UPDATE_ISSUER", issuer)
-
-    // (eldersonar) TODO: Need a better way to update the state
-    // (eldersonar) Wait 0.5 sec for the database to update and fetch fresh set of data
-    // setTimeout(() => {
-    //   props.sendRequest("GOVERNANCE", "GET_ALL_ISSUERS", {})
-    // }, 500)
   }
 
   return (
