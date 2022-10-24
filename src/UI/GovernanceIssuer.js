@@ -6,7 +6,10 @@ import Select from "react-select"
 import PageHeader from "./PageHeader.js"
 import PageSection from "./PageSection.js"
 import styled from "styled-components"
-import { setSelectedGovernanceIssuer } from "../redux/governanceReducer"
+import {
+  setSelectedGovernanceIssuer,
+  setGovernanceIssuers,
+} from "../redux/governanceReducer"
 import GovernanceIssuerEdit from "./GovernanceIssuerEdit"
 
 // import { setNotificationState } from "../redux/notificationsReducer"
@@ -203,13 +206,18 @@ function GovernanceIssuer(props) {
     issuer.roles = [...new Set([...issuer.roles, ...schema.issuer_roles])]
 
     // Update issuer with role
-    props.sendRequest("GOVERNANCE", "UPDATE_ISSUER", issuer)
+    let array = JSON.parse(JSON.stringify(governanceState.issuers)) // Creates a deep copy
+    array = array.map((x) => (x.issuer_id === issuer.issuer_id ? issuer : x))
+
+    // Update issuer with role
+    dispatch(setGovernanceIssuers(array))
+    // props.sendRequest("GOVERNANCE", "UPDATE_ISSUER", issuer)
 
     // (eldersonar) TODO: Need a better way to update the state
     // (eldersonar) Wait 0.5 sec for the database to update and fetch fresh set of data
-    setTimeout(() => {
-      props.sendRequest("GOVERNANCE", "GET_ALL_ISSUERS", {})
-    }, 500)
+    // setTimeout(() => {
+    //   props.sendRequest("GOVERNANCE", "GET_ALL_ISSUERS", {})
+    // }, 500)
   }
 
   return (
