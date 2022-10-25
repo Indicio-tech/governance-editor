@@ -56,6 +56,7 @@ function EditFormGovernanceMetadata(props) {
     const name = form.get("name")
     const description = form.get("description")
     const version = form.get("version")
+    const format = form.get("format")
     const docs_uri = form.get("docs_uri")
 
     const metadata = {
@@ -65,6 +66,7 @@ function EditFormGovernanceMetadata(props) {
       name,
       description,
       version,
+      format,
       docs_uri,
       selected: governanceState.selectedGovernance
         ? governanceState.selectedGovernance.selected
@@ -99,8 +101,8 @@ function EditFormGovernanceMetadata(props) {
                   id="name"
                   placeholder="Country Health Governance"
                   defaultValue={
-                    governanceState.selectedGovernance
-                      ? governanceState.selectedGovernance.name
+                    governanceState.metadata
+                      ? governanceState.metadata.name
                       : ""
                   }
                 />
@@ -113,8 +115,8 @@ function EditFormGovernanceMetadata(props) {
                   id="description"
                   placeholder="Selected schemas and trusted issuers for the nation of 'country'"
                   defaultValue={
-                    governanceState.selectedGovernance
-                      ? governanceState.selectedGovernance.description
+                    governanceState.metadata
+                      ? governanceState.metadata.description
                       : ""
                   }
                 />
@@ -127,8 +129,22 @@ function EditFormGovernanceMetadata(props) {
                   id="version"
                   placeholder="1.0"
                   defaultValue={
-                    governanceState.selectedGovernance
-                      ? governanceState.selectedGovernance.version
+                    governanceState.metadata
+                      ? governanceState.metadata.version
+                      : ""
+                  }
+                />
+              </InputBox>
+              <InputBox>
+                <ModalLabel htmlFor="format">Format</ModalLabel>
+                <InputFieldModal
+                  type="text"
+                  name="format"
+                  id="format"
+                  placeholder="1.0"
+                  defaultValue={
+                    governanceState.metadata
+                      ? governanceState.metadata.format
                       : ""
                   }
                 />
@@ -143,8 +159,8 @@ function EditFormGovernanceMetadata(props) {
                   id="docs_uri"
                   placeholder="https://country.gov/health/2022-health-standards/index.html"
                   defaultValue={
-                    governanceState.selectedGovernance
-                      ? governanceState.selectedGovernance.docs_uri
+                    governanceState.metadata
+                      ? governanceState.metadata.docs_uri
                       : ""
                   }
                 />

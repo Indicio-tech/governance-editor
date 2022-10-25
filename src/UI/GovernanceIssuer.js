@@ -217,7 +217,7 @@ function GovernanceIssuer(props) {
       <div id="issuer">
         <PageHeader title={"Issuer Details: " + (selectedIssuer.name || "")} />
         <PageSection>
-          <GovernanceHeader>Schema</GovernanceHeader>
+          <GovernanceHeader>Issuer</GovernanceHeader>
           <AttributeTable>
             <tbody>
               <AttributeRow>

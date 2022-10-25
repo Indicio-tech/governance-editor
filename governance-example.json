@@ -7,7 +7,7 @@
 	"format": "1.0",
 	"id": "<uuid>",
 	"description": "This document describes COVID health and travel governance for the nation of ___ in a machine readable way.",
-	"last_updated": "2022-03-29",
+	"last_updated": 1648591392,
 	"docs_uri": "https://url-for-docs...",
 	"schemas": [
 		{
@@ -24,8 +24,8 @@
 	"participants": {
 		"id": "32f54163-7166-48f1-93d8-ff217bdb0653",
 		"author": "did:example:sampleecosystemgovernanceparty",
-		"created": "2010-01-01T19:23:24Z",
-		"version": 2,
+		"created": 1262399004,
+		"version": 1,
 		"topic": "uri:to-multi-topic-schema",
 		"entries": {
 			"did:example:lab_licensing_board": {

@@ -87,7 +87,7 @@ function Governance() {
       const roles = []
       let role_id = 1
       roles.governance_id = governanceFile.id
-      for (var key in governanceFile.roles) {
+      for (let key in governanceFile.roles) {
         let role = {}
         if (governanceFile.roles.hasOwnProperty(key)) {
           role.role_id = role_id
@@ -221,7 +221,12 @@ function Governance() {
     // Clean and restructure - "basic" structure
     const cleanMetadata = () => {
       const obj = JSON.parse(JSON.stringify(governanceState.selectedGovernance)) // Creates a deep copy
-      delete obj.selected
+      obj.last_updated = Date.now()
+      // delete obj.selected // This is part of governance seletion feature (not presented here)
+
+      // Update the metadata object too to keep it consistent with exported file
+      dispatch(setGovernanceMetadata(obj))
+
       return obj
     }
 
@@ -371,6 +376,14 @@ function Governance() {
               </td>
             </AttributeRow>
             <AttributeRow>
+              <th>Format:</th>
+              <td>
+                {governanceState.metadata !== undefined
+                  ? governanceState.metadata.format || ""
+                  : ""}
+              </td>
+            </AttributeRow>
+            <AttributeRow>
               <th>Human Readable Version URI:</th>
               <td>
                 {governanceState.metadata !== undefined
@@ -382,15 +395,18 @@ function Governance() {
               <th>Last Updated:</th>
               <td>
                 {/* TODO: decide on the date format and handle it here */}
-                {/* {governanceState.metadata === {}
+                {governanceState.metadata &&
+                Object.keys(governanceState.metadata).length !== 0 &&
+                Object.getPrototypeOf(governanceState.metadata) ===
+                  Object.prototype
                   ? new Date(governanceState.metadata.last_updated)
                       .toISOString()
                       .slice(0, 19)
                       .replace("T", " ") || ""
-                  : ""} */}
-                {governanceState.metadata !== {}
-                  ? governanceState.metadata.last_updated || ""
                   : ""}
+                {/* {governanceState.metadata !== {}
+                  ? governanceState.metadata.last_updated || ""
+                  : ""} */}
               </td>
             </AttributeRow>
           </tbody>
