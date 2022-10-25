@@ -404,9 +404,6 @@ function Governance() {
                       .slice(0, 19)
                       .replace("T", " ") || ""
                   : ""}
-                {/* {governanceState.metadata !== {}
-                  ? governanceState.metadata.last_updated || ""
-                  : ""} */}
               </td>
             </AttributeRow>
           </tbody>
