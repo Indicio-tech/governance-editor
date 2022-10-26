@@ -462,6 +462,8 @@ function Governance() {
       // (eldersonar) This is simulating final result of the governance file
       console.log(result)
 
+      // (eldersonar) TODO: explore canonicalization and signatures
+
       return result
     } else {
       // (eldersonar) governance format is not supported
