@@ -3,7 +3,7 @@ import React from "react"
 import { ThemeProvider } from "styled-components"
 
 import App from "../App"
-import { NotificationProvider } from "./NotificationProvider"
+import { NotificationProvider } from "./Core/NotificationProvider"
 
 function AppContainer() {
   const theme = {

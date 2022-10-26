@@ -1,8 +1,7 @@
 import React, { useRef, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-// import { useTheme } from "styled-components"
 
-import { setGovernanceMetadata } from "../redux/governanceReducer"
+import { setGovernanceMetadata } from "../../redux/governanceReducer"
 
 import {
   Actions,
@@ -17,21 +16,15 @@ import {
   ModalLabel,
   StyledPopup,
   SubmitBtnModal,
-} from "./CommonStylesForms"
+} from "../Styles/CommonStylesForms"
 
 function EditFormGovernanceMetadata(props) {
   const dispatch = useDispatch()
-  //   const roles = useSelector((state) => state.users.roles)
 
   // const governanceMetadata = props.governanceMetadata
   const governanceState = useSelector((state) => state.governance)
 
-  //   console.log(governanceMetadata)
-
-  //   const [options, setOptions] = useState([])
-
   const error = props.error
-
   const metadataForm = useRef()
   const submitBtn = useRef()
 
@@ -52,6 +45,8 @@ function EditFormGovernanceMetadata(props) {
     e.preventDefault()
     onBtnClick()
 
+    const timestamp = Date.now()
+
     const form = new FormData(metadataForm.current)
     const name = form.get("name")
     const description = form.get("description")
@@ -68,9 +63,12 @@ function EditFormGovernanceMetadata(props) {
       version,
       format,
       docs_uri,
-      selected: governanceState.selectedGovernance
-        ? governanceState.selectedGovernance.selected
-        : false,
+      // selected: governanceState.selectedGovernance
+      //   ? governanceState.selectedGovernance.selected
+      //   : false,
+      last_updated: governanceState.selectedGovernance
+        ? governanceState.selectedGovernance.last_updated
+        : timestamp,
     }
 
     dispatch(setGovernanceMetadata(metadata))

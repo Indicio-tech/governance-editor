@@ -2,19 +2,18 @@ import React, { useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import Select from "react-select"
 
-// import { CanUser } from "./CanUser"
-import PageHeader from "./PageHeader.js"
-import PageSection from "./PageSection.js"
+import PageHeader from "../../Core/PageHeader.js"
+import PageSection from "../../Core/PageSection.js"
 import styled from "styled-components"
 import {
   setSelectedGovernanceIssuer,
   setGovernanceIssuers,
-} from "../redux/governanceReducer"
-import GovernanceIssuerEdit from "./GovernanceIssuerEdit"
+} from "../../../redux/governanceReducer"
+import GovernanceIssuerEdit from "./GovernanceIssuerEditV1"
 
 // import { setNotificationState } from "../redux/notificationsReducer"
 
-import { AttributeTable, AttributeRow } from "./CommonStylesTables"
+import { AttributeTable, AttributeRow } from "../../Styles/CommonStylesTables"
 
 const ListItem = styled.div`
   color: blue;
@@ -52,8 +51,6 @@ function GovernanceIssuer(props) {
   const [schemaOptions, setSchemaOptions] = useState([])
   const [schemaList, setSchemasList] = useState([])
   const [selectedSchema, setSelectedSchema] = useState(null)
-
-  // const [selectedIssuer, setSelectedIssuer] = useState({})
 
   useEffect(() => {
     // Handle selected schema
@@ -114,55 +111,6 @@ function GovernanceIssuer(props) {
     dispatch,
     history,
   ])
-
-  // (eldersonar) TODO: must fix this useEffect. It sometimes doesn't get the current state for selectedIssuer
-  // (eldersonar) TODO: and we might want to get rid of selectedIssuer reducer all together. It writes the issuer, but then keeps it when the view is exited
-  // (eldersonar) Setting up schema options
-  // useEffect(() => {
-  //   let options = []
-
-  //   // (eldersonar) Handle governance options state
-  //   if (governanceState.schemas && governanceState.selectedIssuer) {
-  //     for (let i = 0; i < governanceState.schemas.length; i++) {
-  //       options.push({
-  //         id: governanceState.schemas[i].schema_id,
-  //         label: governanceState.schemas[i].name,
-  //         value: governanceState.schemas[i].schema_id,
-  //       })
-  //     }
-  //     setSchemaOptions(options)
-  //   }
-
-  //   // (eldersonar) Set up the list of authorized to issue schemas
-  //   if (
-  //     governanceState.schemas &&
-  //     governanceState.selectedIssuer &&
-  //     governanceState.selectedIssuer.roles
-  //   ) {
-  //     let list = []
-  //     governanceState.schemas.forEach((element) => {
-  //       for (let k = 0; k < element.issuer_roles.length; k++) {
-  //         for (
-  //           let i = 0;
-  //           i < governanceState.selectedIssuer.roles.length;
-  //           i++
-  //         ) {
-  //           if (
-  //             element.issuer_roles[k] ===
-  //             governanceState.selectedIssuer.roles[i]
-  //           ) {
-  //             list.push(element)
-  //           }
-  //         }
-  //       }
-  //     })
-  //     setSchemasList(list)
-  //   }
-  // }, [
-  //   governanceState.schemas,
-  //   governanceState.selectedIssuer,
-  //   selectedIssuer.roles,
-  // ])
 
   const closeIssuerModal = () => setIssuerModalIsOpen(false)
   const editIssuer = () => {

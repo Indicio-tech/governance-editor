@@ -4,13 +4,11 @@ import { useSelector, useDispatch } from "react-redux"
 import {
   setSelectedGovernanceIssuer,
   setGovernanceIssuers,
-} from "../redux/governanceReducer"
+} from "../../../redux/governanceReducer"
 
 import {
   Actions,
   CancelBtn,
-  //   Checkbox,
-  //   CheckboxHolder,
   CloseBtn,
   InputBox,
   InputFieldModal,
@@ -21,7 +19,7 @@ import {
   ModalLabel,
   StyledPopup,
   SubmitBtnModal,
-} from "./CommonStylesForms"
+} from "../../Styles/CommonStylesForms"
 
 function FormGovernanceIssuer(props) {
   const dispatch = useDispatch()
@@ -79,31 +77,8 @@ function FormGovernanceIssuer(props) {
   }
 
   function closeModal() {
-    // setOptions([])
     props.closeIssuerModal()
   }
-
-  //   const handleCheckboxChange = (event) => {
-  //     let newArray = [...options, event.target.value]
-  //     if (options.includes(event.target.value)) {
-  //       newArray = newArray.filter((s) => s !== event.target.value)
-  //     }
-  //     setOptions(newArray)
-  //   }
-
-  //   const rolesOptions = roles.map((role) => {
-  //     return (
-  //       <div key={role.role_id}>
-  //         <Checkbox
-  //           type="checkbox"
-  //           value={role.role_id}
-  //           id={role.role_id}
-  //           onChange={handleCheckboxChange}
-  //         />
-  //         <label htmlFor={role.role_id}>{role.role_name}</label>
-  //       </div>
-  //     )
-  //   })
 
   return (
     <StyledPopup

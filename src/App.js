@@ -7,17 +7,17 @@ import {
   Route,
   Redirect,
 } from "react-router-dom"
-import AppHeader from "./UI/AppHeader"
+import AppHeader from "./UI/Core/AppHeader"
 import styled from "styled-components"
 
-import Governance from "./UI/Governance"
-import GovernanceSchemas from "./UI/GovernanceSchemas"
+import Governance from "./UI/Core/Governance"
+import GovernanceSchemas from "./UI/Versions/Version1/GovernanceSchemasV1"
 
-import GovernanceSchemasV2 from "./UI/GovernanceSchemasV2"
+import GovernanceSchemasV2 from "./UI/Versions/Version2/GovernanceSchemasV2"
 
-import GovernanceSchema from "./UI/GovernanceSchema"
-import GovernanceIssuers from "./UI/GovernanceIssuers"
-import GovernanceIssuer from "./UI/GovernanceIssuer"
+import GovernanceSchema from "./UI/Versions/Version1/GovernanceSchemaV1"
+import GovernanceIssuers from "./UI/Versions/Version1/GovernanceIssuersV1"
+import GovernanceIssuer from "./UI/Versions/Version1/GovernanceIssuerV1"
 
 import "./App.css"
 

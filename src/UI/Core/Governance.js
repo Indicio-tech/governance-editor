@@ -2,30 +2,36 @@ import React, { useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import styled from "styled-components"
 
-import { setNotificationState } from "../redux/notificationsReducer"
-import GovernanceMetadataEdit from "./GovernanceMetadataEdit"
+import { setNotificationState } from "../../redux/notificationsReducer"
+import GovernanceMetadataEdit from "../Core/GovernanceMetadataEdit"
 import {
   setSelectedGovernance,
   setGovernanceMetadata,
   setGovernanceSchemas,
-  // setSelectedGovernanceSchema,
-  // setSelectedGovernanceIssuer,
   setGovernanceIssuers,
   setSelectedGovernanceIssuersMetadata,
   setGovernanceRoles,
-  // setGovernanceDID,
-} from "../redux/governanceReducer"
+} from "../../redux/governanceReducer"
 
-import PageHeader from "./PageHeader.js"
-import PageSection from "./PageSection.js"
-import { AttributeTable, AttributeRow } from "./CommonStylesTables"
+import PageHeader from "../Core/PageHeader.js"
+import PageSection from "../Core/PageSection.js"
+import { AttributeTable, AttributeRow } from "../Styles/CommonStylesTables"
 
 const GovernanceHeader = styled.h3`
   display: inline-block;
   margin-right: 10px;
   margin-bottom: 0;
 `
-const SaveBtn = styled.button`
+const EditBtn = styled.button`
+  width: 80px;
+  background: ${(props) => props.theme.primary_color};
+  padding: 10px;
+  color: ${(props) => props.theme.text_light};
+  border: none;
+  float: right;
+  box-shadow: ${(props) => props.theme.drop_shadow};
+`
+const ExportBtn = styled.button`
   width: 80px;
   background: ${(props) => props.theme.primary_color};
   padding: 10px;
@@ -194,7 +200,8 @@ function Governance() {
   }
 
   const publishGovernance = () => {
-    const timestamp = new Date()
+    // (eldersonar) Save as UNIX timestamp
+    const timestamp = Date.now() / 1000
 
     // Clean and restructure - "basic" structure
     const cleanSchemas = () => {
@@ -221,7 +228,7 @@ function Governance() {
     // Clean and restructure - "basic" structure
     const cleanMetadata = () => {
       const obj = JSON.parse(JSON.stringify(governanceState.selectedGovernance)) // Creates a deep copy
-      obj.last_updated = Date.now()
+      obj.last_updated = timestamp
       // delete obj.selected // This is part of governance seletion feature (not presented here)
 
       // Update the metadata object too to keep it consistent with exported file
@@ -349,6 +356,7 @@ function Governance() {
       <PageHeader title="Ecosystem Governance" />
       <PageSection>
         <GovernanceHeader>Governance Metadata</GovernanceHeader>
+        <EditBtn onClick={() => editMetadata()}>Edit</EditBtn>
         <AttributeTable>
           <tbody>
             <AttributeRow>
@@ -399,7 +407,7 @@ function Governance() {
                 Object.keys(governanceState.metadata).length !== 0 &&
                 Object.getPrototypeOf(governanceState.metadata) ===
                   Object.prototype
-                  ? new Date(governanceState.metadata.last_updated)
+                  ? new Date(governanceState.metadata.last_updated * 1000)
                       .toISOString()
                       .slice(0, 19)
                       .replace("T", " ") || ""
@@ -408,7 +416,6 @@ function Governance() {
             </AttributeRow>
           </tbody>
         </AttributeTable>
-        <SaveBtn onClick={() => editMetadata()}>Edit</SaveBtn>
         <Form onSubmit={handleGovernanceUpload}>
           <Input
             type="file"
@@ -417,8 +424,8 @@ function Governance() {
           ></Input>
           <SubmitFormBtn type="submit">Upload</SubmitFormBtn>
         </Form>
+        <ExportBtn onClick={() => publishGovernance()}>Publish</ExportBtn>
       </PageSection>
-      <SubmitFormBtn onClick={() => publishGovernance()}>Publish</SubmitFormBtn>
       <GovernanceMetadataEdit
         editMetadataModalIsOpen={editMetadataModalIsOpen}
         closeEditMetadataModal={closeEditMetadataModal}

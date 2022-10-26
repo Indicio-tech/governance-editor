@@ -3,19 +3,18 @@ import { useSelector, useDispatch } from "react-redux"
 import Select from "react-select"
 import styled from "styled-components"
 
-import PageHeader from "./PageHeader.js"
-import PageSection from "./PageSection.js"
+import PageHeader from "../../Core/PageHeader.js"
+import PageSection from "../../Core/PageSection.js"
 
 import {
   setGovernanceIssuers,
   setSelectedGovernanceSchema,
-  // setSelectedGovernanceIssuer,
-} from "../redux/governanceReducer"
-import GovernanceSchemaEdit from "./GovernanceSchemaEdit"
+} from "../../../redux/governanceReducer"
+import GovernanceSchemaEdit from "./GovernanceSchemaEdit1"
 
 // import { setNotificationState } from "../redux/notificationsReducer"
 
-import { AttributeTable, AttributeRow } from "./CommonStylesTables"
+import { AttributeTable, AttributeRow } from "../../Styles/CommonStylesTables"
 
 const ListItem = styled.div`
   color: blue;

@@ -2,30 +2,13 @@ import React, { useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import styled from "styled-components"
 
-import { setGovernanceIssuers } from "../redux/governanceReducer"
-import { setNotificationState } from "../redux/notificationsReducer"
+import { setGovernanceIssuers } from "../../../redux/governanceReducer"
+import { setNotificationState } from "../../../redux/notificationsReducer"
 
-import { getNextId } from "./utils"
+import { getNextId } from "../../utils"
 
-// import { CanUser } from './CanUser'
-// import GovernanceMetadataEdit from './GovernanceMetadataEdit'
-
-import PageHeader from "./PageHeader.js"
-import PageSection from "./PageSection.js"
-
-// import {
-//   DataTable,
-//   DataRow,
-//   DataHeader,
-//   DataCell,
-//   AttributeTable,
-//   AttributeRow,
-//   IconCell,
-//   IconClose,
-//   IconCheck,
-// } from './CommonStylesTables'
-
-// import { ModalLabel } from './CommonStylesForms'
+import PageHeader from "../../Core/PageHeader.js"
+import PageSection from "../../Core/PageSection.js"
 
 const Wrapper = styled.div``
 
@@ -40,30 +23,6 @@ const IssuersHolder = styled.div`
     background: #ffc;
   }
 `
-
-// const SchemaWrapper = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   width: 75%;
-// `
-
-// const FloatRight = styled.div`
-//   // float: right;
-//   text-align: right;
-//   padding-right: 30px;
-//   flex: 1;
-// `
-
-// const FloatLeft = styled.div`
-//   // float: left;
-//   text-align: left;
-//   padding-left: 30px;
-//   flex: 1;
-// `
-
-// const SchemaHolder = styled.div`
-//   margin: 10px;
-// `
 
 const InputBox = styled.div`
   margin: 10px;
@@ -94,37 +53,10 @@ const GovernanceHeader = styled.h3`
   margin-right: 10px;
   margin-bottom: 0;
 `
-// import {
-//   Button,
-//   SubmitBtnModal,
-//   Modal,
-//   Actions,
-//   Select,
-// } from './CommonStylesForms'
-
-// const HomeHeader = styled.h2`
-//   display: inline-block;
-//   margin-right: 10px;
-//   font-size: 1.3em;
-// `
 
 function GovernanceIssuers(props) {
   const dispatch = useDispatch()
   const governanceState = useSelector((state) => state.governance)
-  // const [issuersByGovernance, setIssuersByGovernance] = useState([])
-
-  // (eldersonar) Get schemas that are related to selected governance (metadata) only
-  // useEffect(() => {
-  //   if (governanceState.selectedGovernance && governanceState.issuers) {
-  //     const issuers = governanceState.issuers.filter(
-  //       (schema) =>
-  //         schema.governance_id === governanceState.selectedGovernance.id
-  //     )
-  //     console.log(issuers)
-  //     setIssuersByGovernance(issuers)
-  //   }
-  // }, [governanceState.issuers, governanceState.selectedGovernance])
-
   const newIssuerForm = useRef()
   const history = props.history
 
@@ -153,16 +85,9 @@ function GovernanceIssuers(props) {
         roles: [],
       }
 
-      // props.sendRequest("GOVERNANCE", "SET_ISSUER", issuer)
       dispatch(setGovernanceIssuers([...governanceState.issuers, issuer]))
 
       newIssuerForm.current.reset()
-
-      // (eldersonar) TODO: Need a better way to update the state
-      // (eldersonar) Wait 0.5 sec for the database to update and fetch fresh set of data
-      // setTimeout(() => {
-      //   props.sendRequest("GOVERNANCE", "GET_ALL_ISSUERS", {})
-      // }, 500)
     } else {
       dispatch(
         setNotificationState({

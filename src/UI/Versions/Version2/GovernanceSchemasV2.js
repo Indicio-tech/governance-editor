@@ -5,30 +5,13 @@ import styled from "styled-components"
 import {
   setGovernanceSchemas,
   setGovernanceRoles,
-} from "../redux/governanceReducer"
-import { setNotificationState } from "../redux/notificationsReducer"
+} from "../../../redux/governanceReducer"
+import { setNotificationState } from "../../../redux/notificationsReducer"
 
-import { getNextId } from "./utils"
+import { getNextId } from "../../utils"
 
-// import { CanUser } from './CanUser'
-// import GovernanceMetadataEdit from './GovernanceMetadataEdit'
-
-import PageHeader from "./PageHeader.js"
-import PageSection from "./PageSection.js"
-
-// import {
-//   DataTable,
-//   DataRow,
-//   DataHeader,
-//   DataCell,
-//   AttributeTable,
-//   AttributeRow,
-//   IconCell,
-//   IconClose,
-//   IconCheck,
-// } from './CommonStylesTables'
-
-// import { ModalLabel } from './CommonStylesForms'
+import PageHeader from "../../Core/PageHeader.js"
+import PageSection from "../../Core/PageSection.js"
 
 const Wrapper = styled.div``
 
@@ -60,11 +43,6 @@ const FloatLeft = styled.div`
   padding-left: 30px;
   flex: 1;
 `
-
-// const SchemaHolder = styled.div`
-//   margin: 10px;
-// `
-
 const InputBox = styled.div`
   margin: 10px;
   //   display: flex;
@@ -80,15 +58,6 @@ const ModalLabel = styled.label`
 const Input = styled.input`
   width: 300px;
 `
-
-// const H3 = styled.h3`
-//   margin: 5px 0;
-// `
-
-// const Form = styled.form`
-//   overflow: hidden;
-//   margin-bottom: 10px;
-// `
 const SaveBtn = styled.button`
   width: 80px;
   background: ${(props) => props.theme.primary_color};
@@ -99,49 +68,15 @@ const SaveBtn = styled.button`
   box-shadow: ${(props) => props.theme.drop_shadow};
 `
 
-// const SubmitFormBtn = styled.button``
-
-// const BlockInput = styled.input`
-//   display: block;
-//   margin-bottom: 15px;
-// `
-
 const GovernanceHeader = styled.h3`
   display: inline-block;
   margin-right: 10px;
   margin-bottom: 0;
 `
-// import {
-//   Button,
-//   SubmitBtnModal,
-//   Modal,
-//   Actions,
-//   Select,
-// } from './CommonStylesForms'
-
-// const HomeHeader = styled.h2`
-//   display: inline-block;
-//   margin-right: 10px;
-//   font-size: 1.3em;
-// `
 
 function GovernanceSchemas(props) {
   const dispatch = useDispatch()
   const governanceState = useSelector((state) => state.governance)
-  // const [schemasByGovernance, setSchemasByGovernance] = useState([])
-
-  // (eldersonar) Get schemas that are related to selected governance (metadata) only
-  // useEffect(() => {
-  //   if (governanceState.selectedGovernance && governanceState.schemas) {
-  //     const schemas = governanceState.schemas.filter(
-  //       (schema) =>
-  //         schema.governance_id === governanceState.selectedGovernance.id
-  //     )
-  //     console.log(schemas)
-  //     setSchemasByGovernance(schemas)
-  //   }
-  // }, [governanceState.schemas, governanceState.selectedGovernance])
-
   const newSchemaForm = useRef()
   const history = props.history
 
@@ -157,22 +92,11 @@ function GovernanceSchemas(props) {
     const form = new FormData(newSchemaForm.current)
     const id = form.get("id")
     const name = form.get("name")
+    const creator = form.get("creator")
     const suffix = "_issuer"
 
     let roleName = id.split(":")[2] + "_v" + id.split(":")[3]
     roleName = roleName.concat(suffix).toLowerCase()
-
-    // const getNextId = (array, idKey) => {
-    //   let idList = []
-    //   array.forEach((element) => {
-    //     idList.push(element[idKey])
-    //   })
-    //   let nextId = Math.max.apply(0, idList) // (eldersonar) Math.max is great for small arrays only (up to ~120000)
-    //   console.log(idList)
-    //   console.log(nextId)
-    //   nextId++
-    //   return nextId
-    // }
 
     if (governanceState.selectedGovernance.id) {
       const schema = {
@@ -180,6 +104,7 @@ function GovernanceSchemas(props) {
         id,
         governance_id: governanceState.selectedGovernance.id,
         name,
+        creator,
         issuer_roles: [roleName],
       }
 
@@ -249,6 +174,15 @@ function GovernanceSchemas(props) {
               name="name"
               id="name"
               placeholder="Validated Email"
+            />
+          </InputBox>
+          <InputBox>
+            <ModalLabel htmlFor="creator">Schema Creator</ModalLabel>
+            <Input
+              type="text"
+              name="creator"
+              id="creator"
+              placeholder="Simon Nazarenko"
             />
           </InputBox>
           <SaveBtn type="submit">Add</SaveBtn>

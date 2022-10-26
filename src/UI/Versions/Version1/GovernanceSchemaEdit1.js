@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux"
 import {
   setSelectedGovernanceSchema,
   setGovernanceSchemas,
-} from "../redux/governanceReducer"
+} from "../../../redux/governanceReducer"
 
 import {
   Actions,
@@ -19,7 +19,7 @@ import {
   ModalLabel,
   StyledPopup,
   SubmitBtnModal,
-} from "./CommonStylesForms"
+} from "../../Styles/CommonStylesForms"
 
 function FormGovernanceSchema(props) {
   const dispatch = useDispatch()

@@ -6,13 +6,11 @@ export const StyledPopup = styled(Popup)`
     background: rgba(0, 0, 0, 0.5);
   }
 `
-
 export const InputBox = styled.div`
   margin: 10px;
   display: flex;
   justify-content: center;
 `
-
 export const Modal = styled.div`
   overflow: auto;
   margin: auto;
@@ -23,7 +21,6 @@ export const Modal = styled.div`
   border: 1px solid #d7d7d7;
   background: ${(props) => props.theme.background_primary};
 `
-
 export const LargeModal = styled.div`
   overflow: auto;
   margin: auto;
@@ -34,7 +31,6 @@ export const LargeModal = styled.div`
   border: 1px solid #d7d7d7;
   background: ${(props) => props.theme.background_primary};
 `
-
 export const ModalHeader = styled.div`
   width: 100%;
   border-bottom: 1px solid gray;
@@ -42,13 +38,11 @@ export const ModalHeader = styled.div`
   text-align: center;
   padding: 5px;
 `
-
 export const ModalContentWrapper = styled.div`
   overflow: hidden;
   height: auto;
   width: 100%;
 `
-
 export const CloseBtn = styled.button`
   cursor: pointer;
   outline: inherit;
@@ -66,7 +60,6 @@ export const CloseBtn = styled.button`
     box-shadow: 0 0 1pt 1pt #000;
   }
 `
-
 export const Actions = styled.div`
   width: 100%;
   display: flex;
@@ -75,7 +68,6 @@ export const Actions = styled.div`
   margin: auto;
   text-align: center;
 `
-
 export const CancelBtn = styled.button`
   border: none;
   color: ${(props) => props.theme.text_light};
@@ -86,7 +78,6 @@ export const CancelBtn = styled.button`
   width: 25%;
   font-size: 1.3em;
 `
-
 export const SubmitBtnModal = styled.button`
   border: none;
   color: ${(props) => props.theme.text_light};
@@ -101,7 +92,6 @@ export const SubmitBtnModal = styled.button`
     background: ${(props) => props.theme.neutral_color};
   }
 `
-
 export const Button = styled.button`
   padding: 10px 20px;
   color: ${(props) => props.theme.text_light};
@@ -116,14 +106,12 @@ export const Button = styled.button`
     background: #aaa;
   }
 `
-
 export const ModalLabel = styled.label`
   color: ${(props) => props.theme.text_color};
   font-size: 1.5em;
   width: 30%;
   margin-right: 10px;
 `
-
 export const InputFieldModal = styled.input`
   color: ${(props) => props.theme.text_color};
   font-size: 1.5em;
@@ -131,39 +119,33 @@ export const InputFieldModal = styled.input`
   width: 50%;
   }
 `
-
 export const Select = styled.select`
   color: ${(props) => props.theme.text_color};
   font-size: 1.5em;
   width: 50%;
 `
-
 export const CheckboxHolder = styled.div`
   color: ${(props) => props.theme.text_color};
   font-size 1.5em;
   width: 50%;
 `
-
 export const Checkbox = styled.input``
 
 export const TextWrapper = styled.div`
   text-align: center;
 `
-
 export const TextArea = styled.textarea`
   color: ${(props) => props.theme.text_color};
   font-size: 1.5em;
   height: 30px;
   width: 50%;
 `
-
 export const ModalContent = styled.div`
   height: 99%;
   width: 100%;
   padding: 10px 5px;
   overflow-y: auto;
 `
-
 export const QRModalContent = styled.div`
   width: 100%;
   padding: 10px 5px;
@@ -195,7 +177,6 @@ export const SubmitBtn = styled.button`
     cursor: pointer;
   }
 `
-
 export const LogoHolder = styled.div`
   padding: 20px 0 10px 0;
   width: 100%;
@@ -223,7 +204,6 @@ export const PoweredBox = styled.div`
   width: 100%;
   margin-top: 5px;
 `
-
 export const Form = styled.form`
   display: flex;
   flex-direction: column;

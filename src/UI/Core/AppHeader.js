@@ -2,9 +2,9 @@ import React from "react"
 import styled from "styled-components"
 
 import AppMenu from "./AppMenu.js"
-import PoweredByImage from "../assets/powered-by.png"
+import PoweredByImage from "../../assets/powered-by.png"
 
-import { PoweredHolder, PoweredBy } from "./CommonStylesForms"
+import { PoweredHolder, PoweredBy } from "../Styles/CommonStylesForms"
 
 const Header = styled.header`
   flex: 3;
