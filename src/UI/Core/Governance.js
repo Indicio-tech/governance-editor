@@ -230,10 +230,6 @@ function Governance() {
 
   // (eldersonar) Handle data by format 1.0
   const uploadFormat1_0 = () => {
-    // (eldersonar) Store the version of the original governance file
-    // (eldersonar) This is helpful for governance selection workflow
-    dispatch(setSelectedGovernance(governanceFile))
-
     handleMetadataInjection1_0()
     handleRolesInjection1_0()
     handleSchemasInjection1_0()
@@ -243,10 +239,6 @@ function Governance() {
 
   // (eldersonar) Handle data by format 1.0
   const uploadFormat2_0 = () => {
-    // (eldersonar) Store the version of the original governance file
-    // (eldersonar) This is helpful for governance selection workflow
-    dispatch(setSelectedGovernance(governanceFile))
-
     handleMetadataInjection1_0()
     handleRolesInjection1_0()
     handleSchemasInjection1_0()
@@ -254,7 +246,12 @@ function Governance() {
     handleIssuersMetadataInjection1_0()
   }
 
+  // (eldersonar) Handle governance injection based on the format type
   const handleGovernanceUpload = async (e) => {
+    // (eldersonar) Store the version of the original governance file
+    // (eldersonar) This is helpful for governance selection workflow
+    dispatch(setSelectedGovernance(governanceFile))
+
     if (governanceFile && governanceFile.format === "1.0") {
       uploadFormat1_0()
     } else if (governanceFile && governanceFile.format === "2.0") {
@@ -265,157 +262,200 @@ function Governance() {
     e.preventDefault()
   }
 
-  // (eldersonar) Hadle JSON file download
-  const downloadFile = (file) => {
-    // create file in browser
-    const fileName = "governance-framework-downloaded"
-    const json = JSON.stringify(file, null, 2)
-    const blob = new Blob([json], { type: "application/json" })
-    const href = URL.createObjectURL(blob)
+  // (eldersonar) Handle goverance file download
+  const downloadFile = () => {
+    // (eldersonar) Fetch extracted governance file
+    const file = extractGovernance()
 
-    // create HTML element with href to file
-    const link = document.createElement("a")
-    link.href = href
-    link.download = fileName + ".json"
-    document.body.appendChild(link)
-    link.click()
+    // Handle JSON file download
+    if (file) {
+      if (governanceState.issuersMetadata.author !== "DID not anchored") {
+        // create file in browser
+        const fileName = "governance-framework-downloaded"
+        const json = JSON.stringify(file, null, 2)
+        const blob = new Blob([json], { type: "application/json" })
+        const href = URL.createObjectURL(blob)
 
-    // clean up element & remove ObjectURL to avoid memory leak
-    document.body.removeChild(link)
-    URL.revokeObjectURL(href)
+        // create HTML element with href to file
+        const link = document.createElement("a")
+        link.href = href
+        link.download = fileName + ".json"
+        document.body.appendChild(link)
+        link.click()
+
+        // clean up element & remove ObjectURL to avoid memory leak
+        document.body.removeChild(link)
+        URL.revokeObjectURL(href)
+      } else {
+        dispatch(
+          setNotificationState({
+            message: "Publishing without public DID is forbidden",
+            type: "error",
+          })
+        )
+      }
+    } else {
+      dispatch(
+        setNotificationState({
+          message: `Error: governance file was not created. The governance file format ${governanceState.metadata.format} is not supported`,
+          type: "error",
+        })
+      )
+    }
   }
 
-  const publishGovernance = () => {
+  // (eldersonar) Handle data clean and restructure for the metadata
+  const handleMetadataExtraction1_0 = () => {
     // (eldersonar) Save as UNIX timestamp
     const timestamp = Date.now() / 1000
 
-    // Clean and restructure - "basic" structure
-    const cleanSchemas = () => {
-      // const array = [...governanceState.schemas]
-      const array = JSON.parse(JSON.stringify(governanceState.schemas)) // Creates a deep copy
+    const obj = JSON.parse(JSON.stringify(governanceState.metadata)) // Creates a deep copy
+    obj.last_updated = timestamp
+    // delete obj.selected // This is part of governance seletion feature (not presented here)
 
-      let schemasByGovernanceId = []
-      array.forEach((element) => {
-        if (element.governance_id === governanceState.selectedGovernance.id) {
-          schemasByGovernanceId.push(element)
+    // Update the metadata object too to keep it consistent with exported file
+    dispatch(setGovernanceMetadata(obj))
+
+    return obj
+  }
+
+  // (eldersonar) Handle data clean and restructure for the schemas
+  const handleSchemasExtraction1_0 = () => {
+    // const array = [...governanceState.schemas]
+    const array = JSON.parse(JSON.stringify(governanceState.schemas)) // Creates a deep copy
+
+    let schemasByGovernanceId = []
+    array.forEach((element) => {
+      if (element.governance_id === governanceState.selectedGovernance.id) {
+        schemasByGovernanceId.push(element)
+      }
+    })
+
+    schemasByGovernanceId.forEach((schema) => {
+      delete schema.created_at
+      delete schema.updated_at
+      delete schema.governance_id
+      delete schema.schema_id
+
+      // (eldersonar) Remove parts associated with format 2.0. Importand while downgrading the format type
+      if (governanceState.metadata.format === "1.0") {
+        delete schema.creator
+      }
+    })
+
+    return schemasByGovernanceId
+  }
+
+  // (eldersonar) Handle data clean and restructure for the issuers
+  const handleIssuersExtraction1_0 = () => {
+    console.log("Original array of issuers", governanceState.issuers)
+
+    const array = JSON.parse(JSON.stringify(governanceState.issuers)) // Creates a deep copy
+
+    let issuersByGovernanceId = []
+    array.forEach((element) => {
+      if (element.governance_id === governanceState.selectedGovernance.id) {
+        issuersByGovernanceId.push(element)
+      }
+    })
+
+    const finalEntries = []
+    issuersByGovernanceId.forEach((issuer) => {
+      delete issuer.created_at
+      delete issuer.updated_at
+      delete issuer.governance_id
+      delete issuer.issuer_id
+
+      // (eldersonar) Remove parts associated with format 2.0. Importand while downgrading the format type
+      if (governanceState.metadata.format === "1.0") {
+        delete issuer.address
+        delete issuer.city
+        delete issuer.zip
+        delete issuer.state
+      }
+
+      const participant = {}
+      participant[issuer.did] = {
+        "uri:to-role_schema": {
+          roles: issuer.roles,
+        },
+        "uri:to-describe_schema": issuer,
+      }
+
+      delete issuer.roles
+
+      finalEntries.push(participant)
+    })
+    return finalEntries
+  }
+
+  // (eldersonar) Handle data clean and restructure for the roles
+  const handleRolesExtraction1_0 = () => {
+    // const array = [...arr] // Creates a shallow copy that results in mutating the original issuers array
+    const array = JSON.parse(JSON.stringify(governanceState.roles)) // Creates a deep copy
+
+    let rolesByGovernanceId = []
+    array.forEach((element) => {
+      if (element.governance_id === governanceState.selectedGovernance.id) {
+        rolesByGovernanceId.push(element)
+      }
+    })
+
+    const finalEntries = []
+    rolesByGovernanceId.forEach((role) => {
+      delete role.created_at
+      delete role.updated_at
+      delete role.governance_id
+      delete role.role_id
+
+      const finalRole = {}
+      if (role.credentials.length !== 0) {
+        finalRole[role.role] = {
+          credentials: role.credentials,
         }
-      })
+      } else {
+        finalRole[role.role] = {}
+      }
 
-      schemasByGovernanceId.forEach((schema) => {
-        delete schema.created_at
-        delete schema.updated_at
-        delete schema.governance_id
-        delete schema.schema_id
-      })
+      finalEntries.push(finalRole)
+    })
+    return finalEntries
+  }
 
-      return schemasByGovernanceId
-    }
-
-    // Clean and restructure - "basic" structure
-    const cleanMetadata = () => {
-      const obj = JSON.parse(JSON.stringify(governanceState.selectedGovernance)) // Creates a deep copy
-      obj.last_updated = timestamp
-      // delete obj.selected // This is part of governance seletion feature (not presented here)
-
-      // Update the metadata object too to keep it consistent with exported file
-      dispatch(setGovernanceMetadata(obj))
-
-      return obj
-    }
-
-    // Clean and restructure - "basic" structure
-    const cleanIssuers = () => {
-      console.log("Original array of issuers", governanceState.issuers)
-
-      const array = JSON.parse(JSON.stringify(governanceState.issuers)) // Creates a deep copy
-
-      let issuersByGovernanceId = []
-      array.forEach((element) => {
-        if (element.governance_id === governanceState.selectedGovernance.id) {
-          issuersByGovernanceId.push(element)
-        }
-      })
-
-      const finalEntries = []
-      issuersByGovernanceId.forEach((issuer) => {
-        delete issuer.created_at
-        delete issuer.updated_at
-        delete issuer.governance_id
-        delete issuer.issuer_id
-
-        const participant = {}
-        participant[issuer.did] = {
-          "uri:to-role_schema": {
-            roles: issuer.roles,
-          },
-          "uri:to-describe_schema": issuer,
-        }
-
-        delete issuer.roles
-
-        finalEntries.push(participant)
-      })
-      return finalEntries
-    }
-
-    // Clean and restructure - "basic" structure
-    const cleanRoles = () => {
-      // const array = [...arr] // Creates a shallow copy that results in mutating the original issuers array
-      const array = JSON.parse(JSON.stringify(governanceState.roles)) // Creates a deep copy
-
-      let rolesByGovernanceId = []
-      array.forEach((element) => {
-        if (element.governance_id === governanceState.selectedGovernance.id) {
-          rolesByGovernanceId.push(element)
-        }
-      })
-
-      const finalEntries = []
-      rolesByGovernanceId.forEach((role) => {
-        delete role.created_at
-        delete role.updated_at
-        delete role.governance_id
-        delete role.role_id
-
-        const finalRole = {}
-        if (role.credentials.length !== 0) {
-          finalRole[role.role] = {
-            credentials: role.credentials,
-          }
-        } else {
-          finalRole[role.role] = {}
-        }
-
-        finalEntries.push(finalRole)
-      })
-      return finalEntries
-    }
-
-    const schemas = { schemas: cleanSchemas() }
-    const entries = cleanIssuers()
-    const roles = {
-      roles: Object.assign({}, ...cleanRoles()),
-    }
-    const metadata = cleanMetadata()
-
-    const issuers = {}
-    console.log(governanceState.issuersMetadata.id)
-
-    issuers.participants = {
-      id: governanceState.issuersMetadata.id
-        ? governanceState.issuersMetadata.id
-        : "9b1deb4d-test-uuid-9bdd-2b0d7b3dcb6d",
-      author: governanceState.issuersMetadata.author
-        ? governanceState.issuersMetadata.author
-        : "DID not anchored",
-      created_at: timestamp,
-      version: governanceState.issuersMetadata.version,
-      topic: governanceState.issuersMetadata.topic,
-      entries: Object.assign({}, ...entries), //convert an array of objects to a single object
-    }
+  const extractGovernance = () => {
+    // (eldersonar) Save as UNIX timestamp
+    const timestamp = Date.now() / 1000
 
     let result = {}
-    if (issuers.participants.author !== "DID not anchored") {
+
+    if (
+      governanceState.metadata.format === "1.0" ||
+      governanceState.metadata.format === "2.0"
+    ) {
+      const schemas = { schemas: handleSchemasExtraction1_0() }
+      const entries = handleIssuersExtraction1_0()
+      const roles = {
+        roles: Object.assign({}, ...handleRolesExtraction1_0()),
+      }
+      const metadata = handleMetadataExtraction1_0()
+
+      const issuers = {}
+      console.log(governanceState.issuersMetadata.id)
+
+      issuers.participants = {
+        id: governanceState.issuersMetadata.id
+          ? governanceState.issuersMetadata.id
+          : "9b1deb4d-test-uuid-9bdd-2b0d7b3dcb6d",
+        author: governanceState.issuersMetadata.author
+          ? governanceState.issuersMetadata.author
+          : "DID not anchored",
+        created_at: timestamp,
+        version: governanceState.issuersMetadata.version,
+        topic: governanceState.issuersMetadata.topic,
+        entries: Object.assign({}, ...entries), //convert an array of objects to a single object
+      }
+
+      // if (issuers.participants.author !== "DID not anchored") {
       result = {
         ...metadata,
         ...schemas,
@@ -425,15 +465,10 @@ function Governance() {
       // (eldersonar) This is simulating final result of the governance file
       console.log(result)
 
-      // Download the governance file
-      downloadFile(result)
+      return result
     } else {
-      dispatch(
-        setNotificationState({
-          message: "Publishing without public DID is forbidden",
-          type: "error",
-        })
-      )
+      // (eldersonar) governance format is not supported
+      return null
     }
   }
 
@@ -510,7 +545,7 @@ function Governance() {
           ></Input>
           <SubmitFormBtn type="submit">Upload</SubmitFormBtn>
         </Form>
-        <ExportBtn onClick={() => publishGovernance()}>Publish</ExportBtn>
+        <ExportBtn onClick={() => downloadFile()}>Publish</ExportBtn>
       </PageSection>
       <GovernanceMetadataEdit
         editMetadataModalIsOpen={editMetadataModalIsOpen}

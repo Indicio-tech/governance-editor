@@ -13,6 +13,7 @@
     {
       "id": "4CLG5pU5v294VdkMWxSByu:2:Medical_Release:1.0",
       "name": "Medical Release",
+      "creator": "Simon Nazarenko",
       "issuer_roles": [
         "release_issuer"
       ]
@@ -20,6 +21,7 @@
     {
       "id": "RuuJwd3JMffNwZ43DcJKN1:2:Medical_Release_Issuer:1.4",
       "name": "Medical Release Issuer",
+      "creator": "Mike Ebert",
       "issuer_roles": [
         "lab_authorizer"
       ]
@@ -27,6 +29,7 @@
     {
       "id": "4CLG5pU5v294VdkMWxSByu:2:Email:2.0",
       "name": "Validated Email 2",
+      "creator": "Sam Curren",
       "issuer_roles": [
         "email_v2.0_issuer"
       ]
