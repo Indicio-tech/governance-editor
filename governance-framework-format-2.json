@@ -50,7 +50,11 @@
           "email": "credential_manager@issuinggovernmentsite.org",
           "name": "Government",
           "phone": "123-234-3456",
-          "website": "issuinggovernmentsite.org"
+          "website": "issuinggovernmentsite.org",
+          "address": "222 E 3rd S",
+          "city": "Rexburg",
+          "zip": "83440",
+          "state": "ID"
         }
       },
       "did:example:healthlab": {
@@ -64,7 +68,11 @@
           "email": "credential_manager@issuinglabsite.com",
           "name": "Local Health Lab",
           "phone": "678-789-7890",
-          "website": "issuinglabsite.com"
+          "website": "issuinglabsite.com",
+          "address": "411 Beaver Ave. Apt. 15",
+          "city": "Austin",
+          "zip": "73344",
+          "state": "TX"
         }
       },
       "example:lab_licensing_board4": {
@@ -80,7 +88,11 @@
           "name": "Jon Doe",
           "website": "issuinggovernmentsite.org",
           "email": "slavaecu@gmail.com",
-          "phone": "123-456-7890"
+          "phone": "123-456-7890",
+          "address": "123 Main str",
+          "city": "Seattle",
+          "zip": "98106",
+          "state": "WA"
         }
       }
     }

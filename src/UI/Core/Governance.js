@@ -73,110 +73,196 @@ function Governance() {
     }
   }
 
+  // (eldersonar) Handle metadata assembly
+  const handleMetadataInjection1_0 = () => {
+    let metadata = {
+      description: governanceFile.description,
+      docs_uri: governanceFile.docs_uri,
+      format: governanceFile.format,
+      id: governanceFile.id,
+      last_updated: governanceFile.last_updated,
+      name: governanceFile.name,
+      version: governanceFile.version,
+    }
+    metadata["@context"] = governanceFile["@context"]
+    dispatch(setGovernanceMetadata(metadata))
+  }
+
+  // (eldersonar) Handle roles assembly
+  const handleRolesInjection1_0 = () => {
+    const roles = []
+    let role_id = 1
+    roles.governance_id = governanceFile.id
+    for (let key in governanceFile.roles) {
+      let role = {}
+      if (governanceFile.roles.hasOwnProperty(key)) {
+        role.role_id = role_id
+        role.governance_id = governanceFile.id
+        role.role = key
+        role.credentials = governanceFile.roles[key].credentials
+          ? governanceFile.roles[key].credentials
+          : []
+
+        roles.push(role)
+
+        // Increment for unique id
+        role_id++
+      }
+    }
+    dispatch(setGovernanceRoles(roles))
+  }
+
+  // (eldersonar) Handle schemas assembly
+  const handleSchemasInjection1_0 = () => {
+    let schemas = []
+    let schema_id = 1
+    governanceFile.schemas.forEach((schema) => {
+      schema.schema_id = schema_id
+      schema.governance_id = governanceFile.id
+      schemas.push(schema)
+
+      schema_id++
+    })
+    dispatch(setGovernanceSchemas(governanceFile.schemas))
+  }
+
+  const handleIssuersInjection1_0 = () => {
+    // (eldersonar) Handle issuers assembly
+    let issuers = []
+    let issuer_id = 1
+    for (let key in governanceFile.participants.entries) {
+      let issuer = {}
+      if (governanceFile.participants.entries.hasOwnProperty(key)) {
+        issuer.issuer_id = issuer_id
+        issuer.did = key
+        issuer.governance_id = governanceFile.id
+        issuer.email =
+          governanceFile.participants.entries[key][
+            "uri:to-describe_schema"
+          ].email
+        issuer.name =
+          governanceFile.participants.entries[key][
+            "uri:to-describe_schema"
+          ].name
+        issuer.phone =
+          governanceFile.participants.entries[key][
+            "uri:to-describe_schema"
+          ].phone
+        issuer.website =
+          governanceFile.participants.entries[key][
+            "uri:to-describe_schema"
+          ].website
+        issuer.roles =
+          governanceFile.participants.entries[key]["uri:to-role_schema"].roles
+
+        issuers.push(issuer)
+
+        // Increment for unique id
+        issuer_id++
+      }
+    }
+    dispatch(setGovernanceIssuers(issuers))
+  }
+
+  const handleIssuersInjection2_0 = () => {
+    // (eldersonar) Handle issuers assembly
+    let issuers = []
+    let issuer_id = 1
+    for (let key in governanceFile.participants.entries) {
+      let issuer = {}
+      if (governanceFile.participants.entries.hasOwnProperty(key)) {
+        issuer.issuer_id = issuer_id
+        issuer.did = key
+        issuer.governance_id = governanceFile.id
+        issuer.email =
+          governanceFile.participants.entries[key][
+            "uri:to-describe_schema"
+          ].email
+        issuer.name =
+          governanceFile.participants.entries[key][
+            "uri:to-describe_schema"
+          ].name
+        issuer.phone =
+          governanceFile.participants.entries[key][
+            "uri:to-describe_schema"
+          ].phone
+        issuer.website =
+          governanceFile.participants.entries[key][
+            "uri:to-describe_schema"
+          ].website
+        issuer.address =
+          governanceFile.participants.entries[key][
+            "uri:to-describe_schema"
+          ].address
+        issuer.city =
+          governanceFile.participants.entries[key][
+            "uri:to-describe_schema"
+          ].city
+        issuer.zip =
+          governanceFile.participants.entries[key]["uri:to-describe_schema"].zip
+        issuer.state =
+          governanceFile.participants.entries[key][
+            "uri:to-describe_schema"
+          ].state
+        issuer.roles =
+          governanceFile.participants.entries[key]["uri:to-role_schema"].roles
+
+        issuers.push(issuer)
+
+        // Increment for unique id
+        issuer_id++
+      }
+    }
+    dispatch(setGovernanceIssuers(issuers))
+  }
+
+  const handleIssuersMetadataInjection1_0 = () => {
+    // (eldersonar) Handle issuers metadata assembly
+    let issuersMetadata = {
+      author: governanceFile.participants.author,
+      id: governanceFile.participants.id,
+      created: governanceFile.participants.created,
+      topic: governanceFile.participants.topic,
+      version: governanceFile.participants.version,
+    }
+    dispatch(setSelectedGovernanceIssuersMetadata(issuersMetadata))
+  }
+
+  // (eldersonar) Handle data by format 1.0
+  const uploadFormat1_0 = () => {
+    // (eldersonar) Store the version of the original governance file
+    // (eldersonar) This is helpful for governance selection workflow
+    dispatch(setSelectedGovernance(governanceFile))
+
+    handleMetadataInjection1_0()
+    handleRolesInjection1_0()
+    handleSchemasInjection1_0()
+    handleIssuersInjection1_0()
+    handleIssuersMetadataInjection1_0()
+  }
+
+  // (eldersonar) Handle data by format 1.0
+  const uploadFormat2_0 = () => {
+    // (eldersonar) Store the version of the original governance file
+    // (eldersonar) This is helpful for governance selection workflow
+    dispatch(setSelectedGovernance(governanceFile))
+
+    handleMetadataInjection1_0()
+    handleRolesInjection1_0()
+    handleSchemasInjection1_0()
+    handleIssuersInjection2_0()
+    handleIssuersMetadataInjection1_0()
+  }
+
   const handleGovernanceUpload = async (e) => {
-    e.preventDefault()
-
-    if (governanceFile) {
-      // (eldersonar) Handle metadata assembly
-      let metadata = {
-        description: governanceFile.description,
-        docs_uri: governanceFile.docs_uri,
-        format: governanceFile.format,
-        id: governanceFile.id,
-        last_updated: governanceFile.last_updated,
-        name: governanceFile.name,
-        version: governanceFile.version,
-      }
-      metadata["@context"] = governanceFile["@context"]
-
-      // (eldersonar) Handle roles assembly
-      const roles = []
-      let role_id = 1
-      roles.governance_id = governanceFile.id
-      for (let key in governanceFile.roles) {
-        let role = {}
-        if (governanceFile.roles.hasOwnProperty(key)) {
-          role.role_id = role_id
-          role.governance_id = governanceFile.id
-          role.role = key
-          role.credentials = governanceFile.roles[key].credentials
-            ? governanceFile.roles[key].credentials
-            : []
-
-          roles.push(role)
-
-          // Increment for unique id
-          role_id++
-        }
-      }
-
-      // (eldersonar) Handle schemas assembly
-      let schemas = []
-      let schema_id = 1
-      governanceFile.schemas.forEach((schema) => {
-        schema.schema_id = schema_id
-        schema.governance_id = governanceFile.id
-        schemas.push(schema)
-
-        schema_id++
-      })
-
-      // (eldersonar) Handle issuers assembly
-      let issuers = []
-      let issuer_id = 1
-      for (let key2 in governanceFile.participants.entries) {
-        let issuer = {}
-        if (governanceFile.participants.entries.hasOwnProperty(key2)) {
-          issuer.issuer_id = issuer_id
-          issuer.did = key2
-          issuer.governance_id = governanceFile.id
-          issuer.email =
-            governanceFile.participants.entries[key2][
-              "uri:to-describe_schema"
-            ].email
-          issuer.name =
-            governanceFile.participants.entries[key2][
-              "uri:to-describe_schema"
-            ].name
-          issuer.phone =
-            governanceFile.participants.entries[key2][
-              "uri:to-describe_schema"
-            ].phone
-          issuer.website =
-            governanceFile.participants.entries[key2][
-              "uri:to-describe_schema"
-            ].website
-          issuer.roles =
-            governanceFile.participants.entries[key2][
-              "uri:to-role_schema"
-            ].roles
-
-          issuers.push(issuer)
-
-          // Increment for unique id
-          issuer_id++
-        }
-      }
-
-      // (eldersonar) Handle issuers metadata assembly
-      let issuersMetadata = {
-        author: governanceFile.participants.author,
-        id: governanceFile.participants.id,
-        created: governanceFile.participants.created,
-        topic: governanceFile.participants.topic,
-        version: governanceFile.participants.version,
-      }
-
-      // (eldersonar) Handle storage
-      dispatch(setSelectedGovernance(governanceFile))
-      dispatch(setGovernanceMetadata(metadata))
-      dispatch(setGovernanceSchemas(governanceFile.schemas))
-      dispatch(setGovernanceIssuers(issuers))
-      dispatch(setSelectedGovernanceIssuersMetadata(issuersMetadata))
-      dispatch(setGovernanceRoles(roles))
+    if (governanceFile && governanceFile.format === "1.0") {
+      uploadFormat1_0()
+    } else if (governanceFile && governanceFile.format === "2.0") {
+      uploadFormat2_0()
     } else {
       console.log("no governance")
     }
+    e.preventDefault()
   }
 
   // (eldersonar) Hadle JSON file download
