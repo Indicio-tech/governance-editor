@@ -56,6 +56,10 @@ function FormGovernanceIssuer(props) {
       website: form.get("website"),
       email: form.get("email"),
       phone: form.get("phone"),
+      address: form.get("address"),
+      city: form.get("city"),
+      zip: form.get("zip"),
+      state: form.get("state"),
       roles: governanceState.selectedIssuer.issuer_roles
         ? governanceState.selectedIssuer.issuer_roles
         : [],
@@ -147,6 +151,58 @@ function FormGovernanceIssuer(props) {
                   defaultValue={
                     governanceState.selectedIssuer
                       ? governanceState.selectedIssuer.phone
+                      : ""
+                  }
+                />
+              </InputBox>
+              <InputBox>
+                <ModalLabel htmlFor="address">Address</ModalLabel>
+                <InputFieldModal
+                  type="text"
+                  name="address"
+                  id="address"
+                  defaultValue={
+                    governanceState.selectedIssuer
+                      ? governanceState.selectedIssuer.address
+                      : ""
+                  }
+                />
+              </InputBox>
+              <InputBox>
+                <ModalLabel htmlFor="city">City</ModalLabel>
+                <InputFieldModal
+                  type="text"
+                  name="city"
+                  id="city"
+                  defaultValue={
+                    governanceState.selectedIssuer
+                      ? governanceState.selectedIssuer.city
+                      : ""
+                  }
+                />
+              </InputBox>
+              <InputBox>
+                <ModalLabel htmlFor="zip">Zip</ModalLabel>
+                <InputFieldModal
+                  type="text"
+                  name="zip"
+                  id="zip"
+                  defaultValue={
+                    governanceState.selectedIssuer
+                      ? governanceState.selectedIssuer.zip
+                      : ""
+                  }
+                />
+              </InputBox>
+              <InputBox>
+                <ModalLabel htmlFor="state">State</ModalLabel>
+                <InputFieldModal
+                  type="text"
+                  name="state"
+                  id="state"
+                  defaultValue={
+                    governanceState.selectedIssuer
+                      ? governanceState.selectedIssuer.state
                       : ""
                   }
                 />

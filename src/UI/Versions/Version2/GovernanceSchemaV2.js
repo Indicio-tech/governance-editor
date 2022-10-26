@@ -10,7 +10,7 @@ import {
   setGovernanceIssuers,
   setSelectedGovernanceSchema,
 } from "../../../redux/governanceReducer"
-import GovernanceSchemaEdit1 from "./GovernanceSchemaEdit1"
+import GovernanceSchemaEdit2 from "./GovernanceSchemaEdit2"
 
 // import { setNotificationState } from "../redux/notificationsReducer"
 
@@ -185,6 +185,14 @@ function GovernanceSchema(props) {
                   {selectedSchema !== undefined ? selectedSchema.id || "" : ""}
                 </td>
               </AttributeRow>
+              <AttributeRow>
+                <th>Creator:</th>
+                <td>
+                  {selectedSchema !== undefined
+                    ? selectedSchema.creator || ""
+                    : ""}
+                </td>
+              </AttributeRow>
             </tbody>
           </AttributeTable>
           <SaveBtn onClick={() => editSchema()}>Edit</SaveBtn>
@@ -207,7 +215,7 @@ function GovernanceSchema(props) {
           <OptionSelect />
           <SaveBtn onClick={() => addIssuer()}>Add</SaveBtn>
         </PageSection>
-        <GovernanceSchemaEdit1
+        <GovernanceSchemaEdit2
           sendRequest={props.sendRequest}
           schemaModalIsOpen={schemaModalIsOpen}
           closeSchemaModal={closeSchemaModal}

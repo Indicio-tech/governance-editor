@@ -90,7 +90,6 @@ function GovernanceSchemas(props) {
 
     const form = new FormData(newSchemaForm.current)
     const id = form.get("id")
-    const name = form.get("name")
     const suffix = "_issuer"
 
     let roleName = id.split(":")[2] + "_v" + id.split(":")[3]
@@ -101,7 +100,7 @@ function GovernanceSchemas(props) {
         schema_id: getNextId(governanceState.schemas, "schema_id"),
         id,
         governance_id: governanceState.selectedGovernance.id,
-        name,
+        name: form.get("name"),
         issuer_roles: [roleName],
       }
 

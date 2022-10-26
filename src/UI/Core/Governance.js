@@ -307,7 +307,7 @@ function Governance() {
   // (eldersonar) Handle data clean and restructure for the metadata
   const handleMetadataExtraction1_0 = () => {
     // (eldersonar) Save as UNIX timestamp
-    const timestamp = Date.now() / 1000
+    const timestamp = Math.floor(Date.now() / 1000)
 
     const obj = JSON.parse(JSON.stringify(governanceState.metadata)) // Creates a deep copy
     obj.last_updated = timestamp
@@ -348,8 +348,6 @@ function Governance() {
 
   // (eldersonar) Handle data clean and restructure for the issuers
   const handleIssuersExtraction1_0 = () => {
-    console.log("Original array of issuers", governanceState.issuers)
-
     const array = JSON.parse(JSON.stringify(governanceState.issuers)) // Creates a deep copy
 
     let issuersByGovernanceId = []
@@ -424,7 +422,7 @@ function Governance() {
 
   const extractGovernance = () => {
     // (eldersonar) Save as UNIX timestamp
-    const timestamp = Date.now() / 1000
+    const timestamp = Math.floor(Date.now() / 1000)
 
     let result = {}
 
@@ -440,7 +438,6 @@ function Governance() {
       const metadata = handleMetadataExtraction1_0()
 
       const issuers = {}
-      console.log(governanceState.issuersMetadata.id)
 
       issuers.participants = {
         id: governanceState.issuersMetadata.id

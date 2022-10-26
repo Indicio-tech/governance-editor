@@ -48,21 +48,16 @@ function EditFormGovernanceMetadata(props) {
     const timestamp = Date.now()
 
     const form = new FormData(metadataForm.current)
-    const name = form.get("name")
-    const description = form.get("description")
-    const version = form.get("version")
-    const format = form.get("format")
-    const docs_uri = form.get("docs_uri")
 
     const metadata = {
       id: governanceState.selectedGovernance
         ? governanceState.selectedGovernance.id
         : null,
-      name,
-      description,
-      version,
-      format,
-      docs_uri,
+      name: form.get("name"),
+      description: form.get("description"),
+      version: form.get("version"),
+      format: form.get("format"),
+      docs_uri: form.get("docs_uri"),
       // selected: governanceState.selectedGovernance
       //   ? governanceState.selectedGovernance.selected
       //   : false,

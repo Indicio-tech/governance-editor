@@ -10,14 +10,19 @@ import {
 import AppHeader from "./UI/Core/AppHeader"
 import styled from "styled-components"
 
+// Core
 import Governance from "./UI/Core/Governance"
-import GovernanceSchemas from "./UI/Versions/Version1/GovernanceSchemasV1"
 
+// Format 1.0
+import GovernanceSchemasV1 from "./UI/Versions/Version1/GovernanceSchemasV1"
+import GovernanceSchemaV1 from "./UI/Versions/Version1/GovernanceSchemaV1"
+import GovernanceIssuersV1 from "./UI/Versions/Version1/GovernanceIssuersV1"
+import GovernanceIssuerV1 from "./UI/Versions/Version1/GovernanceIssuerV1"
+// Format 2.0
 import GovernanceSchemasV2 from "./UI/Versions/Version2/GovernanceSchemasV2"
-
-import GovernanceSchema from "./UI/Versions/Version1/GovernanceSchemaV1"
-import GovernanceIssuers from "./UI/Versions/Version1/GovernanceIssuersV1"
-import GovernanceIssuer from "./UI/Versions/Version1/GovernanceIssuerV1"
+import GovernanceSchemaV2 from "./UI/Versions/Version2/GovernanceSchemaV2"
+import GovernanceIssuersV2 from "./UI/Versions/Version2/GovernanceIssuersV2"
+import GovernanceIssuerV2 from "./UI/Versions/Version2/GovernanceIssuerV2"
 
 import "./App.css"
 
@@ -62,7 +67,7 @@ function App() {
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceSchemas history={history} />
+                    <GovernanceSchemasV1 history={history} />
                   </Main>
                 </Frame>
               )
@@ -75,7 +80,10 @@ function App() {
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceSchema history={history} id={match.params.id} />
+                    <GovernanceSchemaV1
+                      history={history}
+                      id={match.params.id}
+                    />
                   </Main>
                 </Frame>
               )
@@ -89,7 +97,7 @@ function App() {
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceIssuers history={history} />
+                    <GovernanceIssuersV1 history={history} />
                   </Main>
                 </Frame>
               )
@@ -102,7 +110,7 @@ function App() {
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceIssuer
+                    <GovernanceIssuerV1
                       history={history}
                       issuerId={match.params.issuerId}
                     />
@@ -157,7 +165,10 @@ function App() {
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceSchema history={history} id={match.params.id} />
+                    <GovernanceSchemaV2
+                      history={history}
+                      id={match.params.id}
+                    />
                   </Main>
                 </Frame>
               )
@@ -171,7 +182,7 @@ function App() {
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceIssuers history={history} />
+                    <GovernanceIssuersV2 history={history} />
                   </Main>
                 </Frame>
               )
@@ -184,7 +195,7 @@ function App() {
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceIssuer
+                    <GovernanceIssuerV2
                       history={history}
                       issuerId={match.params.issuerId}
                     />
@@ -200,6 +211,7 @@ function App() {
       </Router>
     )
   } else {
+    // Render governance format 1.0 by default
     return (
       <Router>
         <Switch>
@@ -226,7 +238,7 @@ function App() {
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceSchemas history={history} />
+                    <GovernanceSchemasV1 history={history} />
                   </Main>
                 </Frame>
               )
@@ -239,7 +251,10 @@ function App() {
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceSchema history={history} id={match.params.id} />
+                    <GovernanceSchemaV1
+                      history={history}
+                      id={match.params.id}
+                    />
                   </Main>
                 </Frame>
               )
@@ -253,7 +268,7 @@ function App() {
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceIssuers history={history} />
+                    <GovernanceIssuersV1 history={history} />
                   </Main>
                 </Frame>
               )
@@ -266,7 +281,7 @@ function App() {
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceIssuer
+                    <GovernanceIssuerV1
                       history={history}
                       issuerId={match.params.issuerId}
                     />
