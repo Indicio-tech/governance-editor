@@ -351,6 +351,10 @@ function Governance() {
       if (governanceState.metadata.format === "1.0") {
         delete schema.creator
       }
+      // (eldersonar) Add placeholders if values are not provided
+      else if (governanceState.metadata.format === "2.0") {
+        schema.creator = schema.creator || ""
+      }
     })
 
     return schemasByGovernanceId
@@ -380,6 +384,13 @@ function Governance() {
         delete issuer.city
         delete issuer.zip
         delete issuer.state
+      }
+      // (eldersonar) Add placeholders if values are not provided
+      else if (governanceState.metadata.format === "2.0") {
+        issuer.address = issuer.address || ""
+        issuer.city = issuer.city || ""
+        issuer.zip = issuer.zip || ""
+        issuer.state = issuer.state || ""
       }
 
       const participant = {}
