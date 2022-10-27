@@ -3,16 +3,29 @@ import { useSelector, useDispatch } from "react-redux"
 import styled from "styled-components"
 
 import { setNotificationState } from "../../redux/notificationsReducer"
-import GovernanceMetadataEdit from "../Core/GovernanceMetadataEdit"
+import GovernanceMetadataEdit from "./MetadataEdit"
 import {
   setSelectedGovernance,
-  setGovernanceMetadata,
-  setGovernanceSchemas,
-  setGovernanceIssuers,
-  setSelectedGovernanceIssuersMetadata,
-  setGovernanceRoles,
+  // setGovernanceMetadata,
   clearGovernanceState,
 } from "../../redux/governanceReducer"
+
+import {
+  handleMetadataInjection1_0,
+  handleRolesInjection1_0,
+  handleSchemasInjection1_0,
+  handleIssuersInjection1_0,
+  handleIssuersMetadataInjection1_0,
+} from "../Formats/Format1/DataInjection1"
+
+import { handleIssuersInjection2_0 } from "../Formats/Format2/DataInjection2"
+
+import {
+  handleMetadataExtraction1_0,
+  handleSchemasExtraction1_0,
+  handleIssuersExtraction1_0,
+  handleRolesExtraction1_0,
+} from "../Formats/Format1/DataExtraction1"
 
 import PageHeader from "../Core/PageHeader.js"
 import PageSection from "../Core/PageSection.js"
@@ -74,177 +87,22 @@ function Governance() {
     }
   }
 
-  // (eldersonar) Handle metadata assembly
-  const handleMetadataInjection1_0 = () => {
-    let metadata = {
-      description: governanceFile.description,
-      docs_uri: governanceFile.docs_uri,
-      format: governanceFile.format,
-      id: governanceFile.id,
-      last_updated: governanceFile.last_updated,
-      name: governanceFile.name,
-      version: governanceFile.version,
-    }
-    metadata["@context"] = governanceFile["@context"]
-    dispatch(setGovernanceMetadata(metadata))
-  }
-
-  // (eldersonar) Handle roles assembly
-  const handleRolesInjection1_0 = () => {
-    const roles = []
-    let role_id = 1
-    roles.governance_id = governanceFile.id
-    for (let key in governanceFile.roles) {
-      let role = {}
-      if (governanceFile.roles.hasOwnProperty(key)) {
-        role.role_id = role_id
-        role.governance_id = governanceFile.id
-        role.role = key
-        role.credentials = governanceFile.roles[key].credentials
-          ? governanceFile.roles[key].credentials
-          : []
-
-        roles.push(role)
-
-        // Increment for unique id
-        role_id++
-      }
-    }
-    dispatch(setGovernanceRoles(roles))
-  }
-
-  // (eldersonar) Handle schemas assembly
-  const handleSchemasInjection1_0 = () => {
-    let schemas = []
-    let schema_id = 1
-    governanceFile.schemas.forEach((schema) => {
-      schema.schema_id = schema_id
-      schema.governance_id = governanceFile.id
-      schemas.push(schema)
-
-      schema_id++
-    })
-    dispatch(setGovernanceSchemas(governanceFile.schemas))
-  }
-
-  const handleIssuersInjection1_0 = () => {
-    // (eldersonar) Handle issuers assembly
-    let issuers = []
-    let issuer_id = 1
-    for (let key in governanceFile.participants.entries) {
-      let issuer = {}
-      if (governanceFile.participants.entries.hasOwnProperty(key)) {
-        issuer.issuer_id = issuer_id
-        issuer.did = key
-        issuer.governance_id = governanceFile.id
-        issuer.email =
-          governanceFile.participants.entries[key][
-            "uri:to-describe_schema"
-          ].email
-        issuer.name =
-          governanceFile.participants.entries[key][
-            "uri:to-describe_schema"
-          ].name
-        issuer.phone =
-          governanceFile.participants.entries[key][
-            "uri:to-describe_schema"
-          ].phone
-        issuer.website =
-          governanceFile.participants.entries[key][
-            "uri:to-describe_schema"
-          ].website
-        issuer.roles =
-          governanceFile.participants.entries[key]["uri:to-role_schema"].roles
-
-        issuers.push(issuer)
-
-        // Increment for unique id
-        issuer_id++
-      }
-    }
-    dispatch(setGovernanceIssuers(issuers))
-  }
-
-  const handleIssuersInjection2_0 = () => {
-    // (eldersonar) Handle issuers assembly
-    let issuers = []
-    let issuer_id = 1
-    for (let key in governanceFile.participants.entries) {
-      let issuer = {}
-      if (governanceFile.participants.entries.hasOwnProperty(key)) {
-        issuer.issuer_id = issuer_id
-        issuer.did = key
-        issuer.governance_id = governanceFile.id
-        issuer.email =
-          governanceFile.participants.entries[key][
-            "uri:to-describe_schema"
-          ].email
-        issuer.name =
-          governanceFile.participants.entries[key][
-            "uri:to-describe_schema"
-          ].name
-        issuer.phone =
-          governanceFile.participants.entries[key][
-            "uri:to-describe_schema"
-          ].phone
-        issuer.website =
-          governanceFile.participants.entries[key][
-            "uri:to-describe_schema"
-          ].website
-        issuer.address =
-          governanceFile.participants.entries[key][
-            "uri:to-describe_schema"
-          ].address
-        issuer.city =
-          governanceFile.participants.entries[key][
-            "uri:to-describe_schema"
-          ].city
-        issuer.zip =
-          governanceFile.participants.entries[key]["uri:to-describe_schema"].zip
-        issuer.state =
-          governanceFile.participants.entries[key][
-            "uri:to-describe_schema"
-          ].state
-        issuer.roles =
-          governanceFile.participants.entries[key]["uri:to-role_schema"].roles
-
-        issuers.push(issuer)
-
-        // Increment for unique id
-        issuer_id++
-      }
-    }
-    dispatch(setGovernanceIssuers(issuers))
-  }
-
-  const handleIssuersMetadataInjection1_0 = () => {
-    // (eldersonar) Handle issuers metadata assembly
-    let issuersMetadata = {
-      author: governanceFile.participants.author,
-      id: governanceFile.participants.id,
-      created: governanceFile.participants.created,
-      topic: governanceFile.participants.topic,
-      version: governanceFile.participants.version,
-    }
-    dispatch(setSelectedGovernanceIssuersMetadata(issuersMetadata))
+  // (eldersonar) Handle data by format 1.0
+  const uploadFormat1_0 = (file) => {
+    handleMetadataInjection1_0(file, dispatch)
+    handleRolesInjection1_0(file, dispatch)
+    handleSchemasInjection1_0(file, dispatch)
+    handleIssuersInjection1_0(file, dispatch)
+    handleIssuersMetadataInjection1_0(file, dispatch)
   }
 
   // (eldersonar) Handle data by format 1.0
-  const uploadFormat1_0 = () => {
-    handleMetadataInjection1_0()
-    handleRolesInjection1_0()
-    handleSchemasInjection1_0()
-    handleIssuersInjection1_0()
-    handleIssuersMetadataInjection1_0()
-  }
-
-  // (eldersonar) Handle data by format 1.0
-  const uploadFormat2_0 = () => {
-    handleMetadataInjection1_0()
-    handleRolesInjection1_0()
-    handleSchemasInjection1_0()
-    handleIssuersInjection2_0()
-    handleIssuersMetadataInjection1_0()
+  const uploadFormat2_0 = (file) => {
+    handleMetadataInjection1_0(file, dispatch)
+    handleRolesInjection1_0(file, dispatch)
+    handleSchemasInjection1_0(file, dispatch)
+    handleIssuersInjection2_0(file, dispatch)
+    handleIssuersMetadataInjection1_0(file, dispatch)
   }
 
   // (eldersonar) Handle governance injection based on the format type
@@ -254,9 +112,9 @@ function Governance() {
     dispatch(setSelectedGovernance(governanceFile))
 
     if (governanceFile && governanceFile.format === "1.0") {
-      uploadFormat1_0()
+      uploadFormat1_0(governanceFile)
     } else if (governanceFile && governanceFile.format === "2.0") {
-      uploadFormat2_0()
+      uploadFormat2_0(governanceFile)
     } else {
       // (eldersonar) Do we want to reject unsupported file formats or just inject data based on format 1.0?
       dispatch(
@@ -314,133 +172,6 @@ function Governance() {
     }
   }
 
-  // (eldersonar) Handle data clean and restructure for the metadata
-  const handleMetadataExtraction1_0 = () => {
-    // (eldersonar) Save as UNIX timestamp
-    const timestamp = Math.floor(Date.now() / 1000)
-
-    const obj = JSON.parse(JSON.stringify(governanceState.metadata)) // Creates a deep copy
-    obj.last_updated = timestamp
-    // delete obj.selected // This is part of governance seletion feature (not presented here)
-
-    // Update the metadata object too to keep it consistent with exported file
-    dispatch(setGovernanceMetadata(obj))
-
-    return obj
-  }
-
-  // (eldersonar) Handle data clean and restructure for the schemas
-  const handleSchemasExtraction1_0 = () => {
-    // const array = [...governanceState.schemas]
-    const array = JSON.parse(JSON.stringify(governanceState.schemas)) // Creates a deep copy
-
-    let schemasByGovernanceId = []
-    array.forEach((element) => {
-      if (element.governance_id === governanceState.selectedGovernance.id) {
-        schemasByGovernanceId.push(element)
-      }
-    })
-
-    schemasByGovernanceId.forEach((schema) => {
-      delete schema.created_at
-      delete schema.updated_at
-      delete schema.governance_id
-      delete schema.schema_id
-
-      // (eldersonar) Remove parts associated with format 2.0. Importand while downgrading the format type
-      if (governanceState.metadata.format === "1.0") {
-        delete schema.creator
-      }
-      // (eldersonar) Add placeholders if values are not provided
-      else if (governanceState.metadata.format === "2.0") {
-        schema.creator = schema.creator || ""
-      }
-    })
-
-    return schemasByGovernanceId
-  }
-
-  // (eldersonar) Handle data clean and restructure for the issuers
-  const handleIssuersExtraction1_0 = () => {
-    const array = JSON.parse(JSON.stringify(governanceState.issuers)) // Creates a deep copy
-
-    let issuersByGovernanceId = []
-    array.forEach((element) => {
-      if (element.governance_id === governanceState.selectedGovernance.id) {
-        issuersByGovernanceId.push(element)
-      }
-    })
-
-    const finalEntries = []
-    issuersByGovernanceId.forEach((issuer) => {
-      delete issuer.created_at
-      delete issuer.updated_at
-      delete issuer.governance_id
-      delete issuer.issuer_id
-
-      // (eldersonar) Remove parts associated with format 2.0. Importand while downgrading the format type
-      if (governanceState.metadata.format === "1.0") {
-        delete issuer.address
-        delete issuer.city
-        delete issuer.zip
-        delete issuer.state
-      }
-      // (eldersonar) Add placeholders if values are not provided
-      else if (governanceState.metadata.format === "2.0") {
-        issuer.address = issuer.address || ""
-        issuer.city = issuer.city || ""
-        issuer.zip = issuer.zip || ""
-        issuer.state = issuer.state || ""
-      }
-
-      const participant = {}
-      participant[issuer.did] = {
-        "uri:to-role_schema": {
-          roles: issuer.roles,
-        },
-        "uri:to-describe_schema": issuer,
-      }
-
-      delete issuer.roles
-
-      finalEntries.push(participant)
-    })
-    return finalEntries
-  }
-
-  // (eldersonar) Handle data clean and restructure for the roles
-  const handleRolesExtraction1_0 = () => {
-    // const array = [...arr] // Creates a shallow copy that results in mutating the original issuers array
-    const array = JSON.parse(JSON.stringify(governanceState.roles)) // Creates a deep copy
-
-    let rolesByGovernanceId = []
-    array.forEach((element) => {
-      if (element.governance_id === governanceState.selectedGovernance.id) {
-        rolesByGovernanceId.push(element)
-      }
-    })
-
-    const finalEntries = []
-    rolesByGovernanceId.forEach((role) => {
-      delete role.created_at
-      delete role.updated_at
-      delete role.governance_id
-      delete role.role_id
-
-      const finalRole = {}
-      if (role.credentials.length !== 0) {
-        finalRole[role.role] = {
-          credentials: role.credentials,
-        }
-      } else {
-        finalRole[role.role] = {}
-      }
-
-      finalEntries.push(finalRole)
-    })
-    return finalEntries
-  }
-
   const extractGovernance = () => {
     // (eldersonar) Save as UNIX timestamp
     const timestamp = Math.floor(Date.now() / 1000)
@@ -451,13 +182,13 @@ function Governance() {
       governanceState.metadata.format === "1.0" ||
       governanceState.metadata.format === "2.0"
     ) {
-      const schemas = { schemas: handleSchemasExtraction1_0() }
+      console.log("calling extraction functions")
       const entries = handleIssuersExtraction1_0()
+      const metadata = handleMetadataExtraction1_0(dispatch)
       const roles = {
         roles: Object.assign({}, ...handleRolesExtraction1_0()),
       }
-      const metadata = handleMetadataExtraction1_0()
-
+      const schemas = { schemas: handleSchemasExtraction1_0() }
       const issuers = {}
 
       issuers.participants = {
