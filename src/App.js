@@ -13,21 +13,18 @@ import styled from "styled-components"
 // Core
 import Governance from "./UI/Core/Governance"
 import { useNotification } from "./UI/Core/NotificationProvider"
-import {
-  clearNotificationsState,
-  // setNotificationState,
-} from "./redux/notificationsReducer"
+import { clearNotificationsState } from "./redux/notificationsReducer"
 
 // Format 1.0
-import GovernanceSchemasV1 from "./UI/Versions/Version1/GovernanceSchemasV1"
-import GovernanceSchemaV1 from "./UI/Versions/Version1/GovernanceSchemaV1"
-import GovernanceIssuersV1 from "./UI/Versions/Version1/GovernanceIssuersV1"
-import GovernanceIssuerV1 from "./UI/Versions/Version1/GovernanceIssuerV1"
+import GovernanceSchemasV1 from "./UI/Formats/Format1/Schemas1"
+import GovernanceSchemaV1 from "./UI/Formats/Format1/Schema1"
+import GovernanceIssuersV1 from "./UI/Formats/Format1/Issuers1"
+import GovernanceIssuerV1 from "./UI/Formats/Format1/Issuer1"
 // Format 2.0
-import GovernanceSchemasV2 from "./UI/Versions/Version2/GovernanceSchemasV2"
-import GovernanceSchemaV2 from "./UI/Versions/Version2/GovernanceSchemaV2"
-import GovernanceIssuersV2 from "./UI/Versions/Version2/GovernanceIssuersV2"
-import GovernanceIssuerV2 from "./UI/Versions/Version2/GovernanceIssuerV2"
+import GovernanceSchemasV2 from "./UI/Formats/Format2/Schemas2"
+import GovernanceSchemaV2 from "./UI/Formats/Format2/Schema2"
+import GovernanceIssuersV2 from "./UI/Formats/Format2/Issuers2"
+import GovernanceIssuerV2 from "./UI/Formats/Format2/Issuer2"
 
 import "./App.css"
 

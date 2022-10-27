@@ -10,7 +10,7 @@ import {
   setGovernanceIssuers,
   setSelectedGovernanceSchema,
 } from "../../../redux/governanceReducer"
-import GovernanceSchemaEdit1 from "./GovernanceSchemaEdit1"
+import GovernanceSchemaEdit1 from "./SchemaEdit1"
 
 // import { setNotificationState } from "../redux/notificationsReducer"
 

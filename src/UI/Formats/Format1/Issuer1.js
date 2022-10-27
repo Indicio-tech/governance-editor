@@ -9,7 +9,7 @@ import {
   setSelectedGovernanceIssuer,
   setGovernanceIssuers,
 } from "../../../redux/governanceReducer"
-import GovernanceIssuerEditV2 from "./GovernanceIssuerEditV2"
+import GovernanceIssuerEditV1 from "./IssuerEdit1"
 
 // import { setNotificationState } from "../redux/notificationsReducer"
 
@@ -206,36 +206,6 @@ function GovernanceIssuer(props) {
                     : ""}
                 </td>
               </AttributeRow>
-              <AttributeRow>
-                <th>Address:</th>
-                <td>
-                  {selectedIssuer !== undefined
-                    ? selectedIssuer.address || ""
-                    : ""}
-                </td>
-              </AttributeRow>
-              <AttributeRow>
-                <th>City:</th>
-                <td>
-                  {selectedIssuer !== undefined
-                    ? selectedIssuer.city || ""
-                    : ""}
-                </td>
-              </AttributeRow>
-              <AttributeRow>
-                <th>Zip:</th>
-                <td>
-                  {selectedIssuer !== undefined ? selectedIssuer.zip || "" : ""}
-                </td>
-              </AttributeRow>
-              <AttributeRow>
-                <th>State:</th>
-                <td>
-                  {selectedIssuer !== undefined
-                    ? selectedIssuer.state || ""
-                    : ""}
-                </td>
-              </AttributeRow>
             </tbody>
           </AttributeTable>
           <SaveBtn onClick={() => editIssuer()}>Edit</SaveBtn>
@@ -258,7 +228,7 @@ function GovernanceIssuer(props) {
           <OptionSelect />
           <SaveBtn onClick={() => addSchema()}>Add</SaveBtn>
         </PageSection>
-        <GovernanceIssuerEditV2
+        <GovernanceIssuerEditV1
           sendRequest={props.sendRequest}
           issuerModalIsOpen={issuerModalIsOpen}
           closeIssuerModal={closeIssuerModal}
