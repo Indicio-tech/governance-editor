@@ -120,8 +120,7 @@ function GovernanceSchemas(props) {
     } else {
       dispatch(
         setNotificationState({
-          message:
-            "The governance (governance metadata) must be selected first",
+          message: "Can't create schema before selecting governance file",
           type: "error",
         })
       )

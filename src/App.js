@@ -1,5 +1,5 @@
-import React from "react"
-import { useSelector } from "react-redux"
+import React, { useEffect } from "react"
+import { useSelector, useDispatch } from "react-redux"
 
 import {
   BrowserRouter as Router,
@@ -12,6 +12,11 @@ import styled from "styled-components"
 
 // Core
 import Governance from "./UI/Core/Governance"
+import { useNotification } from "./UI/Core/NotificationProvider"
+import {
+  clearNotificationsState,
+  // setNotificationState,
+} from "./redux/notificationsReducer"
 
 // Format 1.0
 import GovernanceSchemasV1 from "./UI/Versions/Version1/GovernanceSchemasV1"
@@ -37,8 +42,19 @@ const Main = styled.main`
 `
 
 function App() {
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
   const governanceState = useSelector((state) => state.governance)
+  const notificationsState = useSelector((state) => state.notifications)
+  const { notificationType, notificationMessage } = notificationsState
+
+  const setNotification = useNotification()
+
+  useEffect(() => {
+    if ((notificationMessage, notificationType)) {
+      setNotification(notificationMessage, notificationType)
+      dispatch(clearNotificationsState())
+    }
+  }, [notificationMessage, notificationType, setNotification, dispatch])
 
   if (governanceState.metadata.format === "1.0") {
     return (

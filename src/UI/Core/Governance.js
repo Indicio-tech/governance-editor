@@ -11,6 +11,7 @@ import {
   setGovernanceIssuers,
   setSelectedGovernanceIssuersMetadata,
   setGovernanceRoles,
+  clearGovernanceState,
 } from "../../redux/governanceReducer"
 
 import PageHeader from "../Core/PageHeader.js"
@@ -257,7 +258,13 @@ function Governance() {
     } else if (governanceFile && governanceFile.format === "2.0") {
       uploadFormat2_0()
     } else {
-      console.log("no governance")
+      // (eldersonar) Do we want to reject unsupported file formats or just inject data based on format 1.0?
+      dispatch(
+        setNotificationState({
+          message: `Uploading a file that is not governance, or governance format is not supported`,
+          type: "error",
+        })
+      )
     }
     e.preventDefault()
   }
@@ -286,6 +293,9 @@ function Governance() {
         // clean up element & remove ObjectURL to avoid memory leak
         document.body.removeChild(link)
         URL.revokeObjectURL(href)
+
+        // (eldersonar) Clear governance state
+        dispatch(clearGovernanceState())
       } else {
         dispatch(
           setNotificationState({
@@ -297,7 +307,7 @@ function Governance() {
     } else {
       dispatch(
         setNotificationState({
-          message: `Error: governance file was not created. The governance file format ${governanceState.metadata.format} is not supported`,
+          message: `Governance file is not selected, or the governance format is not supported`,
           type: "error",
         })
       )
@@ -452,7 +462,6 @@ function Governance() {
         entries: Object.assign({}, ...entries), //convert an array of objects to a single object
       }
 
-      // if (issuers.participants.author !== "DID not anchored") {
       result = {
         ...metadata,
         ...schemas,
@@ -476,7 +485,23 @@ function Governance() {
       <PageHeader title="Ecosystem Governance" />
       <PageSection>
         <GovernanceHeader>Governance Metadata</GovernanceHeader>
-        <EditBtn onClick={() => editMetadata()}>Edit</EditBtn>
+        <EditBtn
+          onClick={() =>
+            governanceState.metadata &&
+            Object.keys(governanceState.metadata).length !== 0 &&
+            Object.getPrototypeOf(governanceState.metadata) === Object.prototype
+              ? editMetadata()
+              : dispatch(
+                  setNotificationState({
+                    message:
+                      "Can't edit metadata before selecting governance file",
+                    type: "error",
+                  })
+                )
+          }
+        >
+          Edit
+        </EditBtn>
         <AttributeTable>
           <tbody>
             <AttributeRow>
@@ -522,7 +547,6 @@ function Governance() {
             <AttributeRow>
               <th>Last Updated:</th>
               <td>
-                {/* TODO: decide on the date format and handle it here */}
                 {governanceState.metadata &&
                 Object.keys(governanceState.metadata).length !== 0 &&
                 Object.getPrototypeOf(governanceState.metadata) ===

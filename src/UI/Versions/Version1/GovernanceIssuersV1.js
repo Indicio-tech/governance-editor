@@ -91,8 +91,7 @@ function GovernanceIssuers(props) {
     } else {
       dispatch(
         setNotificationState({
-          message:
-            "The governance (governance metadata) must be selected first",
+          message: "Can't create issuer before selecting governance file",
           type: "error",
         })
       )
