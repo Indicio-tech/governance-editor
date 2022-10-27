@@ -3,11 +3,11 @@ import { useSelector, useDispatch } from "react-redux"
 import styled from "styled-components"
 
 import { setNotificationState } from "../../redux/notificationsReducer"
+import GovernanceMetadataAdd from "./MetadataAdd"
 import GovernanceMetadataEdit from "./MetadataEdit"
 import {
   setSelectedGovernance,
-  // setGovernanceMetadata,
-  clearGovernanceState,
+  // clearGovernanceState,
 } from "../../redux/governanceReducer"
 
 import {
@@ -69,6 +69,13 @@ function Governance() {
 
   const [editMetadataModalIsOpen, setEditMetadataModalIsOpen] = useState(false)
   const closeEditMetadataModal = () => setEditMetadataModalIsOpen(false)
+
+  const [addMetadataModalIsOpen, setAddMetadataModalIsOpen] = useState(false)
+  const closeAddMetadataModal = () => setAddMetadataModalIsOpen(false)
+
+  const addMetadata = () => {
+    setAddMetadataModalIsOpen(true)
+  }
 
   const editMetadata = () => {
     console.log("setEditMetadataModalIsOpen(true)")
@@ -151,9 +158,6 @@ function Governance() {
         // clean up element & remove ObjectURL to avoid memory leak
         document.body.removeChild(link)
         URL.revokeObjectURL(href)
-
-        // (eldersonar) Clear governance state
-        dispatch(clearGovernanceState())
       } else {
         dispatch(
           setNotificationState({
@@ -244,6 +248,7 @@ function Governance() {
         >
           Edit
         </EditBtn>
+        <EditBtn onClick={() => addMetadata()}>Add</EditBtn>
         <AttributeTable>
           <tbody>
             <AttributeRow>
@@ -312,6 +317,10 @@ function Governance() {
         </Form>
         <ExportBtn onClick={() => downloadFile()}>Publish</ExportBtn>
       </PageSection>
+      <GovernanceMetadataAdd
+        addMetadataModalIsOpen={addMetadataModalIsOpen}
+        closeAddMetadataModal={closeAddMetadataModal}
+      />
       <GovernanceMetadataEdit
         editMetadataModalIsOpen={editMetadataModalIsOpen}
         closeEditMetadataModal={closeEditMetadataModal}
