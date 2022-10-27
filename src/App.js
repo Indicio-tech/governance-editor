@@ -74,7 +74,6 @@ function App() {
               )
             }}
           />
-
           <Route
             path={`/governance/schemas`}
             exact
@@ -141,7 +140,9 @@ function App() {
         </Switch>
       </Router>
     )
-  } else if (governanceState.metadata.format === "2.0") {
+  }
+  // (eldersonar) Render the highest format of the governance file by default (2.0)
+  else {
     return (
       <Router>
         <Switch>
@@ -159,7 +160,6 @@ function App() {
               )
             }}
           />
-
           <Route
             path={`/governance/schemas`}
             exact
@@ -212,92 +212,6 @@ function App() {
                   <AppHeader match={match} history={history} />
                   <Main>
                     <GovernanceIssuerV2
-                      history={history}
-                      issuerId={match.params.issuerId}
-                    />
-                  </Main>
-                </Frame>
-              )
-            }}
-          />
-
-          {/* Redirect to root if no route match is found */}
-          <Route render={() => <Redirect to="/governance" />} />
-        </Switch>
-      </Router>
-    )
-  } else {
-    // Render governance format 1.0 by default
-    return (
-      <Router>
-        <Switch>
-          <Route
-            path="/governance"
-            exact
-            render={({ match, history }) => {
-              return (
-                <Frame id="app-frame">
-                  <AppHeader match={match} history={history} />
-                  <Main>
-                    <Governance />
-                  </Main>
-                </Frame>
-              )
-            }}
-          />
-
-          <Route
-            path={`/governance/schemas`}
-            exact
-            render={({ match, history }) => {
-              return (
-                <Frame id="app-frame">
-                  <AppHeader match={match} history={history} />
-                  <Main>
-                    <GovernanceSchemasV1 history={history} />
-                  </Main>
-                </Frame>
-              )
-            }}
-          />
-          <Route
-            path={`/governance/schemas/:id`}
-            render={({ match, history }) => {
-              return (
-                <Frame id="app-frame">
-                  <AppHeader match={match} history={history} />
-                  <Main>
-                    <GovernanceSchemaV1
-                      history={history}
-                      id={match.params.id}
-                    />
-                  </Main>
-                </Frame>
-              )
-            }}
-          />
-          <Route
-            path={`/governance/issuers`}
-            exact
-            render={({ match, history }) => {
-              return (
-                <Frame id="app-frame">
-                  <AppHeader match={match} history={history} />
-                  <Main>
-                    <GovernanceIssuersV1 history={history} />
-                  </Main>
-                </Frame>
-              )
-            }}
-          />
-          <Route
-            path={`/governance/issuers/:issuerId`}
-            render={({ match, history }) => {
-              return (
-                <Frame id="app-frame">
-                  <AppHeader match={match} history={history} />
-                  <Main>
-                    <GovernanceIssuerV1
                       history={history}
                       issuerId={match.params.issuerId}
                     />
