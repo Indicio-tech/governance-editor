@@ -203,8 +203,10 @@ function Governance() {
           ? governanceState.issuersMetadata.author
           : "DID not anchored",
         created_at: timestamp,
-        version: governanceState.issuersMetadata.version,
-        topic: governanceState.issuersMetadata.topic,
+        version: governanceState.issuersMetadata.version
+          ? governanceState.issuersMetadata.version
+          : governanceState.metadata.version,
+        topic: governanceState.issuersMetadata.topic || "No topic provided",
         entries: Object.assign({}, ...entries), //convert an array of objects to a single object
       }
 
