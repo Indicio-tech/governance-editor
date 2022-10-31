@@ -2,7 +2,7 @@ import {
   setGovernanceMetadata,
   setGovernanceSchemas,
   setGovernanceIssuers,
-  setSelectedGovernanceIssuersMetadata,
+  setGovernanceIssuersMetadata,
   setGovernanceRoles,
 } from "../../../redux/governanceReducer"
 
@@ -100,9 +100,9 @@ export const handleIssuersMetadataInjection1_0 = (governanceFile, dispatch) => {
   let issuersMetadata = {
     author: governanceFile.participants.author,
     id: governanceFile.participants.id,
-    created: governanceFile.participants.created,
+    created_at: governanceFile.participants.created_at,
     topic: governanceFile.participants.topic,
     version: governanceFile.participants.version,
   }
-  dispatch(setSelectedGovernanceIssuersMetadata(issuersMetadata))
+  dispatch(setGovernanceIssuersMetadata(issuersMetadata))
 }

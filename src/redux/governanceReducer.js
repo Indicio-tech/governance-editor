@@ -15,12 +15,12 @@ const initialState = {
 
 const SET_SELECTED_GOVERNANCE = "SET_SELECTED_GOVERNANCE"
 const SET_GOVERNANCE_METADATA = "SET_GOVERNANCE_METADATA"
-const SET_GOVERNANCE_SCHEMA = "SET_GOVERNANCE_SCHEMA"
+const SET_GOVERNANCE_SCHEMAS = "SET_GOVERNANCE_SCHEMAS"
 const SET_SELECTED_GOVERNANCE_SCHEMA = "SET_SELECTED_GOVERNANCE_SCHEMA"
 const SET_SELECTED_GOVERNANCE_ISSUER = "SET_SELECTED_GOVERNANCE_ISSUER"
-const SET_GOVERNANCE_ISSUER = "SET_GOVERNANCE_ISSUER"
+const SET_GOVERNANCE_ISSUERS = "SET_GOVERNANCE_ISSUERS"
 const SET_GOVERNANCE_ISSUERS_METADATA = "SET_GOVERNANCE_ISSUERS_METADATA"
-const SET_GOVERNANCE_ROLE = "SET_GOVERNANCE_ROLE"
+const SET_GOVERNANCE_ROLES = "SET_GOVERNANCE_ROLES"
 const SET_GOVERNANCE_DID = "SET_GOVERNANCE_DID"
 // const SET_GOVERNANCE_OPTIONS = "SET_GOVERNANCE_OPTIONS"
 const CLEAR_GOVERNANCE_STATE = "CLEAR_GOVERNANCE_STATE"
@@ -41,7 +41,7 @@ export function setGovernanceMetadata(metadata) {
 
 export function setGovernanceSchemas(schemas) {
   return {
-    type: SET_GOVERNANCE_SCHEMA,
+    type: SET_GOVERNANCE_SCHEMAS,
     payload: schemas,
   }
 }
@@ -60,7 +60,7 @@ export function setSelectedGovernanceIssuer(issuer) {
   }
 }
 
-export function setSelectedGovernanceIssuersMetadata(issuersMetadata) {
+export function setGovernanceIssuersMetadata(issuersMetadata) {
   return {
     type: SET_GOVERNANCE_ISSUERS_METADATA,
     payload: issuersMetadata,
@@ -69,14 +69,14 @@ export function setSelectedGovernanceIssuersMetadata(issuersMetadata) {
 
 export function setGovernanceIssuers(issuers) {
   return {
-    type: SET_GOVERNANCE_ISSUER,
+    type: SET_GOVERNANCE_ISSUERS,
     payload: issuers,
   }
 }
 
 export function setGovernanceRoles(roles) {
   return {
-    type: SET_GOVERNANCE_ROLE,
+    type: SET_GOVERNANCE_ROLES,
     payload: roles,
   }
 }
@@ -110,7 +110,7 @@ export default function (state = initialState, action) {
     case SET_GOVERNANCE_METADATA:
       return { ...state, metadata: action.payload }
 
-    case SET_GOVERNANCE_SCHEMA:
+    case SET_GOVERNANCE_SCHEMAS:
       return { ...state, schemas: action.payload }
 
     case SET_SELECTED_GOVERNANCE_SCHEMA:
@@ -119,13 +119,13 @@ export default function (state = initialState, action) {
     case SET_SELECTED_GOVERNANCE_ISSUER:
       return { ...state, selectedIssuer: action.payload }
 
-    case SET_GOVERNANCE_ISSUER:
+    case SET_GOVERNANCE_ISSUERS:
       return { ...state, issuers: action.payload }
 
     case SET_GOVERNANCE_ISSUERS_METADATA:
       return { ...state, issuersMetadata: action.payload }
 
-    case SET_GOVERNANCE_ROLE:
+    case SET_GOVERNANCE_ROLES:
       return { ...state, roles: action.payload }
 
     case SET_GOVERNANCE_DID:
