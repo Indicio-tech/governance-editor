@@ -1,4 +1,4 @@
-// import { Dropbox } from "dropbox"
+import { Dropbox } from "dropbox"
 import React, { useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import styled from "styled-components"
@@ -137,97 +137,6 @@ function Governance() {
     e.preventDefault()
   }
 
-  // const dbxUploadFile = () => {
-  //   const UPLOAD_FILE_SIZE_LIMIT = 150 * 1024 * 1024
-  //   var fileInput = document.getElementById("file-upload")
-  //   const dbx = new Dropbox({
-  //     accessToken: process.env.REACT_APP_DROP_BOX_TOKEN,
-  //     fetch,
-  //   })
-  //   var file = fileInput.files[0]
-
-  //   if (file.size < UPLOAD_FILE_SIZE_LIMIT) {
-  //     // File is smaller than 150 Mb - use filesUpload API
-  //     dbx
-  //       .filesUpload({ path: "/" + file.name, contents: file })
-  //       .then(function (response) {
-  //         var results = document.getElementById("results")
-  //         var br = document.createElement("br")
-  //         results.appendChild(document.createTextNode("File uploaded!"))
-  //         results.appendChild(br)
-  //         console.log(response)
-  //       })
-  //       .catch(function (error) {
-  //         console.error(error)
-  //       })
-  //   } else {
-  //     // File is bigger than 150 Mb - use filesUploadSession* API
-  //     const maxBlob = 8 * 1000 * 1000 // 8Mb - Dropbox JavaScript API suggested max file / chunk size
-
-  //     var workItems = []
-
-  //     var offset = 0
-
-  //     while (offset < file.size) {
-  //       var chunkSize = Math.min(maxBlob, file.size - offset)
-  //       workItems.push(file.slice(offset, offset + chunkSize))
-  //       offset += chunkSize
-  //     }
-
-  //     const task = workItems.reduce((acc, blob, idx, items) => {
-  //       if (idx === 0) {
-  //         // Starting multipart upload of file
-  //         return acc.then(function () {
-  //           return dbx
-  //             .filesUploadSessionStart({ close: false, contents: blob })
-  //             .then((response) => response.session_id)
-  //         })
-  //       } else if (idx < items.length - 1) {
-  //         // Append part to the upload session
-  //         return acc.then(function (sessionId) {
-  //           var cursor = { session_id: sessionId, offset: idx * maxBlob }
-  //           return dbx
-  //             .filesUploadSessionAppendV2({
-  //               cursor: cursor,
-  //               close: false,
-  //               contents: blob,
-  //             })
-  //             .then(() => sessionId)
-  //         })
-  //       } else {
-  //         // Last chunk of data, close session
-  //         return acc.then(function (sessionId) {
-  //           var cursor = {
-  //             session_id: sessionId,
-  //             offset: file.size - blob.size,
-  //           }
-  //           var commit = {
-  //             path: "/" + file.name,
-  //             mode: "add",
-  //             autorename: true,
-  //             mute: false,
-  //           }
-  //           return dbx.filesUploadSessionFinish({
-  //             cursor: cursor,
-  //             commit: commit,
-  //             contents: blob,
-  //           })
-  //         })
-  //       }
-  //     }, Promise.resolve())
-
-  //     task
-  //       .then(function (result) {
-  //         var results = document.getElementById("results")
-  //         results.appendChild(document.createTextNode("File uploaded!"))
-  //       })
-  //       .catch(function (error) {
-  //         console.error(error)
-  //       })
-  //   }
-  //   return false
-  // }
-
   // (eldersonar) Handle goverance file download
   const downloadFile = () => {
     // (eldersonar) Fetch extracted governance file
@@ -240,15 +149,7 @@ function Governance() {
         const fileName = "governance-framework-upload-test"
         const json = JSON.stringify(file, null, 2)
         const blob = new Blob([json], { type: "application/json" })
-        // var data =
-        //   "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(json))
         const href = URL.createObjectURL(blob)
-
-        // console.log(fileName)
-        // console.log(json)
-        // console.log(blob)
-        // console.log(typeof blob)
-        // console.log(href)
 
         // create HTML element with href to file
         const link = document.createElement("a")
@@ -260,149 +161,6 @@ function Governance() {
         // clean up element & remove ObjectURL to avoid memory leak
         document.body.removeChild(link)
         URL.revokeObjectURL(href)
-
-        /**
-         * Two variables should already be set.
-         * dropboxToken = OAuth token received then signing in with OAuth.
-         * file = file object selected in the file widget.
-         */
-
-        // var xhr = new XMLHttpRequest()
-
-        // xhr.upload.onprogress = function (evt) {
-        //   var percentComplete = parseInt((100.0 * evt.loaded) / evt.total)
-        //   // Upload in progress. Do something here with the percent complete.
-        // }
-
-        // xhr.onload = function () {
-        //   if (xhr.status === 200) {
-        //     var fileInfo = JSON.parse(xhr.response)
-        //     // Upload succeeded. Do something here with the file info.
-        //   } else {
-        //     var errorMessage = xhr.response || "Unable to upload file"
-        //     // Upload failed. Do something here with the error.
-        //   }
-        // }
-
-        // xhr.open("POST", "https://content.dropboxapi.com/2/files/save_url")
-        // // xhr.open("POST", "https://content.dropboxapi.com/2/files/upload")
-        // xhr.setRequestHeader(
-        //   "Authorization",
-        //   "Bearer " + process.env.REACT_APP_DROP_BOX_TOKEN
-        // )
-        // xhr.setRequestHeader("Content-Type", "application/octet-stream")
-        // xhr.setRequestHeader(
-        //   "Dropbox-API-Arg",
-        //   {
-        //     autorename: false,
-        //     mode: "add",
-        //     mute: false,
-        //     path: "/Governance/governance-file.json",
-        //     strict_conflict: false,
-        //   }
-        //   // JSON.stringify({
-        //   //   path: "/" + href.name,
-        //   //   mode: "add",
-        //   //   autorename: true,
-        //   //   mute: false,
-        //   // })
-        // )
-
-        // // xhr.send(blob)
-        // xhr.send({
-        //   path: "/governance-file.json",
-        //   url: "http://maps.googleapis.com/maps/api/geocode/json?address=google",
-        // })
-
-        // fetch("https://content.dropboxapi.com/2/files/upload", {
-        //   mode: "no-cors",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     // "Content-Type": "application/octet-stream",
-        //     // "Content-Type": "application/json",
-        //     Authorization: `Bearer ${process.env.REACT_APP_DROP_BOX_TOKEN}`,
-        //     "Dropbox-API-Arg": {
-        //       autorename: true,
-        //       mode: "add",
-        //       mute: false,
-        //       // path: href,
-        //       strict_conflict: false,
-        //     },
-        //     //     "Authorization",
-        //     // "Bearer " + process.env.DROP_BOX_TOKEN
-        //     // Content-Type may need to be completely **omitted**
-        //     // or you may need something
-        //     // "Content-Type":
-        //     //   "You will perhaps need to define a content-type here",
-        //   },
-        // })
-        //   .then((response) => console.log(response))
-        // .then((data) => console.log(data))
-
-        // fetch("https://content.dropboxapi.com/2/files/upload", {
-        //   // Your POST endpoint
-        //   mode: "no-cors",
-        //   method: "POST",
-        //   // headers: {
-        //   //   "Content-Type": "application/json",
-        //   //   // "Content-Type": "application/octet-stream",
-        //   //   // "Content-Type": "application/json",
-        //   //   Authorization: `Bearer ${process.env.REACT_APP_DROP_BOX_TOKEN}`,
-        //   //   "Dropbox-API-Arg": {
-        //   //     autorename: true,
-        //   //     mode: "add",
-        //   //     mute: false,
-        //   //     // path: href,
-        //   //     strict_conflict: false,
-        //   //   },
-        //   //   //     "Authorization",
-        //   //   // "Bearer " + process.env.DROP_BOX_TOKEN
-        //   //   // Content-Type may need to be completely **omitted**
-        //   //   // or you may need something
-        //   //   // "Content-Type":
-        //   //   //   "You will perhaps need to define a content-type here",
-        //   // },
-        //   // body: json, // This is your file object
-        //   // data: {
-        //   //   path: "/governance-file.json",
-        //   //   url: "http://maps.googleapis.com/maps/api/geocode/json?address=google",
-        //   // },
-        // })
-        //   .then(
-        //     (response) => response.json() // if the response is a JSON object
-        //   )
-        //   .then(
-        //     (success) => console.log(success) // Handle the success response object
-        //   )
-        //   .catch(
-        //     (error) => console.log(error) // Handle the error response object
-        //   )
-
-        // Axios({
-        //   method: "POST",
-        //   // withCredentials: false,
-        //   mode: "no-cors",
-        //   // "Access-Control-Allow-Origin": "*",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     Authorization: `Bearer ${process.env.REACT_APP_DROP_BOX_TOKEN}`,
-        //     "Dropbox-API-Arg": {
-        //       autorename: true,
-        //       mode: "add",
-        //       mute: false,
-        //       strict_conflict: false,
-        //     },
-        //   },
-        //   data: {
-        //     path: "/Governance/governance-file.json",
-        //     url: "http://maps.googleapis.com/maps/api/geocode/json?address=google",
-        //   },
-        //   url: "https://content.dropboxapi.com/2/files/upload/save_url",
-        // }).then((res) => {
-        //   if (res.data.error) {
-        //     console.log(res.data.error)
-        //   }
-        // })
       } else {
         dispatch(
           setNotificationState({
@@ -562,7 +320,6 @@ function Governance() {
           ></Input>
           <SubmitFormBtn type="submit">Upload</SubmitFormBtn>
         </Form>
-        {/* <ExportBtn onClick={() => dbxUploadFile()}>Upload to DropBox</ExportBtn> */}
         <ExportBtn onClick={() => downloadFile()}>Download to files</ExportBtn>
       </PageSection>
       <GovernanceMetadataAdd
