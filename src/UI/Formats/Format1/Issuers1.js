@@ -1,14 +1,18 @@
-import React, { useRef } from "react"
+import React, { useRef, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import styled from "styled-components"
 
 import { setGovernanceIssuers } from "../../../redux/governanceReducer"
 import { setNotificationState } from "../../../redux/notificationsReducer"
 
+import IssuersMetadataEdit from "../Format1/IssuerMetadataEdit1"
+
 import { getNextId } from "../../utils"
 
 import PageHeader from "../../Core/PageHeader.js"
 import PageSection from "../../Core/PageSection.js"
+
+import { AttributeTable, AttributeRow } from "../../Styles/CommonStylesTables"
 
 const Wrapper = styled.div``
 
@@ -23,7 +27,6 @@ const IssuersHolder = styled.div`
     background: #ffc;
   }
 `
-
 const InputBox = styled.div`
   margin: 10px;
   //   display: flex;
@@ -35,7 +38,6 @@ const ModalLabel = styled.label`
   //   width: 30%;
   margin-right: 10px;
 `
-
 const Input = styled.input`
   width: 300px;
 `
@@ -59,6 +61,14 @@ function GovernanceIssuers(props) {
   const governanceState = useSelector((state) => state.governance)
   const newIssuerForm = useRef()
   const history = props.history
+
+  const [editMetadataModalIsOpen, setEditMetadataModalIsOpen] = useState(false)
+  const closeEditMetadataModal = () => setEditMetadataModalIsOpen(false)
+
+  const editIssuerMetadata = () => {
+    console.log("setEditMetadataModalIsOpen(true)")
+    setEditMetadataModalIsOpen(true)
+  }
 
   const openIssuer = (history, id) => {
     if (history !== undefined) {
@@ -131,6 +141,80 @@ function GovernanceIssuers(props) {
           <SaveBtn type="submit">Add</SaveBtn>
         </form>
       </PageSection>
+      <PageSection>
+        <GovernanceHeader>Issuers Metadata</GovernanceHeader>
+        <SaveBtn
+          onClick={() =>
+            governanceState.metadata &&
+            Object.keys(governanceState.metadata).length !== 0 &&
+            Object.getPrototypeOf(governanceState.metadata) === Object.prototype
+              ? editIssuerMetadata()
+              : dispatch(
+                  setNotificationState({
+                    message:
+                      "Can't edit issuers metadata before selecting governance file",
+                    type: "error",
+                  })
+                )
+          }
+        >
+          Edit
+        </SaveBtn>
+        <AttributeTable>
+          <tbody>
+            <AttributeRow>
+              <th>Id:</th>
+              <td>
+                {governanceState.issuersMetadata !== undefined
+                  ? governanceState.issuersMetadata.id || ""
+                  : ""}
+              </td>
+            </AttributeRow>
+            <AttributeRow>
+              <th>Author:</th>
+              <td>
+                {governanceState.issuersMetadata !== undefined
+                  ? governanceState.issuersMetadata.author || ""
+                  : ""}
+              </td>
+            </AttributeRow>
+            <AttributeRow>
+              <th>Created:</th>
+              <td>
+                {governanceState.issuersMetadata &&
+                Object.keys(governanceState.issuersMetadata).length !== 0 &&
+                Object.getPrototypeOf(governanceState.issuersMetadata) ===
+                  Object.prototype
+                  ? new Date(governanceState.issuersMetadata.created * 1000)
+                      .toISOString()
+                      .slice(0, 19)
+                      .replace("T", " ") || ""
+                  : ""}
+              </td>
+            </AttributeRow>
+            <AttributeRow>
+              <th>Version:</th>
+              <td>
+                {governanceState.issuersMetadata !== undefined
+                  ? governanceState.issuersMetadata.version || ""
+                  : ""}
+              </td>
+            </AttributeRow>
+            <AttributeRow>
+              <th>Topic:</th>
+              <td>
+                {governanceState.issuersMetadata !== undefined
+                  ? governanceState.issuersMetadata.topic || ""
+                  : ""}
+              </td>
+            </AttributeRow>
+          </tbody>
+        </AttributeTable>
+      </PageSection>
+      <IssuersMetadataEdit
+        editMetadataModalIsOpen={editMetadataModalIsOpen}
+        closeEditMetadataModal={closeEditMetadataModal}
+      />
     </>
   )
 }

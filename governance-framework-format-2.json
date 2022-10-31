@@ -38,7 +38,7 @@
   "participants": {
     "id": "32f54163-7166-48f1-93d8-ff217bdb0653",
     "author": "did:example:sampleecosystemgovernanceparty",
-    "created_at": 1262399004,
+    "created": 1262399004,
     "version": 2,
     "topic": "uri:to-multi-topic-schema",
     "entries": {

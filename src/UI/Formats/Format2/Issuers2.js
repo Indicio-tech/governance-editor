@@ -27,7 +27,6 @@ const IssuersHolder = styled.div`
     background: #ffc;
   }
 `
-
 const InputBox = styled.div`
   margin: 10px;
   //   display: flex;
@@ -39,11 +38,10 @@ const ModalLabel = styled.label`
   //   width: 30%;
   margin-right: 10px;
 `
-
 const Input = styled.input`
   width: 300px;
 `
-const Button = styled.button`
+const SaveBtn = styled.button`
   width: 80px;
   background: ${(props) => props.theme.primary_color};
   padding: 10px;
@@ -141,12 +139,12 @@ function GovernanceIssuers(props) {
               placeholder="Doctor's office"
             />
           </InputBox>
-          <Button type="submit">Add</Button>
+          <SaveBtn type="submit">Add</SaveBtn>
         </form>
       </PageSection>
       <PageSection>
         <GovernanceHeader>Issuers Metadata</GovernanceHeader>
-        <Button
+        <SaveBtn
           onClick={() =>
             governanceState.metadata &&
             Object.keys(governanceState.metadata).length !== 0 &&
@@ -162,7 +160,7 @@ function GovernanceIssuers(props) {
           }
         >
           Edit
-        </Button>
+        </SaveBtn>
         <AttributeTable>
           <tbody>
             <AttributeRow>
