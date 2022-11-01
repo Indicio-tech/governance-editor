@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from "react"
 import { useDispatch } from "react-redux"
 
+import { v4 as uuidv4 } from "uuid"
+
 import {
   setGovernanceMetadata,
   setSelectedGovernance,
@@ -28,6 +30,8 @@ function AddFormGovernanceMetadata(props) {
 
   const metadataForm = useRef()
   const submitBtn = useRef()
+
+  const guid = uuidv4()
 
   useEffect(() => {
     if (error && submitBtn.current) {
@@ -102,6 +106,7 @@ function AddFormGovernanceMetadata(props) {
                   name="id"
                   id="id"
                   placeholder="<uuid>"
+                  defaultValue={guid}
                 />
               </InputBox>
               <InputBox>

@@ -56,8 +56,8 @@ function FormGovernanceIssuer(props) {
       website: form.get("website"),
       email: form.get("email"),
       phone: form.get("phone"),
-      roles: governanceState.selectedIssuer.issuer_roles
-        ? governanceState.selectedIssuer.issuer_roles
+      roles: governanceState.selectedIssuer.roles
+        ? governanceState.selectedIssuer.roles
         : [],
     }
 

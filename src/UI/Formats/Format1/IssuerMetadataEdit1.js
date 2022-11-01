@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux"
 
 import { setGovernanceIssuersMetadata } from "../../../redux/governanceReducer"
 
+import { v4 as uuidv4 } from "uuid"
+
 import {
   Actions,
   CancelBtn,
@@ -28,6 +30,8 @@ function EditIssuersMetadata(props) {
   const metadataForm = useRef()
   const submitBtn = useRef()
 
+  const guid = uuidv4()
+
   useEffect(() => {
     if (error && submitBtn.current) {
       submitBtn.current.removeAttribute("disabled")
@@ -51,9 +55,6 @@ function EditIssuersMetadata(props) {
     const form = new FormData(metadataForm.current)
 
     const metadata = {
-      issuer_metadata_id: governanceState.metadata
-        ? governanceState.metadata.id
-        : null,
       id: form.get("id"),
       author: form.get("author"),
       created: governanceState.metadata
@@ -92,9 +93,10 @@ function EditIssuersMetadata(props) {
                   id="id"
                   placeholder="32f54163-7166-48f1-93d8-ff217bdb0653"
                   defaultValue={
-                    governanceState.issuersMetadata
+                    governanceState.issuersMetadata &&
+                    governanceState.issuersMetadata.id
                       ? governanceState.issuersMetadata.id
-                      : ""
+                      : guid
                   }
                 />
               </InputBox>

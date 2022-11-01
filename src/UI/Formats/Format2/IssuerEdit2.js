@@ -60,8 +60,8 @@ function FormGovernanceIssuer(props) {
       city: form.get("city"),
       zip: form.get("zip"),
       state: form.get("state"),
-      roles: governanceState.selectedIssuer.issuer_roles
-        ? governanceState.selectedIssuer.issuer_roles
+      roles: governanceState.selectedIssuer.roles
+        ? governanceState.selectedIssuer.roles
         : [],
     }
 
