@@ -53,6 +53,17 @@ function App() {
     }
   }, [notificationMessage, notificationType, setNotification, dispatch])
 
+  // // Enable navigation prompt
+  const myEvent = window.attachEvent || window.addEventListener
+  const chkevent = window.attachEvent ? "onbeforeunload" : "beforeunload" /// make IE7, IE8 compitable
+
+  myEvent(chkevent, function (e) {
+    // For >=IE7, Chrome, Firefox
+    const confirmationMessage = "Are you sure to leave the page?" // This custom message won't be displayed.
+    ;(e || window.event).returnValue = confirmationMessage
+    return confirmationMessage
+  })
+
   if (governanceState.metadata.format === "1.0") {
     return (
       <Router>
