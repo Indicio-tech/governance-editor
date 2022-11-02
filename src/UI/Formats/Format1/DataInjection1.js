@@ -13,6 +13,7 @@ import {
 // (eldersonar) Handle metadata assembly
 export const handleMetadataInjection1_0 = (governanceFile, dispatch) => {
   let metadata = {
+    author: governanceFile.author,
     description: governanceFile.description,
     docs_uri: governanceFile.docs_uri,
     format: governanceFile.format,

@@ -173,8 +173,8 @@ function GovernanceIssuers(props) {
             <AttributeRow>
               <th>Author:</th>
               <td>
-                {governanceState.issuersMetadata !== undefined
-                  ? governanceState.issuersMetadata.author || ""
+                {governanceState.metadata !== undefined
+                  ? governanceState.metadata.author || ""
                   : ""}
               </td>
             </AttributeRow>

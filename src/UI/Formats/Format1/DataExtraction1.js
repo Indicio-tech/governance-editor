@@ -72,7 +72,6 @@ export const handleIssuersExtraction1_0 = () => {
 
   const finalEntries = []
   issuersByGovernanceId.forEach((issuer) => {
-    // delete issuer.created
     delete issuer.updated_at
     delete issuer.governance_id
     delete issuer.issuer_id

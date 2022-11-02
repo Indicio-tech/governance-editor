@@ -100,6 +100,15 @@ function AddFormGovernanceMetadata(props) {
           <ModalContent>
             <form id="form" onSubmit={handleSubmit} ref={metadataForm}>
               <InputBox>
+                <ModalLabel htmlFor="author">Author</ModalLabel>
+                <InputFieldModal
+                  type="text"
+                  name="author"
+                  id="author"
+                  placeholder="did:example:sampleecosystemgovernanceparty"
+                />
+              </InputBox>
+              <InputBox>
                 <ModalLabel htmlFor="id">Id</ModalLabel>
                 <InputFieldModal
                   type="text"

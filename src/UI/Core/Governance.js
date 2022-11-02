@@ -201,9 +201,16 @@ function Governance() {
         id: governanceState.issuersMetadata.id
           ? governanceState.issuersMetadata.id
           : "9b1deb4d-test-uuid-9bdd-2b0d7b3dcb6d",
-        author: governanceState.issuersMetadata.author
-          ? governanceState.issuersMetadata.author
+
+        // (eldersonar) This is a temporary solution till the community decides on where the "author" lives
+        author: governanceState.metadata.author
+          ? governanceState.metadata.author
           : "DID not anchored",
+
+        // author: governanceState.issuersMetadata.author
+        //   ? governanceState.issuersMetadata.author
+        //   : "DID not anchored",
+
         created: timestamp,
         version: governanceState.issuersMetadata.version
           ? governanceState.issuersMetadata.version
@@ -255,6 +262,14 @@ function Governance() {
         <EditBtn onClick={() => addMetadata()}>Add</EditBtn>
         <AttributeTable>
           <tbody>
+            <AttributeRow>
+              <th>Author:</th>
+              <td>
+                {governanceState.metadata !== undefined
+                  ? governanceState.metadata.author || ""
+                  : ""}
+              </td>
+            </AttributeRow>
             <AttributeRow>
               <th>Name:</th>
               <td>

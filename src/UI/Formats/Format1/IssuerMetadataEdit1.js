@@ -106,10 +106,10 @@ function EditIssuersMetadata(props) {
                   type="text"
                   name="author"
                   id="author"
-                  placeholder="did:example:sampleecosystemgovernanceparty"
+                  disabled
                   defaultValue={
-                    governanceState.issuersMetadata
-                      ? governanceState.issuersMetadata.author
+                    governanceState.metadata
+                      ? governanceState.metadata.author
                       : ""
                   }
                 />

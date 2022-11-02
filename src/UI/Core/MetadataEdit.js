@@ -51,6 +51,7 @@ function EditFormGovernanceMetadata(props) {
     const form = new FormData(metadataForm.current)
 
     const metadata = {
+      author: form.get("author"),
       id: form.get("id"),
       name: form.get("name"),
       description: form.get("description"),
@@ -83,6 +84,20 @@ function EditFormGovernanceMetadata(props) {
         <ModalContentWrapper>
           <ModalContent>
             <form id="form" onSubmit={handleSubmit} ref={metadataForm}>
+              <InputBox>
+                <ModalLabel htmlFor="author">Author</ModalLabel>
+                <InputFieldModal
+                  type="text"
+                  name="author"
+                  id="author"
+                  placeholder="Country Health Governance"
+                  defaultValue={
+                    governanceState.metadata
+                      ? governanceState.metadata.author
+                      : ""
+                  }
+                />
+              </InputBox>
               <InputBox>
                 <ModalLabel htmlFor="id">Id</ModalLabel>
                 <InputFieldModal
