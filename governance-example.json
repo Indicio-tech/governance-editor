@@ -1,62 +1,55 @@
 {
-	"@context": [
-		"https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0430-machine-readable-governance-frameworks/context.jsonld"
-	],
-	"name": "COVID Governance",
-	"version": "0.1",
+	"author": "did:demo:indicio-governance-editor",
+	"id": "148ef557-c20a-4329-9550-cb210cd69b40",
+	"name": "Editor demo governance",
+	"description": "Selected schemas and trusted issuers for the nation of 'country'",
+	"version": "0.2",
 	"format": "1.0",
-	"id": "<uuid>",
-	"description": "This document describes COVID health and travel governance for the nation of ___ in a machine readable way.",
-	"last_updated": 1648591392,
-	"docs_uri": "https://url-for-docs...",
+	"docs_uri": "https://country.gov/health/2022-health-standards/index.html",
+	"last_updated": 1667339537,
+	"@context": [
+	  "https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0430-machine-readable-governance-frameworks/context.jsonld"
+	],
 	"schemas": [
-		{
-			"id": "4CLG5pU5v294VdkMWxSByu:2:Medical_Release:1.0",
-			"name": "Medical Release",
-			"issuer_roles": ["release_issuer"]
-		},
-		{
-			"id": "RuuJwd3JMffNwZ43DcJKN1:2:Medical_Release_Issuer:1.4",
-			"name": "Medical Release Issuer",
-			"issuer_roles": ["lab_authorizer"]
-		}
+	  {
+		"id": "4CLG5pU5v294VdkMWxSByu:1:Some_Schema:1.0",
+		"name": "Some Schema",
+		"issuer_roles": [
+		  "some_schema_v1.0_issuer"
+		]
+	  },
+	  {
+		"id": "4CLG5pU5v294VdkMWxSByu:1:Other_Schema:1.0",
+		"name": "Other Schema",
+		"issuer_roles": [
+		  "other_schema_v1.0_issuer"
+		]
+	  }
 	],
 	"participants": {
-		"id": "32f54163-7166-48f1-93d8-ff217bdb0653",
-		"author": "did:example:sampleecosystemgovernanceparty",
-		"created": 1262399004,
-		"version": 1,
-		"topic": "uri:to-multi-topic-schema",
-		"entries": {
-			"did:example:lab_licensing_board": {
-				"uri:to-role_schema": {
-					"roles": ["lab_authorizer"]
-				},
-				"uri:to-describe_schema": {
-					"email": "credential_manager@issuinggovernmentsite.org",
-					"name": "Government",
-					"phone": "123-234-3456",
-					"website": "issuinggovernmentsite.org"
-				}
-			},
-			"did:example:healthlab": {
-				"uri:to-role_schema": {
-					"roles": ["release_issuer"]
-				},
-				"uri:to-describe_schema": {
-					"email": "credential_manager@issuinglabsite.com",
-					"name": "Local Health Lab",
-					"phone": "678-789-7890",
-					"website": "issuinglabsite.com"
-				}
-			}
+	  "id": "af83e0d2-0dcc-410d-964d-4374e27780bd",
+	  "author": "did:demo:indicio-governance-editor",
+	  "created": 1667340856,
+	  "version": "1",
+	  "topic": "Governance demo",
+	  "entries": {
+		"example:his_majesty_bob": {
+		  "uri:to-role_schema": {
+			"roles": [
+			  "some_schema_v1.0_issuer"
+			]
+		  },
+		  "uri:to-describe_schema": {
+			"name": "Bob",
+			"website": "issuinggovernmentsite.org",
+			"email": "bob@builder.com",
+			"phone": "123-456-7890"
+		  }
 		}
+	  }
 	},
 	"roles": {
-		"holder": {},
-		"release_issuer": {
-			"credentials": ["RuuJwd3JMffNwZ43DcJKN1:2:Medical_Release_Issuer:1.4"]
-		},
-		"lab_authorizer": {}
+	  "some_schema_v1.0_issuer": {},
+	  "other_schema_v1.0_issuer": {}
 	}
-}
+  }

@@ -56,6 +56,7 @@ function AddFormGovernanceMetadata(props) {
     const form = new FormData(metadataForm.current)
 
     const metadata = {
+      author: form.get("author"),
       id: form.get("id"),
       name: form.get("name"),
       description: form.get("description"),
