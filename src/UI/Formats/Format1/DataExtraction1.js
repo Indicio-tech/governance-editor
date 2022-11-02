@@ -72,7 +72,7 @@ export const handleIssuersExtraction1_0 = () => {
 
   const finalEntries = []
   issuersByGovernanceId.forEach((issuer) => {
-    delete issuer.created_at
+    // delete issuer.created
     delete issuer.updated_at
     delete issuer.governance_id
     delete issuer.issuer_id
@@ -101,6 +101,7 @@ export const handleIssuersExtraction1_0 = () => {
     }
 
     delete issuer.roles
+    delete issuer.did
 
     finalEntries.push(participant)
   })

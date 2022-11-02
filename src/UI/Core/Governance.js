@@ -204,7 +204,7 @@ function Governance() {
         author: governanceState.issuersMetadata.author
           ? governanceState.issuersMetadata.author
           : "DID not anchored",
-        created_at: timestamp,
+        created: timestamp,
         version: governanceState.issuersMetadata.version
           ? governanceState.issuersMetadata.version
           : governanceState.metadata.version,
