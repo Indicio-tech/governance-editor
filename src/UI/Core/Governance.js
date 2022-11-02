@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from "react-redux"
 import styled from "styled-components"
 
 import { setNotificationState } from "../../redux/notificationsReducer"
-import GovernanceMetadataAdd from "./MetadataAdd"
-import GovernanceMetadataEdit from "./MetadataEdit"
+import GovernanceMetadataAdd from "../Formats/Format1/MetadataAdd"
+import GovernanceMetadataEdit from "../Formats/Format1/MetadataEdit"
 import {
   setSelectedGovernance,
   // clearGovernanceState,

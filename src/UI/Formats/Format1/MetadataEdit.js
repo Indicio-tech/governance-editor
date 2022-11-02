@@ -1,12 +1,7 @@
 import React, { useRef, useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 
-import { v4 as uuidv4 } from "uuid"
-
-import {
-  setGovernanceMetadata,
-  setSelectedGovernance,
-} from "../../redux/governanceReducer"
+import { setGovernanceMetadata } from "../../../redux/governanceReducer"
 
 import {
   Actions,
@@ -21,17 +16,17 @@ import {
   ModalLabel,
   StyledPopup,
   SubmitBtnModal,
-} from "../Styles/CommonStylesForms"
+} from "../../Styles/CommonStylesForms"
 
-function AddFormGovernanceMetadata(props) {
+function EditFormGovernanceMetadata(props) {
   const dispatch = useDispatch()
 
-  const error = props.error
+  // const governanceMetadata = props.governanceMetadata
+  const governanceState = useSelector((state) => state.governance)
 
+  const error = props.error
   const metadataForm = useRef()
   const submitBtn = useRef()
-
-  const guid = uuidv4()
 
   useEffect(() => {
     if (error && submitBtn.current) {
@@ -63,40 +58,29 @@ function AddFormGovernanceMetadata(props) {
       version: form.get("version"),
       format: form.get("format"),
       docs_uri: form.get("docs_uri"),
-      // selected: false,
+      // selected: governanceState.selectedGovernance
+      //   ? governanceState.selectedGovernance.selected
+      //   : false,
       last_updated: timestamp,
-      "@context": [
-        "https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0430-machine-readable-governance-frameworks/context.jsonld",
-      ],
     }
 
-    let governanceTemplate = {}
-    governanceTemplate = {
-      ...metadata,
-      schemas: {},
-      participants: {},
-      roles: {},
-    }
-
-    dispatch(setSelectedGovernance(governanceTemplate))
     dispatch(setGovernanceMetadata(metadata))
 
-    props.closeAddMetadataModal()
+    props.closeEditMetadataModal()
   }
 
   function closeModal() {
-    // setOptions([])
-    props.closeAddMetadataModal()
+    props.closeEditMetadataModal()
   }
 
   return (
     <StyledPopup
-      open={props.addMetadataModalIsOpen}
+      open={props.editMetadataModalIsOpen}
       closeOnDocumentClick
       onClose={closeModal}
     >
       <LargeModal className="modal">
-        <ModalHeader>Add Governance Metadata</ModalHeader>
+        <ModalHeader>Update Governance Metadata</ModalHeader>
         <ModalContentWrapper>
           <ModalContent>
             <form id="form" onSubmit={handleSubmit} ref={metadataForm}>
@@ -106,7 +90,12 @@ function AddFormGovernanceMetadata(props) {
                   type="text"
                   name="author"
                   id="author"
-                  placeholder="did:example:sampleecosystemgovernanceparty"
+                  placeholder="Country Health Governance"
+                  defaultValue={
+                    governanceState.metadata
+                      ? governanceState.metadata.author
+                      : ""
+                  }
                 />
               </InputBox>
               <InputBox>
@@ -115,8 +104,10 @@ function AddFormGovernanceMetadata(props) {
                   type="text"
                   name="id"
                   id="id"
-                  placeholder="<uuid>"
-                  defaultValue={guid}
+                  placeholder="Country Health Governance"
+                  defaultValue={
+                    governanceState.metadata ? governanceState.metadata.id : ""
+                  }
                 />
               </InputBox>
               <InputBox>
@@ -126,6 +117,11 @@ function AddFormGovernanceMetadata(props) {
                   name="name"
                   id="name"
                   placeholder="Country Health Governance"
+                  defaultValue={
+                    governanceState.metadata
+                      ? governanceState.metadata.name
+                      : ""
+                  }
                 />
               </InputBox>
               <InputBox>
@@ -135,6 +131,11 @@ function AddFormGovernanceMetadata(props) {
                   name="description"
                   id="description"
                   placeholder="Selected schemas and trusted issuers for the nation of 'country'"
+                  defaultValue={
+                    governanceState.metadata
+                      ? governanceState.metadata.description
+                      : ""
+                  }
                 />
               </InputBox>
               <InputBox>
@@ -144,6 +145,11 @@ function AddFormGovernanceMetadata(props) {
                   name="version"
                   id="version"
                   placeholder="1.0"
+                  defaultValue={
+                    governanceState.metadata
+                      ? governanceState.metadata.version
+                      : ""
+                  }
                 />
               </InputBox>
               <InputBox>
@@ -153,6 +159,11 @@ function AddFormGovernanceMetadata(props) {
                   name="format"
                   id="format"
                   placeholder="1.0"
+                  defaultValue={
+                    governanceState.metadata
+                      ? governanceState.metadata.format
+                      : ""
+                  }
                 />
               </InputBox>
               <InputBox>
@@ -164,6 +175,11 @@ function AddFormGovernanceMetadata(props) {
                   name="docs_uri"
                   id="docs_uri"
                   placeholder="https://country.gov/health/2022-health-standards/index.html"
+                  defaultValue={
+                    governanceState.metadata
+                      ? governanceState.metadata.docs_uri
+                      : ""
+                  }
                 />
               </InputBox>
               <Actions>
@@ -171,7 +187,7 @@ function AddFormGovernanceMetadata(props) {
                   Cancel
                 </CancelBtn>
                 <SubmitBtnModal type="submit" ref={submitBtn}>
-                  Add
+                  Update
                 </SubmitBtnModal>
               </Actions>
             </form>
@@ -183,4 +199,4 @@ function AddFormGovernanceMetadata(props) {
   )
 }
 
-export default AddFormGovernanceMetadata
+export default EditFormGovernanceMetadata
