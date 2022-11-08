@@ -332,7 +332,9 @@ function Governance() {
             accept=".json"
             onChange={governanceSelectHandler}
           ></Input>
-          <SubmitFormBtn type="submit">Upload</SubmitFormBtn>
+          <SubmitFormBtn disabled={governanceState.metadata.id} type="submit">
+            Upload
+          </SubmitFormBtn>
         </Form>
         <ExportBtn onClick={() => downloadFile()}>Download to files</ExportBtn>
       </PageSection>
