@@ -89,6 +89,7 @@ function Governance(props) {
   const governanceForm = useRef(null)
   const governancePath = useRef(null)
 
+  // (eldersonar) This is an example of storing all possible piblish options. Only API options is supported as of 5/18/2023
   const publishOptions = ["API", "FTP", "AS3"]
 
   const uploadFormat1_0 = useCallback(
@@ -146,7 +147,6 @@ function Governance(props) {
     ) {
       handleDataInjection()
     }
-    // setSelectionEvent(false)
   }, [
     governanceState.selectedGovernance,
     governanceState.fileUploaded,
@@ -161,6 +161,7 @@ function Governance(props) {
     setEditMetadataModalIsOpen(true)
   }
 
+  // (eldersonar) This function alows the governance modal to open and present all possible export options descirbed in publishOptions array
   const openGovernanceExport = () => {
     setGovernanceExportModalIsOpen(true)
   }
@@ -186,7 +187,7 @@ function Governance(props) {
   // (eldersonar) This is a simple POST request to upload a file to a remote server
   const exportGovernanceFile = async () => {
     // (eldersonar) Fetch extracted governance file
-    const file = await extractGovernance("publish")
+    const file = await extractGovernance()
 
     // Handle JSON file download
     if (file) {
@@ -230,8 +231,6 @@ function Governance(props) {
   // (eldersonar) Handle governance injection based on the format type
   const handleGovernanceFileUpload = async (e) => {
     e.preventDefault()
-    // (eldersonar) Clear selection for governance file (from DB)
-    // setDbGovernance("")
     dispatch(setSelectedGovernance(selectedFile))
     dispatch(setFileUploaded(true))
   }
@@ -328,35 +327,49 @@ function Governance(props) {
       }
       // (eldersonar) This is simulating final result of the governance file
       console.log(result)
-
-      // (eldersonar) Signing governance object before publishing as JWT
-      if (action === "publish") {
-        try {
-          const jwtResponse = await Axios({
-            method: "post",
-            url: "https://governance-file-signing.glitch.me/file/sign",
-            data: result,
-          })
-          console.log("Signed governance JWT")
-          console.log(jwtResponse.data)
-          // if (jwtResponse.data) {
-
-          //   const verifiedjwt = await Axios({
-          //     method: 'post',
-          //     url: 'https://governance-file-signing.glitch.me/file/verify',
-          //     data: { jwt: jwtResponse.data },
-          //   })
-          //   console.log(verifiedjwt.data)
-          // }
-        } catch (error) {
-          console.error(error)
-        }
-      } else {
-        return result
-      }
+      return result
+      // }
     } else {
       // (eldersonar) governance format is not supported
       return null
+    }
+  }
+
+  // (eldersonar) This allows an example of simple signing of the governance payload in a JWT with Ed25519 key using external signing demo service
+  const signGovernance = async () => {
+    try {
+      const file = await extractGovernance("publish")
+
+      if (file) {
+        // (eldersonar) Sign jwt
+        const jwtResponse = await Axios({
+          method: "post",
+          url: "https://governance-file-signing.glitch.me/file/sign",
+          data: file,
+        })
+        console.log("Signed governance JWT")
+        console.log(jwtResponse.data)
+
+        // (eldersonar) Verify jwt
+        if (jwtResponse.data) {
+          const verifiedjwt = await Axios({
+            method: "post",
+            url: "https://governance-file-signing.glitch.me/file/verify",
+            data: { jwt: jwtResponse.data },
+          })
+          console.log("decoded jwt")
+          console.log(verifiedjwt.data)
+        }
+      } else {
+        dispatch(
+          setNotificationState({
+            message: `Governance file is not selected, or the governance format is not supported`,
+            type: "error",
+          })
+        )
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -368,8 +381,6 @@ function Governance(props) {
 
   const uploadGovernanceViaAPI = async (e) => {
     e.preventDefault()
-    // (eldersonar) Clear selection for governance file (from DB)
-    // setDbGovernance("")
     const form = new FormData(governanceForm.current)
     const goverancePath = form.get("governance_path")
 
@@ -400,6 +411,7 @@ function Governance(props) {
     governanceForm.current.reset()
   }
 
+  // (eldersonar) This allows the component to render as many publish options as supported by the editor
   const renderExportButton = () => {
     if (publishOptions.length === 1) {
       return <ExportBtn onClick={exportGovernanceFile}>Publish</ExportBtn>
@@ -524,8 +536,7 @@ function Governance(props) {
           </SubmitFormBtn>
         </Form>
         <hr></hr>
-        {/* <H3>Get governance from the database</H3>
-        <OptionSelect /> */}
+        <ExportBtn onClick={() => signGovernance()}>Sign</ExportBtn>
         <ExportBtn onClick={() => downloadFile()}>Download</ExportBtn>
         {renderExportButton()}
       </PageSection>
