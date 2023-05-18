@@ -87,43 +87,86 @@ function GovernanceSchemas(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    //(RomanStepanyan) This regular expression will check for an 'id' with four parts divided by colons:
+    const pattern = new RegExp(
+      /^[A-Za-z0-9]+:\d+:[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*:(\d+.)+\d+$/
+    )
 
     const form = new FormData(newSchemaForm.current)
     const id = form.get("id")
-    const suffix = "_issuer"
+    const prefix = "role_"
+    const name = form.get("name")
 
-    let roleName = id.split(":")[2] + "_v" + id.split(":")[3]
-    roleName = roleName.concat(suffix).toLowerCase()
-
-    if (governanceState.selectedGovernance.id) {
-      const schema = {
-        schema_id: getNextId(governanceState.schemas, "schema_id"),
-        id,
-        governance_id: governanceState.selectedGovernance.id,
-        name: form.get("name"),
-        issuer_roles: [roleName],
-      }
-
-      const role = {
-        role_id: getNextId(governanceState.roles, "role_id"),
-        governance_id: governanceState.selectedGovernance.id,
-        role: roleName,
-        credentials: [],
-      }
-
-      // Save new schema
-      dispatch(setGovernanceSchemas([...governanceState.schemas, schema]))
-      // Save new role
-      dispatch(setGovernanceRoles([...governanceState.roles, role]))
-
-      newSchemaForm.current.reset()
-    } else {
+    if (!id || !name) {
       dispatch(
         setNotificationState({
-          message: "Can't create schema before selecting governance file",
+          message: "Can't add schema before providing Schema ID or Schema Name",
           type: "error",
         })
       )
+    } else if (!id.match(pattern)) {
+      dispatch(
+        setNotificationState({
+          message:
+            "Schema must have 4 parts structure devided by colons. Use the placeholder as an exemple",
+          type: "error",
+        })
+      )
+    } else {
+      if (governanceState.selectedGovernance.id) {
+        const schema = {
+          id,
+          governance_id: governanceState.selectedGovernance.id,
+          schema_id: getNextId(governanceState.schemas, "schema_id"),
+          name,
+        }
+
+        const rolesArrayCopy = [...governanceState.roles]
+        const issuerRole = {
+          role_id: getNextId(rolesArrayCopy, "role_id"),
+          governance_id: governanceState.selectedGovernance.id,
+          role: `${prefix.toLowerCase()}${getNextId(
+            rolesArrayCopy,
+            "role_id"
+          )}`,
+          action: "issue",
+          subject: [schema.id],
+        }
+
+        rolesArrayCopy.push(issuerRole)
+
+        const verifierRole = {
+          role_id: getNextId(rolesArrayCopy, "role_id"),
+          governance_id: governanceState.selectedGovernance.id,
+          role: `${prefix.toLowerCase()}${getNextId(
+            rolesArrayCopy,
+            "role_id"
+          )}`,
+          action: "verify",
+          subject: [schema.id],
+        }
+
+        dispatch(setGovernanceSchemas([...governanceState.schemas, schema]))
+        dispatch(
+          setGovernanceRoles([
+            ...new Set([...governanceState.roles, issuerRole, verifierRole]),
+          ])
+        )
+        newSchemaForm.current.reset()
+        dispatch(
+          setNotificationState({
+            message: "The new schema has been added",
+            type: "notice",
+          })
+        )
+      } else {
+        dispatch(
+          setNotificationState({
+            message: "Can't create schema before selecting governance file",
+            type: "error",
+          })
+        )
+      }
     }
   }
 

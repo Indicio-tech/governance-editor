@@ -2,8 +2,8 @@ import React, { useRef, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 
 import {
-  setSelectedGovernanceIssuer,
-  setGovernanceIssuers,
+  setSelectedGovernanceParticipant,
+  setGovernanceParticipants,
 } from "../../../redux/governanceReducer"
 
 import {
@@ -21,12 +21,12 @@ import {
   SubmitBtnModal,
 } from "../../Styles/CommonStylesForms"
 
-function FormGovernanceIssuer(props) {
+function FormGovernanceParticipant(props) {
   const dispatch = useDispatch()
   const governanceState = useSelector((state) => state.governance)
   const error = props.error
 
-  const issuerForm = useRef()
+  const participantForm = useRef()
   const submitBtn = useRef()
 
   useEffect(() => {
@@ -46,50 +46,48 @@ function FormGovernanceIssuer(props) {
     e.preventDefault()
     onBtnClick()
 
-    const form = new FormData(issuerForm.current)
+    const form = new FormData(participantForm.current)
 
-    const issuer = {
-      issuer_id: governanceState.selectedIssuer.issuer_id,
+    const participant = {
+      participant_id: governanceState.selectedParticipant.participant_id,
       did: form.get("did"),
-      governance_id: governanceState.selectedIssuer.governance_id,
+      governance_id: governanceState.selectedParticipant.governance_id,
       name: form.get("name"),
       website: form.get("website"),
       email: form.get("email"),
       phone: form.get("phone"),
-      address: form.get("address"),
-      city: form.get("city"),
-      zip: form.get("zip"),
-      state: form.get("state"),
-      roles: governanceState.selectedIssuer.roles
-        ? governanceState.selectedIssuer.roles
+      roles: governanceState.selectedParticipant.roles
+        ? governanceState.selectedParticipant.roles
         : [],
     }
 
-    let array = JSON.parse(JSON.stringify(governanceState.issuers)) // Creates a deep copy
+    let array = JSON.parse(JSON.stringify(governanceState.participants)) // Creates a deep copy
 
-    array = array.map((x) => (x.issuer_id === issuer.issuer_id ? issuer : x))
+    array = array.map((x) =>
+      x.participant_id === participant.participant_id ? participant : x
+    )
 
-    dispatch(setSelectedGovernanceIssuer(issuer))
-    dispatch(setGovernanceIssuers(array))
+    dispatch(setSelectedGovernanceParticipant(participant))
+    dispatch(setGovernanceParticipants(array))
 
-    props.closeIssuerModal()
+    props.closeParticipantModal()
   }
 
   function closeModal() {
-    props.closeIssuerModal()
+    props.closeParticipantModal()
   }
 
   return (
     <StyledPopup
-      open={props.issuerModalIsOpen}
+      open={props.participantModalIsOpen}
       closeOnDocumentClick
       onClose={closeModal}
     >
       <LargeModal className="modal">
-        <ModalHeader>Update Governance Issuer</ModalHeader>
+        <ModalHeader>Update Governance Participant</ModalHeader>
         <ModalContentWrapper>
           <ModalContent>
-            <form id="form" onSubmit={handleSubmit} ref={issuerForm}>
+            <form id="form" onSubmit={handleSubmit} ref={participantForm}>
               <InputBox>
                 <ModalLabel htmlFor="name">Name</ModalLabel>
                 <InputFieldModal
@@ -97,8 +95,8 @@ function FormGovernanceIssuer(props) {
                   name="name"
                   id="name"
                   defaultValue={
-                    governanceState.selectedIssuer
-                      ? governanceState.selectedIssuer.name
+                    governanceState.selectedParticipant
+                      ? governanceState.selectedParticipant.name
                       : ""
                   }
                 />
@@ -110,8 +108,8 @@ function FormGovernanceIssuer(props) {
                   name="did"
                   id="did"
                   defaultValue={
-                    governanceState.selectedIssuer
-                      ? governanceState.selectedIssuer.did
+                    governanceState.selectedParticipant
+                      ? governanceState.selectedParticipant.did
                       : ""
                   }
                 />
@@ -123,8 +121,8 @@ function FormGovernanceIssuer(props) {
                   name="website"
                   id="website"
                   defaultValue={
-                    governanceState.selectedIssuer
-                      ? governanceState.selectedIssuer.website
+                    governanceState.selectedParticipant
+                      ? governanceState.selectedParticipant.website
                       : ""
                   }
                 />
@@ -136,8 +134,8 @@ function FormGovernanceIssuer(props) {
                   name="email"
                   id="email"
                   defaultValue={
-                    governanceState.selectedIssuer
-                      ? governanceState.selectedIssuer.email
+                    governanceState.selectedParticipant
+                      ? governanceState.selectedParticipant.email
                       : ""
                   }
                 />
@@ -149,60 +147,8 @@ function FormGovernanceIssuer(props) {
                   name="phone"
                   id="phone"
                   defaultValue={
-                    governanceState.selectedIssuer
-                      ? governanceState.selectedIssuer.phone
-                      : ""
-                  }
-                />
-              </InputBox>
-              <InputBox>
-                <ModalLabel htmlFor="address">Address</ModalLabel>
-                <InputFieldModal
-                  type="text"
-                  name="address"
-                  id="address"
-                  defaultValue={
-                    governanceState.selectedIssuer
-                      ? governanceState.selectedIssuer.address
-                      : ""
-                  }
-                />
-              </InputBox>
-              <InputBox>
-                <ModalLabel htmlFor="city">City</ModalLabel>
-                <InputFieldModal
-                  type="text"
-                  name="city"
-                  id="city"
-                  defaultValue={
-                    governanceState.selectedIssuer
-                      ? governanceState.selectedIssuer.city
-                      : ""
-                  }
-                />
-              </InputBox>
-              <InputBox>
-                <ModalLabel htmlFor="zip">Zip</ModalLabel>
-                <InputFieldModal
-                  type="text"
-                  name="zip"
-                  id="zip"
-                  defaultValue={
-                    governanceState.selectedIssuer
-                      ? governanceState.selectedIssuer.zip
-                      : ""
-                  }
-                />
-              </InputBox>
-              <InputBox>
-                <ModalLabel htmlFor="state">State</ModalLabel>
-                <InputFieldModal
-                  type="text"
-                  name="state"
-                  id="state"
-                  defaultValue={
-                    governanceState.selectedIssuer
-                      ? governanceState.selectedIssuer.state
+                    governanceState.selectedParticipant
+                      ? governanceState.selectedParticipant.phone
                       : ""
                   }
                 />
@@ -224,4 +170,4 @@ function FormGovernanceIssuer(props) {
   )
 }
 
-export default FormGovernanceIssuer
+export default FormGovernanceParticipant

@@ -1,14 +1,10 @@
 import {
   setGovernanceMetadata,
   setGovernanceSchemas,
-  setGovernanceIssuers,
-  setGovernanceIssuersMetadata,
+  setGovernanceParticipants,
+  setGovernanceParticipantsMetadata,
   setGovernanceRoles,
 } from "../../../redux/governanceReducer"
-
-// This results in error...
-// import { useDispatch } from "react-redux"
-// const dispatch = useDispatch()
 
 // (eldersonar) Handle metadata assembly
 export const handleMetadataInjection1_0 = (governanceFile, dispatch) => {
@@ -33,13 +29,20 @@ export const handleRolesInjection1_0 = (governanceFile, dispatch) => {
   roles.governance_id = governanceFile.id
   for (let key in governanceFile.roles) {
     let role = {}
+
     if (governanceFile.roles.hasOwnProperty(key)) {
       role.role_id = role_id
       role.governance_id = governanceFile.id
       role.role = key
-      role.credentials = governanceFile.roles[key].credentials
-        ? governanceFile.roles[key].credentials
-        : []
+
+      // (eldersonar) TODO: subject to change in future
+      if ("issue" in governanceFile.roles[key]) {
+        role.action = "issue"
+        role.subject = governanceFile.roles[key].issue
+      } else {
+        role.action = "verify"
+        role.subject = governanceFile.roles[key].verify
+      }
 
       roles.push(role)
 
@@ -64,46 +67,49 @@ export const handleSchemasInjection1_0 = (governanceFile, dispatch) => {
   dispatch(setGovernanceSchemas(governanceFile.schemas))
 }
 
-export const handleIssuersInjection1_0 = (governanceFile, dispatch) => {
-  // (eldersonar) Handle issuers assembly
-  let issuers = []
-  let issuer_id = 1
-  for (let key in governanceFile.participants.entries) {
-    let issuer = {}
-    if (governanceFile.participants.entries.hasOwnProperty(key)) {
-      issuer.issuer_id = issuer_id
-      issuer.did = key
-      issuer.governance_id = governanceFile.id
-      issuer.email =
-        governanceFile.participants.entries[key]["uri:to-describe_schema"].email
-      issuer.name =
-        governanceFile.participants.entries[key]["uri:to-describe_schema"].name
-      issuer.phone =
-        governanceFile.participants.entries[key]["uri:to-describe_schema"].phone
-      issuer.website =
-        governanceFile.participants.entries[key][
-          "uri:to-describe_schema"
-        ].website
-      issuer.roles =
-        governanceFile.participants.entries[key]["uri:to-role_schema"].roles
+export const handleParticipantsInjection1_0 = (governanceFile, dispatch) => {
+  // (eldersonar) Handle participants assembly
+  let participants = []
+  let participant_id = 1
+  let roles =
+    governanceFile.participants.entries["https://example.com/roles.schema.json"]
+  let descriptions =
+    governanceFile.participants.entries[
+      "https://example.com/description.schema.json"
+    ]
 
-      issuers.push(issuer)
+  for (const did in roles) {
+    let participant = {}
+    participant.participant_id = participant_id
+    participant.did = did
+    participant.governance_id = governanceFile.id
+    participant.email = descriptions[did].email
+    participant.name = descriptions[did].name
+    participant.phone = descriptions[did].phone
+    participant.website = descriptions[did].website
+    participant.roles = []
 
-      // Increment for unique id
-      issuer_id++
+    for (const role of roles[did].roles) {
+      participant.roles.push(role)
     }
+    participants.push(participant)
+    participant_id++
   }
-  dispatch(setGovernanceIssuers(issuers))
+
+  dispatch(setGovernanceParticipants(participants))
 }
 
-export const handleIssuersMetadataInjection1_0 = (governanceFile, dispatch) => {
-  // (eldersonar) Handle issuers metadata assembly
-  let issuersMetadata = {
+export const handleParticipantsMetadataInjection1_0 = (
+  governanceFile,
+  dispatch
+) => {
+  // (eldersonar) Handle participants metadata assembly
+  let participantsMetadata = {
     author: governanceFile.participants.author,
     id: governanceFile.participants.id,
     created: governanceFile.participants.created,
     topic: governanceFile.participants.topic,
     version: governanceFile.participants.version,
   }
-  dispatch(setGovernanceIssuersMetadata(issuersMetadata))
+  dispatch(setGovernanceParticipantsMetadata(participantsMetadata))
 }

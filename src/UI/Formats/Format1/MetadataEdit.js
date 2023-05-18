@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 
 import { setGovernanceMetadata } from "../../../redux/governanceReducer"
+import { setNotificationState } from "../../../redux/notificationsReducer"
 
 import {
   Actions,
@@ -21,7 +22,6 @@ import {
 function EditFormGovernanceMetadata(props) {
   const dispatch = useDispatch()
 
-  // const governanceMetadata = props.governanceMetadata
   const governanceState = useSelector((state) => state.governance)
 
   const error = props.error
@@ -58,14 +58,33 @@ function EditFormGovernanceMetadata(props) {
       version: form.get("version"),
       format: form.get("format"),
       docs_uri: form.get("docs_uri"),
-      // selected: governanceState.selectedGovernance
-      //   ? governanceState.selectedGovernance.selected
-      //   : false,
       last_updated: timestamp,
     }
-
-    dispatch(setGovernanceMetadata(metadata))
-
+    //(RomanStepanyan) Checking if any changes have been made
+    if (
+      governanceState.metadata.author !== metadata.author ||
+      governanceState.metadata.id !== metadata.id ||
+      governanceState.metadata.name !== metadata.name ||
+      governanceState.metadata.description !== metadata.description ||
+      governanceState.metadata.version !== metadata.version ||
+      governanceState.metadata.format !== metadata.format ||
+      governanceState.metadata.docs_uri !== metadata.docs_uri
+    ) {
+      dispatch(setGovernanceMetadata(metadata))
+      dispatch(
+        setNotificationState({
+          message: "Governance Metadata has been changed",
+          type: "notice",
+        })
+      )
+    } else {
+      dispatch(
+        setNotificationState({
+          message: "No changes have been made",
+          type: "warning",
+        })
+      )
+    }
     props.closeEditMetadataModal()
   }
 
@@ -130,7 +149,7 @@ function EditFormGovernanceMetadata(props) {
                   type="text"
                   name="description"
                   id="description"
-                  placeholder="Selected schemas and trusted issuers for the nation of 'country'"
+                  placeholder="Selected schemas and trusted participants for the nation of 'country'"
                   defaultValue={
                     governanceState.metadata
                       ? governanceState.metadata.description

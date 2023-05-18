@@ -54,8 +54,8 @@ function FormGovernanceSchema(props) {
       governance_id: governanceState.selectedSchema.governance_id,
       name: form.get("name"),
       id,
-      issuer_roles: governanceState.selectedSchema
-        ? governanceState.selectedSchema.issuer_roles
+      participant_roles: governanceState.selectedSchema
+        ? governanceState.selectedSchema.participant_roles
         : [],
       creator,
     }
@@ -81,7 +81,7 @@ function FormGovernanceSchema(props) {
       onClose={closeModal}
     >
       <LargeModal className="modal">
-        <ModalHeader>Update Governance Issuer</ModalHeader>
+        <ModalHeader>Update Governance Participant</ModalHeader>
         <ModalContentWrapper>
           <ModalContent>
             <form id="form" onSubmit={handleSubmit} ref={schemaForm}>

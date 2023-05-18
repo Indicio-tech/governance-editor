@@ -63,7 +63,6 @@ function AddFormGovernanceMetadata(props) {
       version: form.get("version"),
       format: form.get("format"),
       docs_uri: form.get("docs_uri"),
-      // selected: false,
       last_updated: timestamp,
       "@context": [
         "https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0430-machine-readable-governance-frameworks/context.jsonld",
@@ -85,7 +84,6 @@ function AddFormGovernanceMetadata(props) {
   }
 
   function closeModal() {
-    // setOptions([])
     props.closeAddMetadataModal()
   }
 
@@ -134,7 +132,7 @@ function AddFormGovernanceMetadata(props) {
                   type="text"
                   name="description"
                   id="description"
-                  placeholder="Selected schemas and trusted issuers for the nation of 'country'"
+                  placeholder="Selected schemas and trusted participants for the nation of 'country'"
                 />
               </InputBox>
               <InputBox>

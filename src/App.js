@@ -18,13 +18,13 @@ import { clearNotificationsState } from "./redux/notificationsReducer"
 // Format 1.0
 import GovernanceSchemasV1 from "./UI/Formats/Format1/Schemas1"
 import GovernanceSchemaV1 from "./UI/Formats/Format1/Schema1"
-import GovernanceIssuersV1 from "./UI/Formats/Format1/Issuers1"
-import GovernanceIssuerV1 from "./UI/Formats/Format1/Issuer1"
+import GovernanceParticipantsV1 from "./UI/Formats/Format1/Participants1"
+import GovernanceParticipantV1 from "./UI/Formats/Format1/Participant1"
 // Format 2.0
 import GovernanceSchemasV2 from "./UI/Formats/Format2/Schemas2"
 import GovernanceSchemaV2 from "./UI/Formats/Format2/Schema2"
-import GovernanceIssuersV2 from "./UI/Formats/Format2/Issuers2"
-import GovernanceIssuerV2 from "./UI/Formats/Format2/Issuer2"
+import GovernanceParticipantsV2 from "./UI/Formats/Format2/Participants2"
+import GovernanceParticipantV2 from "./UI/Formats/Format2/Participant2"
 
 import "./App.css"
 
@@ -113,29 +113,29 @@ function App() {
             }}
           />
           <Route
-            path={`/governance/issuers`}
+            path={`/governance/participants`}
             exact
             render={({ match, history }) => {
               return (
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceIssuersV1 history={history} />
+                    <GovernanceParticipantsV1 history={history} />
                   </Main>
                 </Frame>
               )
             }}
           />
           <Route
-            path={`/governance/issuers/:issuerId`}
+            path={`/governance/participants/:participantId`}
             render={({ match, history }) => {
               return (
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceIssuerV1
+                    <GovernanceParticipantV1
                       history={history}
-                      issuerId={match.params.issuerId}
+                      participantId={match.params.participantId}
                     />
                   </Main>
                 </Frame>
@@ -199,29 +199,29 @@ function App() {
             }}
           />
           <Route
-            path={`/governance/issuers`}
+            path={`/governance/participants`}
             exact
             render={({ match, history }) => {
               return (
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceIssuersV2 history={history} />
+                    <GovernanceParticipantsV2 history={history} />
                   </Main>
                 </Frame>
               )
             }}
           />
           <Route
-            path={`/governance/issuers/:issuerId`}
+            path={`/governance/participants/:participantId`}
             render={({ match, history }) => {
               return (
                 <Frame id="app-frame">
                   <AppHeader match={match} history={history} />
                   <Main>
-                    <GovernanceIssuerV2
+                    <GovernanceParticipantV2
                       history={history}
-                      issuerId={match.params.issuerId}
+                      participantId={match.params.participantId}
                     />
                   </Main>
                 </Frame>
