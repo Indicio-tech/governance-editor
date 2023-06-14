@@ -7,7 +7,7 @@ import PageHeader from "../../Core/PageHeader.js"
 import PageSection from "../../Core/PageSection.js"
 
 import {
-  setGovernanceIssuers,
+  setGovernanceParticipants,
   setSelectedGovernanceSchema,
 } from "../../../redux/governanceReducer"
 import GovernanceSchemaEdit1 from "./SchemaEdit1"
@@ -31,12 +31,14 @@ const GovernanceHeader = styled.h3`
 `
 const SaveBtn = styled.button`
   width: 80px;
-  background: ${(props) => props.theme.primary_color};
+  background: ${(props) =>
+    props.disabled ? "#808080" : props.theme.primary_color};
   padding: 10px;
   color: ${(props) => props.theme.text_light};
   border: none;
   float: right;
   box-shadow: ${(props) => props.theme.drop_shadow};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 `
 
 function GovernanceSchema(props) {
@@ -44,13 +46,28 @@ function GovernanceSchema(props) {
   const governanceState = useSelector((state) => state.governance)
   const selectedSchema = governanceState.selectedSchema
 
+  const [schemaModalIsOpen, setSchemaModalIsOpen] = useState(false)
+  const closeSchemaModal = () => setSchemaModalIsOpen(false)
+  const editSchema = () => {
+    setSchemaModalIsOpen(true)
+  }
+
+  const [participantsOptions, setParticipantsOptions] = useState([])
+  const [rolesOptions, setRolesOptions] = useState([])
+  const [participantVerifyList, setParticipantVerifyList] = useState([])
+  const [participantIssueList, setParticipantIssueList] = useState([])
+  const [selectedParticipant, setSelectedParticipant] = useState(null)
+  const [selectedRole, setSelectedRole] = useState(null)
+
+  const isDisabled = !selectedParticipant || !selectedRole
+
   const schemaId = props.id
   const history = props.history
 
   useEffect(() => {
     // Handle selected schema
+    let foundSchema = {}
     if (governanceState.schemas) {
-      let foundSchema = {}
       foundSchema = governanceState.schemas.find(
         (schema) =>
           schema.schema_id === parseInt(schemaId) &&
@@ -58,7 +75,6 @@ function GovernanceSchema(props) {
       )
 
       if (foundSchema) {
-        console.log(foundSchema)
         dispatch(setSelectedGovernanceSchema(foundSchema))
       } else {
         // (eldersonar) TODO: Might want to display notification as well `The schema with id ${schemaId} doesn't exist or it doesn't belong to selected governance`
@@ -68,99 +84,174 @@ function GovernanceSchema(props) {
       }
 
       let options = []
+      let rOptions = []
 
-      if (governanceState.issuers) {
+      if (governanceState.participants) {
         // (eldersonar) Handle governance options state
-        for (let i = 0; i < governanceState.issuers.length; i++) {
+        for (let i = 0; i < governanceState.participants.length; i++) {
           options.push({
-            id: governanceState.issuers[i].issuer_id,
-            label: governanceState.issuers[i].name,
-            value: governanceState.issuers[i].issuer_id,
+            id: governanceState.participants[i].participant_id,
+            label: governanceState.participants[i].name,
+            value: governanceState.participants[i].participant_id,
           })
         }
-        setIssuersOptions(options)
+        setParticipantsOptions(options)
 
-        // (eldersonar) Generate a list of issuers using this schema
-        if (
-          foundSchema &&
-          foundSchema.issuer_roles &&
-          foundSchema.issuer_roles.length
-        ) {
-          let list = []
-          governanceState.issuers.forEach((element) => {
-            for (let i = 0; i < foundSchema.issuer_roles.length; i++) {
-              for (let k = 0; k < element.roles.length; k++) {
-                if (element.roles[k] === foundSchema.issuer_roles[i]) {
-                  list.push(element)
-                }
-              }
+        if (foundSchema && governanceState.participants) {
+          let availableRolesBySchema = []
+
+          // (eldersonar) Get a list of roles related to the selected schema
+          for (let j = 0; j < governanceState.roles.length; j++) {
+            if (governanceState.roles[j].subject.includes(foundSchema.id)) {
+              console.log(governanceState.roles[j])
+              availableRolesBySchema.push(governanceState.roles[j])
             }
-          })
-          setIssuersList(list)
+          }
+
+          // (eldersonar) Set up the list of authorized participants to work with a schema
+          if (availableRolesBySchema && availableRolesBySchema.length) {
+            // (eldersonar) Create a Map of schema IDs and schema_id values
+            const schemaMap = new Map(
+              governanceState.schemas.map((schema) => [
+                schema.id,
+                schema.schema_id,
+              ])
+            )
+
+            // (eldersonar) Create two arrays to store participants who have issue and verify roles
+            const issueList = []
+            const verifyList = []
+
+            // (eldersonar) Loop through each participant and each of their roles to check if they are authorized to work with the schema
+            governanceState.participants.forEach((participant) => {
+              participant.roles.forEach((role) => {
+                // (eldersonar) Check if the role is in the availableRolesBySchema array
+                const roleInSchema = availableRolesBySchema.find(
+                  (schemaRole) => schemaRole.role === role
+                )
+                if (roleInSchema) {
+                  // (eldersonar) Add participant to the issueList or verifyList based on the action in the role
+                  if (roleInSchema.action === "issue") {
+                    issueList.push({
+                      id: participant.participant_id,
+                      name: participant.name,
+                      action: roleInSchema.action,
+                    })
+                  } else if (roleInSchema.action === "verify") {
+                    verifyList.push({
+                      id: participant.participant_id,
+                      name: participant.name,
+                      action: roleInSchema.action,
+                    })
+                  }
+                }
+              })
+            })
+
+            // (eldersonar) Remove duplicate records from the array of objects using the Map approach
+            const cleanedParticipantList = [
+              ...new Map(issueList.map((item) => [item["id"], item])).values(),
+            ]
+            const cleanedVerifierList = [
+              ...new Map(verifyList.map((item) => [item["id"], item])).values(),
+            ]
+
+            // (eldersonar) Set the cleaned lists as the state variables
+            setParticipantIssueList(cleanedParticipantList)
+            setParticipantVerifyList(cleanedVerifierList)
+          }
         }
+      }
+
+      // (eldersonar) TODO: subject to change in future
+      if (governanceState.roles) {
+        // (eldersonar) Handle governance options state
+        for (let i = 0; i < governanceState.roles.length; i++) {
+          if (foundSchema.id === governanceState.roles[i].subject[0]) {
+            rOptions.push({
+              id: governanceState.roles[i].role_id,
+              label:
+                governanceState.roles[i].action === "issue"
+                  ? "Issuer"
+                  : "Verifier",
+              value: governanceState.roles[i].role,
+            })
+          }
+        }
+        setRolesOptions(rOptions)
       }
     }
   }, [
     governanceState.schemas,
     governanceState.selectedGovernance,
-    governanceState.issuers,
+    governanceState.participants,
     schemaId,
     dispatch,
     history,
   ])
 
-  const [schemaModalIsOpen, setSchemaModalIsOpen] = useState(false)
-  const closeSchemaModal = () => setSchemaModalIsOpen(false)
-  const editSchema = () => {
-    setSchemaModalIsOpen(true)
+  function selectParticipant(participant) {
+    setSelectedParticipant(participant)
   }
 
-  const [issuersOptions, setIssuersOptions] = useState([])
-  const [issuersList, setIssuersList] = useState([])
-  const [selectedIssuer, setSelectedIssuer] = useState(null)
-
-  function selectIsssuer(issuer) {
-    setSelectedIssuer(issuer)
+  function selectRole(role) {
+    setSelectedRole(role)
   }
 
   const OptionSelect = () => {
     return (
       <Select
-        name="governance_issuer"
-        placeholder="Select issuer..."
-        defaultValue={selectedIssuer}
-        options={issuersOptions}
-        onChange={(e) => selectIsssuer(e)}
+        name="governance_participant"
+        placeholder="Select participant..."
+        defaultValue={selectedParticipant}
+        options={participantsOptions}
+        onChange={(e) => selectParticipant(e)}
         menuPortalTarget={document.body}
       />
     )
   }
 
-  const openIssuer = (history, id) => {
+  const RoleOptionSelect = () => {
+    return (
+      <Select
+        name="governance_role"
+        placeholder="Select a role..."
+        defaultValue={selectedRole}
+        options={rolesOptions}
+        onChange={(e) => selectRole(e)}
+        menuPortalTarget={document.body}
+      />
+    )
+  }
+
+  const openParticipant = (history, id) => {
     if (history !== undefined) {
-      history.push("/governance/issuers/" + id)
+      history.push("/governance/participants/" + id)
     }
   }
 
-  const addIssuer = () => {
-    console.log(selectedIssuer)
-    const issuer = governanceState.issuers.find(
-      (element) => element.issuer_id === selectedIssuer.id
+  const assignParticipantRole = () => {
+    const participant = governanceState.participants.find(
+      (element) => element.participant_id === selectedParticipant.id
     )
 
     // (eldersonar) Clear the dropdown selection
-    setSelectedIssuer(null)
+    setSelectedParticipant(null)
+    setSelectedRole(null)
 
     // (eldersonar) Merge arrays without duplicates
-    issuer.roles = [
-      ...new Set([...issuer.roles, ...selectedSchema.issuer_roles]),
+    participant.roles = [
+      ...new Set([...participant.roles, ...[selectedRole.value]]),
     ]
 
-    // Update issuer with role
-    let array = JSON.parse(JSON.stringify(governanceState.issuers)) // Creates a deep copy
-    array = array.map((x) => (x.issuer_id === issuer.issuer_id ? issuer : x))
+    // Update participant with role
+    let array = JSON.parse(JSON.stringify(governanceState.participants)) // Creates a deep copy
+    // Update the array with updated participant record
+    array = array.map((x) =>
+      x.participant_id === participant.participant_id ? participant : x
+    )
 
-    dispatch(setGovernanceIssuers(array))
+    dispatch(setGovernanceParticipants(array))
   }
 
   return (
@@ -191,21 +282,42 @@ function GovernanceSchema(props) {
         </PageSection>
         <PageSection>
           <GovernanceHeader>Issuers</GovernanceHeader>
-          {issuersList.map((issuer) => (
+          {participantIssueList.map((participant) => (
             <ListItem
-              key={issuer.issuer_id}
+              key={participant.id}
               onClick={() => {
-                openIssuer(history, issuer.issuer_id)
+                openParticipant(history, participant.id)
               }}
             >
-              {issuer.name}
+              {participant.name}
+            </ListItem>
+          ))}
+        </PageSection>
+
+        <PageSection>
+          <GovernanceHeader>Verifiers</GovernanceHeader>
+          {participantVerifyList.map((participant) => (
+            <ListItem
+              key={participant.id}
+              onClick={() => {
+                openParticipant(history, participant.id)
+              }}
+            >
+              {participant.name}
             </ListItem>
           ))}
         </PageSection>
         <PageSection>
-          <GovernanceHeader>Add Issuer</GovernanceHeader>
+          <GovernanceHeader>Add</GovernanceHeader>
           <OptionSelect />
-          <SaveBtn onClick={() => addIssuer()}>Add</SaveBtn>
+          <GovernanceHeader>As</GovernanceHeader>
+          <RoleOptionSelect />
+          <SaveBtn
+            disabled={isDisabled}
+            onClick={() => assignParticipantRole()}
+          >
+            Add
+          </SaveBtn>
         </PageSection>
         <GovernanceSchemaEdit1
           sendRequest={props.sendRequest}

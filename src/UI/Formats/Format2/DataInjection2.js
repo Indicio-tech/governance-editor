@@ -1,43 +1,40 @@
-import { setGovernanceIssuers } from "../../../redux/governanceReducer"
+import { setGovernanceParticipants } from "../../../redux/governanceReducer"
 
-// (eldersonar) Handle issuers assembly
-export const handleIssuersInjection2_0 = (governanceFile, dispatch) => {
-  let issuers = []
-  let issuer_id = 1
-  for (let key in governanceFile.participants.entries) {
-    let issuer = {}
-    if (governanceFile.participants.entries.hasOwnProperty(key)) {
-      issuer.issuer_id = issuer_id
-      issuer.did = key
-      issuer.governance_id = governanceFile.id
-      issuer.email =
-        governanceFile.participants.entries[key]["uri:to-describe_schema"].email
-      issuer.name =
-        governanceFile.participants.entries[key]["uri:to-describe_schema"].name
-      issuer.phone =
-        governanceFile.participants.entries[key]["uri:to-describe_schema"].phone
-      issuer.website =
-        governanceFile.participants.entries[key][
-          "uri:to-describe_schema"
-        ].website
-      issuer.address =
-        governanceFile.participants.entries[key][
-          "uri:to-describe_schema"
-        ].address
-      issuer.city =
-        governanceFile.participants.entries[key]["uri:to-describe_schema"].city
-      issuer.zip =
-        governanceFile.participants.entries[key]["uri:to-describe_schema"].zip
-      issuer.state =
-        governanceFile.participants.entries[key]["uri:to-describe_schema"].state
-      issuer.roles =
-        governanceFile.participants.entries[key]["uri:to-role_schema"].roles
+// (eldersonar) Handle participants assembly
+export const handleParticipantsInjection2_0 = (governanceFile, dispatch) => {
+  let participants = []
+  let participant_id = 1
+  let roles =
+    governanceFile.participants.entries["https://example.com/roles.schema.json"]
+  let descriptions =
+    governanceFile.participants.entries[
+      "https://example.com/description.schema.json"
+    ]
 
-      issuers.push(issuer)
+  console.log(roles)
+  console.log(descriptions)
 
-      // Increment for unique id
-      issuer_id++
+  for (const did in roles) {
+    let participant = {}
+    participant.participant_id = participant_id
+    participant.did = did
+    participant.governance_id = governanceFile.id
+    participant.email = descriptions[did].email
+    participant.name = descriptions[did].name
+    participant.phone = descriptions[did].phone
+    participant.website = descriptions[did].website
+    participant.address = descriptions[did].address
+    participant.city = descriptions[did].city
+    participant.zip = descriptions[did].zip
+    participant.state = descriptions[did].state
+    participant.roles = []
+
+    for (const role of roles[did].roles) {
+      participant.roles.push(role)
     }
+    participants.push(participant)
+    participant_id++
   }
-  dispatch(setGovernanceIssuers(issuers))
+
+  dispatch(setGovernanceParticipants(participants))
 }

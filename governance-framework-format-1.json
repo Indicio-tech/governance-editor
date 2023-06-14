@@ -1,43 +1,40 @@
 {
+	"@context": [
+	  "https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0430-machine-readable-governance-frameworks/context.jsonld"
+	],
 	"author": "did:example:viacheslavnazarenko",
-	"id": "c64846d1-cf60-4ac5-835e-cbd25569f2ea",
 	"name": "Proven Ecosystem Governance",
-	"description": "This document describes email and employment governance in a machine readable way",
 	"version": "0.1",
-	"format": "2.0",
+	"format": "1.0",
+	"id": "c64846d1-cf60-4ac5-835e-cbd25569f2fa",
+	"uri": "htpps://degov.com/proven.json",
+	"ttl": 300,
+	"description": "This document describes email and employment governance in a machine readable way",
+	"last_updated": 1673307432,
 	"docs_uri": "https://url-for-docs...",
-	"last_updated": 1684366927,
 	"schemas": [
 	  {
-		"name": "Email Credential",
 		"id": "BXtzYPyPdiVKGAjkqtPexs:2:Email:1.0",
-		"creator": "Simon"
+		"name": "Email Credential"
 	  },
 	  {
-		"name": "Employment Credential",
 		"id": "QHqtjywxfP3yYsFrRHFLQm:2:Employment:1.0",
-		"creator": "Simon"
+		"name": "Employment Credential"
 	  }
 	],
 	"participants": {
-	  "id": "1e762324-6a45-4f6a-b124-acb21190fe09",
+	  "id": "1e762324-6a45-4f6a-b124-ecb21190fe09",
 	  "author": "did:example:viacheslavnazarenko",
-	  "created": 1684366927,
+	  "created": 1673307432,
 	  "version": "2.0",
 	  "topic": "uri:to-multi-topic-schema",
 	  "entries": {
 		"https://example.com/roles.schema.json": {
 		  "98nVuCngj7ReESPrH7skpF": {
-			"roles": [
-			  "role_1",
-			  "role_2"
-			]
+			"roles": ["role_1", "role_2"]
 		  },
 		  "WdvgJP7fwfvCrKupRRhDEu": {
-			"roles": [
-			  "role_3",
-			  "role_4"
-			]
+			"roles": ["role_3", "role_4"]
 		  }
 		},
 		"https://example.com/description.schema.json": {
@@ -45,21 +42,13 @@
 			"name": "Proven issuer agency",
 			"website": "issuinggovernmentsite.org",
 			"email": "credential_manager@issuinggovernmentsite.org",
-			"phone": "123-456-6780",
-			"address": "234 Main str",
-			"city": "Austin",
-			"zip": "32876",
-			"state": "TX"
+			"phone": "123-456-6780"
 		  },
 		  "WdvgJP7fwfvCrKupRRhDEu": {
 			"name": "Proven verifier agency",
 			"website": "verifyinglabsite.com",
 			"email": "credential_manager@verifyinglabsite.com",
-			"phone": "098-765-4321",
-			"address": "824 State St.",
-			"city": "Christiansburg",
-			"zip": "24073",
-			"state": "VA"
+			"phone": "098-765-4321"
 		  }
 		}
 	  }

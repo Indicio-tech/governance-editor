@@ -84,11 +84,11 @@ function AppMenu(props) {
           </Item>
           <Item
             className={
-              pathMatch === "/governance/issuers" ? "active" : undefined
+              pathMatch === "/governance/participants" ? "active" : undefined
             }
           >
-            <StyledSubLink exact to="/governance/issuers">
-              Issuers
+            <StyledSubLink exact to="/governance/participants">
+              Participants
             </StyledSubLink>
           </Item>
         </List>

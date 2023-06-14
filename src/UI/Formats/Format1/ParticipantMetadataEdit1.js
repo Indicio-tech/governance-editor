@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 
-import { setGovernanceIssuersMetadata } from "../../../redux/governanceReducer"
+import { setGovernanceParticipantsMetadata } from "../../../redux/governanceReducer"
+import { setNotificationState } from "../../../redux/notificationsReducer"
 
 import { v4 as uuidv4 } from "uuid"
 
@@ -20,10 +21,9 @@ import {
   SubmitBtnModal,
 } from "../../Styles/CommonStylesForms"
 
-function EditIssuersMetadata(props) {
+function editParticipantsMetadata(props) {
   const dispatch = useDispatch()
 
-  // const governanceMetadata = props.governanceMetadata
   const governanceState = useSelector((state) => state.governance)
 
   const error = props.error
@@ -64,8 +64,28 @@ function EditIssuersMetadata(props) {
       topic: form.get("topic"),
       last_updated: timestamp,
     }
-
-    dispatch(setGovernanceIssuersMetadata(metadata))
+    //(RomanStepanyan) Checking if any changes have been made
+    if (
+      governanceState.participantsMetadata.id !== metadata.id ||
+      governanceState.participantsMetadata.version !==
+        Number(metadata.version) ||
+      governanceState.participantsMetadata.topic !== metadata.topic
+    ) {
+      dispatch(setGovernanceParticipantsMetadata(metadata))
+      dispatch(
+        setNotificationState({
+          message: "Participants Metadata has been updated",
+          type: "notice",
+        })
+      )
+    } else {
+      dispatch(
+        setNotificationState({
+          message: "No changes have been made",
+          type: "warning",
+        })
+      )
+    }
 
     props.closeEditMetadataModal()
   }
@@ -81,7 +101,7 @@ function EditIssuersMetadata(props) {
       onClose={closeModal}
     >
       <LargeModal className="modal">
-        <ModalHeader>Update Issuers Metadata</ModalHeader>
+        <ModalHeader>Update Participants Metadata</ModalHeader>
         <ModalContentWrapper>
           <ModalContent>
             <form id="form" onSubmit={handleSubmit} ref={metadataForm}>
@@ -93,9 +113,9 @@ function EditIssuersMetadata(props) {
                   id="id"
                   placeholder="32f54163-7166-48f1-93d8-ff217bdb0653"
                   defaultValue={
-                    governanceState.issuersMetadata &&
-                    governanceState.issuersMetadata.id
-                      ? governanceState.issuersMetadata.id
+                    governanceState.participantsMetadata &&
+                    governanceState.participantsMetadata.id
+                      ? governanceState.participantsMetadata.id
                       : guid
                   }
                 />
@@ -122,8 +142,8 @@ function EditIssuersMetadata(props) {
                   id="version"
                   placeholder="2"
                   defaultValue={
-                    governanceState.issuersMetadata
-                      ? governanceState.issuersMetadata.version
+                    governanceState.participantsMetadata
+                      ? governanceState.participantsMetadata.version
                       : ""
                   }
                 />
@@ -136,8 +156,8 @@ function EditIssuersMetadata(props) {
                   id="topic"
                   placeholder="uri:to-multi-topic-schema"
                   defaultValue={
-                    governanceState.issuersMetadata
-                      ? governanceState.issuersMetadata.topic
+                    governanceState.participantsMetadata
+                      ? governanceState.participantsMetadata.topic
                       : ""
                   }
                 />
@@ -159,4 +179,4 @@ function EditIssuersMetadata(props) {
   )
 }
 
-export default EditIssuersMetadata
+export default editParticipantsMetadata

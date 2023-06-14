@@ -55,55 +55,64 @@ export const handleSchemasExtraction1_0 = () => {
   return schemasByGovernanceId
 }
 
-// (eldersonar) Handle data clean and restructure for the issuers
-export const handleIssuersExtraction1_0 = () => {
+// (eldersonar) Handle data clean and restructure for the participants
+export const handleParticipantsExtraction1_0 = () => {
   // (eldersonar) Fetch Redux store
   const currentState = store.getState()
   const governanceState = currentState.governance
 
-  const array = JSON.parse(JSON.stringify(governanceState.issuers)) // Creates a deep copy
+  const array = JSON.parse(JSON.stringify(governanceState.participants)) // Creates a deep copy
 
-  let issuersByGovernanceId = []
+  let participantsByGovernanceId = []
   array.forEach((element) => {
     if (element.governance_id === governanceState.selectedGovernance.id) {
-      issuersByGovernanceId.push(element)
+      participantsByGovernanceId.push(element)
     }
   })
 
-  const finalEntries = []
-  issuersByGovernanceId.forEach((issuer) => {
-    delete issuer.updated_at
-    delete issuer.governance_id
-    delete issuer.issuer_id
+  const finalEntries = {
+    "https://example.com/roles.schema.json": {},
+    "https://example.com/description.schema.json": {},
+  }
+
+  participantsByGovernanceId.forEach((participant) => {
+    delete participant.updated_at
+    delete participant.governance_id
+    delete participant.participant_id
 
     // (eldersonar) Remove parts associated with format 2.0. Importand while downgrading the format type
     if (governanceState.metadata.format === "1.0") {
-      delete issuer.address
-      delete issuer.city
-      delete issuer.zip
-      delete issuer.state
+      delete participant.address
+      delete participant.city
+      delete participant.zip
+      delete participant.state
     }
     // (eldersonar) Add placeholders if values are not provided
     else if (governanceState.metadata.format === "2.0") {
-      issuer.address = issuer.address || ""
-      issuer.city = issuer.city || ""
-      issuer.zip = issuer.zip || ""
-      issuer.state = issuer.state || ""
+      participant.address = participant.address || ""
+      participant.city = participant.city || ""
+      participant.zip = participant.zip || ""
+      participant.state = participant.state || ""
     }
 
-    const participant = {}
-    participant[issuer.did] = {
-      "uri:to-role_schema": {
-        roles: issuer.roles,
-      },
-      "uri:to-describe_schema": issuer,
+    finalEntries["https://example.com/roles.schema.json"][participant.did] = {
+      roles: participant.roles,
+    }
+    // Remove roles from the participant record
+    delete participant.roles
+
+    finalEntries["https://example.com/description.schema.json"][
+      participant.did
+    ] = {
+      ...participant,
     }
 
-    delete issuer.roles
-    delete issuer.did
-
-    finalEntries.push(participant)
+    // Remove did from the participant record
+    delete finalEntries["https://example.com/description.schema.json"][
+      participant.did
+    ].did
   })
+
   return finalEntries
 }
 
@@ -112,6 +121,8 @@ export const handleRolesExtraction1_0 = () => {
   // (eldersonar) Fetch Redux store
   const currentState = store.getState()
   const governanceState = currentState.governance
+
+  console.log(governanceState.roles)
 
   const array = JSON.parse(JSON.stringify(governanceState.roles)) // Creates a deep copy
 
@@ -130,12 +141,17 @@ export const handleRolesExtraction1_0 = () => {
     delete role.role_id
 
     const finalRole = {}
-    if (role.credentials.length !== 0) {
+
+    console.log("role is ", role)
+
+    if (role.action === "issue") {
       finalRole[role.role] = {
-        credentials: role.credentials,
+        issue: [role.subject[0]],
       }
     } else {
-      finalRole[role.role] = {}
+      finalRole[role.role] = {
+        verify: [role.subject[0]],
+      }
     }
 
     finalEntries.push(finalRole)

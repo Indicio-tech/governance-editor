@@ -6,10 +6,11 @@ const initialState = {
   metadata: {},
   selectedSchema: {},
   schemas: [],
-  selectedIssuer: {},
-  issuers: [],
-  issuersMetadata: {},
+  selectedParticipant: {},
+  participants: [],
+  participantsMetadata: {},
   roles: [],
+  fileUploaded: false,
   did: null,
 }
 
@@ -17,12 +18,15 @@ const SET_SELECTED_GOVERNANCE = "SET_SELECTED_GOVERNANCE"
 const SET_GOVERNANCE_METADATA = "SET_GOVERNANCE_METADATA"
 const SET_GOVERNANCE_SCHEMAS = "SET_GOVERNANCE_SCHEMAS"
 const SET_SELECTED_GOVERNANCE_SCHEMA = "SET_SELECTED_GOVERNANCE_SCHEMA"
-const SET_SELECTED_GOVERNANCE_ISSUER = "SET_SELECTED_GOVERNANCE_ISSUER"
-const SET_GOVERNANCE_ISSUERS = "SET_GOVERNANCE_ISSUERS"
-const SET_GOVERNANCE_ISSUERS_METADATA = "SET_GOVERNANCE_ISSUERS_METADATA"
+const SET_SELECTED_GOVERNANCE_PARTICIPANT =
+  "SET_SELECTED_GOVERNANCE_PARTICIPANT"
+const SET_GOVERNANCE_PARTICIPANTS = "SET_GOVERNANCE_PARTICIPANTS"
+const SET_GOVERNANCE_PARTICIPANTS_METADATA =
+  "SET_GOVERNANCE_PARTICIPANTS_METADATA"
 const SET_GOVERNANCE_ROLES = "SET_GOVERNANCE_ROLES"
 const SET_GOVERNANCE_DID = "SET_GOVERNANCE_DID"
 // const SET_GOVERNANCE_OPTIONS = "SET_GOVERNANCE_OPTIONS"
+const SET_GOVERNANCE_UPLOADED = "SET_GOVERNANCE_UPLOADED"
 const CLEAR_GOVERNANCE_STATE = "CLEAR_GOVERNANCE_STATE"
 
 export function setSelectedGovernance(selectedGovernance) {
@@ -53,24 +57,24 @@ export function setSelectedGovernanceSchema(schema) {
   }
 }
 
-export function setSelectedGovernanceIssuer(issuer) {
+export function setSelectedGovernanceParticipant(participant) {
   return {
-    type: SET_SELECTED_GOVERNANCE_ISSUER,
-    payload: issuer,
+    type: SET_SELECTED_GOVERNANCE_PARTICIPANT,
+    payload: participant,
   }
 }
 
-export function setGovernanceIssuersMetadata(issuersMetadata) {
+export function setGovernanceParticipantsMetadata(participantsMetadata) {
   return {
-    type: SET_GOVERNANCE_ISSUERS_METADATA,
-    payload: issuersMetadata,
+    type: SET_GOVERNANCE_PARTICIPANTS_METADATA,
+    payload: participantsMetadata,
   }
 }
 
-export function setGovernanceIssuers(issuers) {
+export function setGovernanceParticipants(participants) {
   return {
-    type: SET_GOVERNANCE_ISSUERS,
-    payload: issuers,
+    type: SET_GOVERNANCE_PARTICIPANTS,
+    payload: participants,
   }
 }
 
@@ -95,6 +99,13 @@ export function setGovernanceDID(did) {
 //   }
 // }
 
+export function setFileUploaded(fileUploaded) {
+  return {
+    type: SET_GOVERNANCE_UPLOADED,
+    payload: fileUploaded,
+  }
+}
+
 export function clearGovernanceState() {
   return {
     type: CLEAR_GOVERNANCE_STATE,
@@ -116,14 +127,14 @@ export default function (state = initialState, action) {
     case SET_SELECTED_GOVERNANCE_SCHEMA:
       return { ...state, selectedSchema: action.payload }
 
-    case SET_SELECTED_GOVERNANCE_ISSUER:
-      return { ...state, selectedIssuer: action.payload }
+    case SET_SELECTED_GOVERNANCE_PARTICIPANT:
+      return { ...state, selectedParticipant: action.payload }
 
-    case SET_GOVERNANCE_ISSUERS:
-      return { ...state, issuers: action.payload }
+    case SET_GOVERNANCE_PARTICIPANTS:
+      return { ...state, participants: action.payload }
 
-    case SET_GOVERNANCE_ISSUERS_METADATA:
-      return { ...state, issuersMetadata: action.payload }
+    case SET_GOVERNANCE_PARTICIPANTS_METADATA:
+      return { ...state, participantsMetadata: action.payload }
 
     case SET_GOVERNANCE_ROLES:
       return { ...state, roles: action.payload }
@@ -133,6 +144,9 @@ export default function (state = initialState, action) {
 
     // case SET_GOVERNANCE_OPTIONS:
     //   return { ...state, governanceOptions: action.payload }
+
+    case SET_GOVERNANCE_UPLOADED:
+      return { ...state, fileUploaded: action.payload }
 
     case CLEAR_GOVERNANCE_STATE:
       return initialState
