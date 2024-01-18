@@ -7,7 +7,6 @@ import styled from "styled-components"
 import { setNotificationState } from "../../redux/notificationsReducer"
 import GovernanceMetadataAdd from "../Formats/Format1/MetadataAdd"
 import GovernanceMetadataEdit from "../Formats/Format1/MetadataEdit"
-import GovernanceExportModal from "./ExportModal"
 
 import {
   setSelectedGovernance,
@@ -82,15 +81,8 @@ function Governance(props) {
   const [addMetadataModalIsOpen, setAddMetadataModalIsOpen] = useState(false)
   const closeAddMetadataModal = () => setAddMetadataModalIsOpen(false)
 
-  const [governanceExportModalIsOpen, setGovernanceExportModalIsOpen] =
-    useState(false)
-  const closeGovernanceExportModal = () => setGovernanceExportModalIsOpen(false)
-
   const governanceForm = useRef(null)
   const governancePath = useRef(null)
-
-  // (eldersonar) This is an example of storing all possible piblish options. Only API options is supported as of 5/18/2023
-  const publishOptions = ["API", "FTP", "AS3"]
 
   const uploadFormat1_0 = useCallback(
     (file) => {
@@ -161,11 +153,6 @@ function Governance(props) {
     setEditMetadataModalIsOpen(true)
   }
 
-  // (eldersonar) This function alows the governance modal to open and present all possible export options descirbed in publishOptions array
-  const openGovernanceExport = () => {
-    setGovernanceExportModalIsOpen(true)
-  }
-
   let governanceSelectHandler = (event) => {
     const file = event.target.files[0]
 
@@ -184,50 +171,6 @@ function Governance(props) {
     )
   }
 
-  // (eldersonar) This is a simple POST request to upload a file to a remote server
-  const exportGovernanceFile = async () => {
-    // (eldersonar) Fetch extracted governance file
-    const file = await extractGovernance()
-
-    // Handle JSON file download
-    if (file) {
-      if (governanceState.participantsMetadata.author !== "DID not anchored") {
-        try {
-          const response = await Axios({
-            method: "post",
-            url: "https://governance-file-hosting.glitch.me/file",
-            data: file,
-          })
-          console.log(response.data)
-        } catch (error) {
-          console.error(error)
-        }
-
-        dispatch(
-          setNotificationState({
-            message:
-              "Selected governance file was succesfully exported to a hosting service",
-            type: "notice",
-          })
-        )
-      } else {
-        dispatch(
-          setNotificationState({
-            message: "Publishing without public DID is forbidden",
-            type: "error",
-          })
-        )
-      }
-    } else {
-      dispatch(
-        setNotificationState({
-          message: `Governance file is not selected, or the governance format is not supported`,
-          type: "error",
-        })
-      )
-    }
-  }
-
   // (eldersonar) Handle governance injection based on the format type
   const handleGovernanceFileUpload = async (e) => {
     e.preventDefault()
@@ -242,37 +185,28 @@ function Governance(props) {
 
     // Handle JSON file download
     if (file) {
-      if (governanceState.participantsMetadata.author !== "DID not anchored") {
-        // create file in browser
-        const fileName = "governance-framework-upload-test"
-        const json = JSON.stringify(file, null, 2)
-        const blob = new Blob([json], { type: "application/json" })
-        const href = URL.createObjectURL(blob)
+      // create file in browser
+      const fileName = "governance-framework-upload-test"
+      const json = JSON.stringify(file, null, 2)
+      const blob = new Blob([json], { type: "application/json" })
+      const href = URL.createObjectURL(blob)
 
-        // create HTML element with href to file
-        const link = document.createElement("a")
-        link.href = href
-        link.download = fileName + ".json"
-        document.body.appendChild(link)
-        link.click()
+      // create HTML element with href to file
+      const link = document.createElement("a")
+      link.href = href
+      link.download = fileName + ".json"
+      document.body.appendChild(link)
+      link.click()
 
-        // clean up element & remove ObjectURL to avoid memory leak
-        document.body.removeChild(link)
-        URL.revokeObjectURL(href)
-        dispatch(
-          setNotificationState({
-            message: "Selected governance file is downloaded",
-            type: "notice",
-          })
-        )
-      } else {
-        dispatch(
-          setNotificationState({
-            message: "Publishing without public DID is forbidden",
-            type: "error",
-          })
-        )
-      }
+      // clean up element & remove ObjectURL to avoid memory leak
+      document.body.removeChild(link)
+      URL.revokeObjectURL(href)
+      dispatch(
+        setNotificationState({
+          message: "Selected governance file is downloaded",
+          type: "notice",
+        })
+      )
     } else {
       dispatch(
         setNotificationState({
@@ -335,44 +269,6 @@ function Governance(props) {
     }
   }
 
-  // (eldersonar) This allows an example of simple signing of the governance payload in a JWT with Ed25519 key using external signing demo service
-  const signGovernance = async () => {
-    try {
-      const file = await extractGovernance("publish")
-
-      if (file) {
-        // (eldersonar) Sign jwt
-        const jwtResponse = await Axios({
-          method: "post",
-          url: "https://governance-file-signing.glitch.me/file/sign",
-          data: file,
-        })
-        console.log("Signed governance JWT")
-        console.log(jwtResponse.data)
-
-        // (eldersonar) Verify jwt
-        if (jwtResponse.data) {
-          const verifiedjwt = await Axios({
-            method: "post",
-            url: "https://governance-file-signing.glitch.me/file/verify",
-            data: { jwt: jwtResponse.data },
-          })
-          console.log("decoded jwt")
-          console.log(verifiedjwt.data)
-        }
-      } else {
-        dispatch(
-          setNotificationState({
-            message: `Governance file is not selected, or the governance format is not supported`,
-            type: "error",
-          })
-        )
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   const handleSubmit = (e) => {
     console.log("on handlesubmit")
     e.preventDefault()
@@ -409,18 +305,6 @@ function Governance(props) {
       )
     }
     governanceForm.current.reset()
-  }
-
-  // (eldersonar) This allows the component to render as many publish options as supported by the editor
-  const renderExportButton = () => {
-    if (publishOptions.length === 1) {
-      return <ExportBtn onClick={exportGovernanceFile}>Publish</ExportBtn>
-    } else if (publishOptions.length > 1) {
-      return (
-        <ExportBtn onClick={() => openGovernanceExport()}>Publish</ExportBtn>
-      )
-    }
-    return null
   }
 
   return (
@@ -536,9 +420,7 @@ function Governance(props) {
           </SubmitFormBtn>
         </Form>
         <hr></hr>
-        <ExportBtn onClick={() => signGovernance()}>Sign</ExportBtn>
         <ExportBtn onClick={() => downloadFile()}>Download</ExportBtn>
-        {renderExportButton()}
       </PageSection>
       <GovernanceMetadataAdd
         addMetadataModalIsOpen={addMetadataModalIsOpen}
@@ -547,12 +429,6 @@ function Governance(props) {
       <GovernanceMetadataEdit
         editMetadataModalIsOpen={editMetadataModalIsOpen}
         closeEditMetadataModal={closeEditMetadataModal}
-      />
-      <GovernanceExportModal
-        governanceExportModalIsOpen={governanceExportModalIsOpen}
-        closeGovernanceExportModal={closeGovernanceExportModal}
-        publishOptions={publishOptions}
-        exportGovernanceFile={exportGovernanceFile}
       />
     </>
   )
