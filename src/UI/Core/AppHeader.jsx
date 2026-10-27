@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 
-import AppMenu from "./AppMenu.js"
+import AppMenu from "./AppMenu"
 import PoweredByImage from "../../assets/powered-by.png"
 
 import { PoweredHolder, PoweredBy } from "../Styles/CommonStylesForms"

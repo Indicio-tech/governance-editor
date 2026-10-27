@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import Select from "react-select"
 
-import PageHeader from "../../Core/PageHeader.js"
-import PageSection from "../../Core/PageSection.js"
+import PageHeader from "../../Core/PageHeader"
+import PageSection from "../../Core/PageSection"
 import styled from "styled-components"
 import {
   setSelectedGovernanceParticipant,

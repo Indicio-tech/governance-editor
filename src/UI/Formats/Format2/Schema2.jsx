@@ -3,14 +3,14 @@ import { useSelector, useDispatch } from "react-redux"
 import Select from "react-select"
 import styled from "styled-components"
 
-import PageHeader from "../../Core/PageHeader.js"
-import PageSection from "../../Core/PageSection.js"
+import PageHeader from "../../Core/PageHeader"
+import PageSection from "../../Core/PageSection"
 
 import {
   setGovernanceParticipants,
   setSelectedGovernanceSchema,
 } from "../../../redux/governanceReducer"
-import GovernanceSchemaEdit1 from "./SchemaEdit1"
+import GovernanceSchemaEdit2 from "./SchemaEdit2"
 
 // import { setNotificationState } from "../redux/notificationsReducer"
 
@@ -276,6 +276,14 @@ function GovernanceSchema(props) {
                   {selectedSchema !== undefined ? selectedSchema.id || "" : ""}
                 </td>
               </AttributeRow>
+              <AttributeRow>
+                <th>Creator:</th>
+                <td>
+                  {selectedSchema !== undefined
+                    ? selectedSchema.creator || ""
+                    : ""}
+                </td>
+              </AttributeRow>
             </tbody>
           </AttributeTable>
           <SaveBtn onClick={() => editSchema()}>Edit</SaveBtn>
@@ -319,7 +327,7 @@ function GovernanceSchema(props) {
             Add
           </SaveBtn>
         </PageSection>
-        <GovernanceSchemaEdit1
+        <GovernanceSchemaEdit2
           sendRequest={props.sendRequest}
           schemaModalIsOpen={schemaModalIsOpen}
           closeSchemaModal={closeSchemaModal}

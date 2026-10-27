@@ -9,8 +9,8 @@ import ParticipantsMetadataEdit from "./ParticipantMetadataEdit1"
 
 import { getNextId } from "../../utils"
 
-import PageHeader from "../../Core/PageHeader.js"
-import PageSection from "../../Core/PageSection.js"
+import PageHeader from "../../Core/PageHeader"
+import PageSection from "../../Core/PageSection"
 
 import { AttributeTable, AttributeRow } from "../../Styles/CommonStylesTables"
 
