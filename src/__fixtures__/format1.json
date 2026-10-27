@@ -1,0 +1,78 @@
+{
+	"@context": [
+	  "https://github.com/hyperledger/aries-rfcs/blob/main/concepts/0430-machine-readable-governance-frameworks/context.jsonld"
+	],
+	"author": "did:example:viacheslavnazarenko",
+	"name": "Proven Ecosystem Governance",
+	"version": "0.1",
+	"format": "1.0",
+	"id": "c64846d1-cf60-4ac5-835e-cbd25569f2fa",
+	"uri": "htpps://degov.com/proven.json",
+	"ttl": 300,
+	"description": "This document describes email and employment governance in a machine readable way",
+	"last_updated": 1673307432,
+	"docs_uri": "https://url-for-docs...",
+	"schemas": [
+	  {
+		"id": "BXtzYPyPdiVKGAjkqtPexs:2:Email:1.0",
+		"name": "Email Credential"
+	  },
+	  {
+		"id": "QHqtjywxfP3yYsFrRHFLQm:2:Employment:1.0",
+		"name": "Employment Credential"
+	  }
+	],
+	"participants": {
+	  "id": "1e762324-6a45-4f6a-b124-ecb21190fe09",
+	  "author": "did:example:viacheslavnazarenko",
+	  "created": 1673307432,
+	  "version": "2.0",
+	  "topic": "uri:to-multi-topic-schema",
+	  "entries": {
+		"https://example.com/roles.schema.json": {
+		  "98nVuCngj7ReESPrH7skpF": {
+			"roles": ["role_1", "role_2"]
+		  },
+		  "WdvgJP7fwfvCrKupRRhDEu": {
+			"roles": ["role_3", "role_4"]
+		  }
+		},
+		"https://example.com/description.schema.json": {
+		  "98nVuCngj7ReESPrH7skpF": {
+			"name": "Proven issuer agency",
+			"website": "issuinggovernmentsite.org",
+			"email": "credential_manager@issuinggovernmentsite.org",
+			"phone": "123-456-6780"
+		  },
+		  "WdvgJP7fwfvCrKupRRhDEu": {
+			"name": "Proven verifier agency",
+			"website": "verifyinglabsite.com",
+			"email": "credential_manager@verifyinglabsite.com",
+			"phone": "098-765-4321"
+		  }
+		}
+	  }
+	},
+	"roles": {
+	  "role_1": {
+		"issue": [
+		  "QHqtjywxfP3yYsFrRHFLQm:2:Employment:1.0"
+		]
+	  },
+	  "role_2": {
+		"issue": [
+		  "BXtzYPyPdiVKGAjkqtPexs:2:Email:1.0"
+		]
+	  },
+	  "role_3": {
+		"verify": [
+		  "QHqtjywxfP3yYsFrRHFLQm:2:Employment:1.0"
+		]
+	  },
+	  "role_4": {
+		"verify": [
+		  "BXtzYPyPdiVKGAjkqtPexs:2:Email:1.0"
+		]
+	  }
+	}
+  }
