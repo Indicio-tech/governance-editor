@@ -42,7 +42,7 @@ function load(fixture, participantsInjection) {
 
 beforeEach(() => {
   store.dispatch(clearGovernanceState())
-  jest.spyOn(console, "log").mockImplementation(() => {})
+  vi.spyOn(console, "log").mockImplementation(() => {})
 })
 afterEach(() => {
   console.log.mockRestore()

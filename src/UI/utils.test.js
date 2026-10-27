@@ -2,7 +2,7 @@ import { getNextId } from "./utils"
 
 describe("getNextId", () => {
   beforeEach(() => {
-    jest.spyOn(console, "log").mockImplementation(() => {})
+    vi.spyOn(console, "log").mockImplementation(() => {})
   })
   afterEach(() => {
     console.log.mockRestore()

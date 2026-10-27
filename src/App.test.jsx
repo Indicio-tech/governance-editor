@@ -21,8 +21,8 @@ import { handleParticipantsInjection2_0 } from "./UI/Formats/Format2/DataInjecti
 import format1 from "./__fixtures__/format1.json"
 import format2 from "./__fixtures__/format2.json"
 
-// Keeps the tests off the network (axios 1.x is ESM-only, which CRA 2's Jest can't load)
-jest.mock("axios", () => ({ __esModule: true, default: jest.fn() }))
+// Keeps the tests off the network
+vi.mock("axios", () => ({ __esModule: true, default: vi.fn() }))
 
 const clone = (o) => JSON.parse(JSON.stringify(o))
 
@@ -51,8 +51,8 @@ let errorSpy
 beforeEach(() => {
   store.dispatch(clearGovernanceState())
   store.dispatch(clearNotificationsState())
-  jest.spyOn(console, "log").mockImplementation(() => {})
-  errorSpy = jest.spyOn(console, "error")
+  vi.spyOn(console, "log").mockImplementation(() => {})
+  errorSpy = vi.spyOn(console, "error")
 })
 afterEach(() => {
   cleanup()
